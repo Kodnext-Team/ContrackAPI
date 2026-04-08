@@ -18,7 +18,6 @@ namespace ContrackAPI.Controllers.Container
         public IActionResult GetTrackingList([FromBody] TrackingFilterPage filter)
         {
             APIResponse response = new APIResponse();
-
             try
             {
                 var data = _service.GetTrackingList(filter);
@@ -27,7 +26,7 @@ namespace ContrackAPI.Controllers.Container
             }
             catch (Exception ex)
             {
-              
+                response.Result = Common.ErrorMessage(ex.Message);
             }
 
             return Ok(response);
