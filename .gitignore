@@ -1,0 +1,12 @@
+# Visual Studio
+.vs/
+bin/
+obj/
+
+# SVN files
+.svn/
+
+# User-specific files
+*.user
+*.log
+*.cache
