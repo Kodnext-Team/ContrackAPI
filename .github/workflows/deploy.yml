@@ -1,0 +1,67 @@
+name: Deploy Site2 API to IIS
+
+on:
+  push:
+    branches:
+      - deploy
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, site2]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Restore NuGet Packages
+        run: |
+          & "C:\actions-runner-site2\nuget.exe" restore ContrackAPI.sln
+
+      - name: Build Solution
+        run: |
+          & "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Current\Bin\amd64\MSBuild.exe" ContrackAPI.sln /p:Configuration=Release
+
+      - name: Create Publish Folder
+        run: |
+          if (!(Test-Path "D:\temp\publish_site2")) {
+            New-Item -ItemType Directory -Path "D:\temp\publish_site2"
+          }
+
+      - name: Clean Publish Folder
+        run: |
+          if (Test-Path "D:\temp\publish_site2") {
+            Remove-Item "D:\temp\publish_site2\*" -Recurse -Force -ErrorAction SilentlyContinue
+          }
+
+      - name: Publish Web API
+        run: |
+          & "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Current\Bin\amd64\MSBuild.exe" "Contrack\Contrack.csproj" `
+          /p:Configuration=Release `
+          /p:DeployOnBuild=true `
+          /p:WebPublishMethod=FileSystem `
+          /p:DeleteExistingFiles=true `
+          /p:publishUrl="D:\temp\publish_site2"
+
+      - name: Verify Publish Files
+        run: |
+          echo "FILES INSIDE PUBLISH:"
+          Get-ChildItem -Path "D:\temp\publish_site2" -Recurse
+
+      - name: Deploy to IIS
+        run: |
+          if (!(Test-Path "D:\inetpub\wwwroot\ContrackAPI")) {
+            New-Item -ItemType Directory -Path "D:\inetpub\wwwroot\ContrackAPI"
+          }
+
+          robocopy "D:\temp\publish_site2" "D:\inetpub\wwwroot\ContrackAPI" /E /NFL /NDL /NJH /NJS /NC /NS
+
+          if ($LASTEXITCODE -le 7) {
+            exit 0
+          } else {
+            exit $LASTEXITCODE
+          }
+
+      - name: Check IIS Folder
+        run: |
+          echo "FILES IN IIS:"
+          Get-ChildItem -Path "D:\inetpub\wwwroot\ContrackAPI" -Recurse
