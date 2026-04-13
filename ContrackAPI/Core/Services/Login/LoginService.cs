@@ -13,9 +13,9 @@
             _HubRepository = hubRepository;
         }
 
-        public APIResponse ValidateLogin(LoginUI loginui)
+        public LoginResponse ValidateLogin(LoginUI loginui)
         {
-            var response = new APIResponse();
+            var response = new LoginResponse();
             if (string.IsNullOrWhiteSpace(loginui.UserName) || string.IsNullOrWhiteSpace(loginui.Password))
             {
                 response.Result = Common.ErrorMessage("Invalid Username/Password");
@@ -26,30 +26,23 @@
                 UserName = loginui.UserName,
                 Password = loginui.Password
             };
-
             Result validationResult = _repo.ValidateLogin(loginDto);
-            response.Result = validationResult ?? Common.ErrorMessage("Login validation failed");
-
-            if (validationResult?.ResultId == 1)
+            response.Result = validationResult;
+            if (validationResult.ResultId == 1)
             {
+                response.Token = JwtTokenService.GenerateToken(
+                    loginDto.UserID.NumericValue,
+                    loginDto.HubID,
+                    _configuration
+                );
                 response.Data = new Login
                 {
-                    authToken = JwtTokenService.GenerateToken(
-                        loginDto.UserID.NumericValue,
-                        loginDto.HubID,
-                        _configuration
-                    ),
-                    login = loginDto,
+                    LoginInfo = loginDto,
                     HubInfo = _HubRepository.GetHubByID(loginDto.HubID)
                 };
             }
-            else
-            {
-                response.Data = null;
-            }
             return response;
         }
-
         public UserDTO GetUserById(int userId)
         {
             return _repo.GetUserByID(userId);

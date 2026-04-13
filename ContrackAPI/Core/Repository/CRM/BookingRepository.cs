@@ -671,58 +671,5 @@ namespace ContrackAPI
             }
             return list;
         }
-        public Result SaveContainerSelection(string bookingid, List<ContainerSelectionDTO> selections)
-        {
-            Result result = new Result();
-            try
-            {
-                using (SqlDB Db = new SqlDB(DatabaseCollection.Contrack))
-                {
-
-                    var details = selections
-                                    .SelectMany(location => location.Details
-                                        .SelectMany(model => model.Containers
-                                        .Where(cont => cont.Selected)
-                                        .Select(cont => new
-                                        {
-                                            containerid = Common.Decrypt(cont.ContainerID.EncryptedValue),
-                                            isdeleted = cont.IsDeleted
-                                        })
-                                    )).ToList();
-
-                    string detailsJson = System.Text.Json.JsonSerializer.Serialize(details);
-
-                    string query = @"SELECT * FROM booking.container_selection_save(
-                                     p_bookingid := '" + Common.Decrypt(bookingid) + @"',
-                                     p_json := '" + Common.Escape(detailsJson) + @"'::jsonb,
-                                     p_hubid := '" + Common.HubID + @"',
-                                     p_userid := '" + Common.UserID + @"');";
-
-                    DataTable tbl = Db.GetDataTable(query);
-                    if (tbl != null && tbl.Rows.Count > 0)
-                    {
-                        if (tbl.Rows[0][0].ToString() == "1")
-                        {
-                            result = Common.SuccessMessage(tbl.Rows[0][1].ToString());
-                        }
-                        else
-                        {
-                            result = Common.ErrorMessage(tbl.Rows[0][1].ToString());
-                        }
-                    }
-                    else
-                    {
-                        result = Common.ErrorMessage("Cannot save container selection.");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                RecordException(ex);
-                result = Common.ErrorMessage(ex.Message);
-            }
-            return result;
-        }
-
     }
 }

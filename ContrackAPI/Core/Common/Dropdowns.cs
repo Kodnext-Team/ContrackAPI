@@ -94,5 +94,10 @@ namespace ContrackAPI
 
             return result;
         }
+        public static List<VoyageDTO> GetVoyageSearch(string search, bool createnew = true)
+        {
+            IVoyageRepository repo = new VoyageRepository();
+            return repo.SearchVoyage(search, createnew);
+        }
     }
 }
