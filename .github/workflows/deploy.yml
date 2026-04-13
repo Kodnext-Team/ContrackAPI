@@ -20,7 +20,7 @@ jobs:
         run: dotnet build ContrackAPI.sln --configuration Release
 
       - name: Publish Web API
-        run: dotnet publish ContrackAPI.csproj -c Release -o D:\temp\publish_site2
+        run: dotnet publish ContrackAPI.sln -c Release -o D:\temp\publish_site2
 
       - name: Verify Publish Files
         run: |
