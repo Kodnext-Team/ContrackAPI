@@ -7,45 +7,29 @@ namespace ContrackAPI
         public Result ValidateLogin(LoginDTO login)
         {
             Result result = new Result();
-
             try
             {
                 using (SqlDB Db = new SqlDB())
                 {
-                    DataTable tbl = Db.GetDataTable(
-                        "SELECT * FROM masters.login_validation('" + login.UserName + "');"
-                    );
-
+                    DataTable tbl = Db.GetDataTable("SELECT * FROM masters.login_validation('" + login.UserName + "');");
                     if (tbl.Rows.Count > 0)
                     {
                         int ResultID = Common.ToInt(tbl.Rows[0]["resultid"]);
                         string ResultMsg = Common.ToString(tbl.Rows[0]["resultmessage"]);
-
                         if (ResultID == 1)
                         {
                             string DBHash = Common.ToString(tbl.Rows[0]["passwordhash"]);
                             string DBSalt = Common.ToString(tbl.Rows[0]["salt"]);
-
                             bool isvalid = Encryption.IsPasswordValid(login.Password, DBSalt + ":" + DBHash);
-
                             if (isvalid)
                             {
                                 result = Common.SuccessMessage("Login Success");
-                                login.UserID = new EncryptedData
-                                {
-                                    NumericValue = Common.ToInt(tbl.Rows[0]["userid"])
-                                };
+                                login.UserID = new EncryptedData { NumericValue = Common.ToInt(tbl.Rows[0]["userid"]) };
                                 login.UserName = Common.ToString(tbl.Rows[0]["username"]);
                                 login.Name = Common.ToString(tbl.Rows[0]["fullname"]);
-                                login.Type = new EncryptedData
-                                {
-                                    NumericValue = Common.ToInt(tbl.Rows[0]["usertype"])
-                                };
+                                login.Type = new EncryptedData { NumericValue = Common.ToInt(tbl.Rows[0]["usertype"]) };
                                 login.HubID = Common.ToInt(tbl.Rows[0]["hubid"]);
-                                login.RoleID = new EncryptedData
-                                {
-                                    NumericValue = Common.ToInt(tbl.Rows[0]["role_id"])
-                                };
+                                login.RoleID = new EncryptedData { NumericValue = Common.ToInt(tbl.Rows[0]["role_id"]) };
                                 login.RoleName = Common.ToString(tbl.Rows[0]["role_name"]);
                             }
                             else
@@ -66,10 +50,9 @@ namespace ContrackAPI
             }
             catch (Exception ex)
             {
-                result = Common.ErrorMessage(ex.Message);
+                result = Common.ErrorMessage(ex.Message.ToString());
                 RecordException(ex);
             }
-
             return result;
         }
 

@@ -12,26 +12,23 @@ namespace ContrackAPI
         {
             _service = service;
         }
-
         [AllowAnonymous]
         [HttpPost("Login")]
         public IActionResult Login([FromBody] LoginUI login)
         {
-            APIResponse response = new APIResponse();
-
             try
             {
-                var serviceResponse = _service.ValidateLogin(login);
-                response.Result = serviceResponse.Result;
-                response.Data = serviceResponse.Data;
+                var response = _service.ValidateLogin(login);
+                return Ok(response);
             }
             catch (Exception ex)
             {
-                response.Result = Common.ErrorMessage(ex.Message);
+                return Ok(new LoginResponse
+                {
+                    Result = Common.ErrorMessage(ex.Message)
+                });
             }
-
-            return Ok(response);
         }
-       
+
     }
 }
