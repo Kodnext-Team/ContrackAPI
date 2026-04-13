@@ -20,12 +20,18 @@ jobs:
         run: dotnet build ContrackAPI.sln --configuration Release
 
       - name: Publish Web API
-        run: dotnet publish ContrackAPI.sln -c Release -o D:\temp\publish_site2
+        run: dotnet publish ContrackAPI.sln -c Release -o D:\temp\publish_site2 --self-contained false
 
       - name: Verify Publish Files
         run: |
           echo "FILES INSIDE PUBLISH:"
           Get-ChildItem -Path "D:\temp\publish_site2" -Recurse
+
+      - name: Clean IIS Folder
+        run: |
+          if (Test-Path "D:\inetpub\wwwroot\ContrackAPI") {
+            Remove-Item "D:\inetpub\wwwroot\ContrackAPI\*" -Recurse -Force -ErrorAction SilentlyContinue
+          }
 
       - name: Deploy to IIS
         run: |
@@ -33,7 +39,7 @@ jobs:
             New-Item -ItemType Directory -Path "D:\inetpub\wwwroot\ContrackAPI"
           }
 
-          robocopy "D:\temp\publish_site2" "D:\inetpub\wwwroot\ContrackAPI" /E /NFL /NDL /NJH /NJS /NC /NS
+          robocopy "D:\temp\publish_site2" "D:\inetpub\wwwroot\ContrackAPI" /E
 
           if ($LASTEXITCODE -le 7) {
             exit 0
