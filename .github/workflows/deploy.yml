@@ -1,0 +1,53 @@
+name: Deploy Site2 API to IIS
+
+on:
+  push:
+    branches:
+      - deploy
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, site2]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Restore Packages
+        run: dotnet restore ContrackAPI.sln
+
+      - name: Build Solution
+        run: dotnet build ContrackAPI.sln --configuration Release
+
+      - name: Publish Web API
+        run: dotnet publish ContrackAPI.sln -c Release -o D:\temp\publish_site2 --self-contained false
+
+      - name: Verify Publish Files
+        run: |
+          echo "FILES INSIDE PUBLISH:"
+          Get-ChildItem -Path "D:\temp\publish_site2" -Recurse
+
+      - name: Clean IIS Folder
+        run: |
+          if (Test-Path "D:\inetpub\wwwroot\ContrackAPI") {
+            Remove-Item "D:\inetpub\wwwroot\ContrackAPI\*" -Recurse -Force -ErrorAction SilentlyContinue
+          }
+
+      - name: Deploy to IIS
+        run: |
+          if (!(Test-Path "D:\inetpub\wwwroot\ContrackAPI")) {
+            New-Item -ItemType Directory -Path "D:\inetpub\wwwroot\ContrackAPI"
+          }
+
+          robocopy "D:\temp\publish_site2" "D:\inetpub\wwwroot\ContrackAPI" /E
+
+          if ($LASTEXITCODE -le 7) {
+            exit 0
+          } else {
+            exit $LASTEXITCODE
+          }
+
+      - name: Check IIS Folder
+        run: |
+          echo "FILES IN IIS:"
+          Get-ChildItem -Path "D:\inetpub\wwwroot\ContrackAPI" -Recurse
