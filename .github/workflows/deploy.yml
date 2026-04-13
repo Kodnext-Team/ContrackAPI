@@ -13,34 +13,14 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Restore NuGet Packages
-        run: |
-          & "C:\actions-runner-site2\nuget.exe" restore ContrackAPI.sln
+      - name: Restore Packages
+        run: dotnet restore ContrackAPI.sln
 
       - name: Build Solution
-        run: |
-          & "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Current\Bin\amd64\MSBuild.exe" ContrackAPI.sln /p:Configuration=Release
-
-      - name: Create Publish Folder
-        run: |
-          if (!(Test-Path "D:\temp\publish_site2")) {
-            New-Item -ItemType Directory -Path "D:\temp\publish_site2"
-          }
-
-      - name: Clean Publish Folder
-        run: |
-          if (Test-Path "D:\temp\publish_site2") {
-            Remove-Item "D:\temp\publish_site2\*" -Recurse -Force -ErrorAction SilentlyContinue
-          }
+        run: dotnet build ContrackAPI.sln --configuration Release
 
       - name: Publish Web API
-        run: |
-          & "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Current\Bin\amd64\MSBuild.exe" "Contrack\Contrack.csproj" `
-          /p:Configuration=Release `
-          /p:DeployOnBuild=true `
-          /p:WebPublishMethod=FileSystem `
-          /p:DeleteExistingFiles=true `
-          /p:publishUrl="D:\temp\publish_site2"
+        run: dotnet publish Contrack\Contrack.csproj -c Release -o D:\temp\publish_site2
 
       - name: Verify Publish Files
         run: |
