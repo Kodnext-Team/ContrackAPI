@@ -62,25 +62,7 @@ namespace ContrackAPI
             }
 
             return Ok(response);
-        }
-        [HttpPost("SaveContainerSelection")]
-        public IActionResult SaveContainerSelection([FromBody] ContainerSelection bookingmodel)
-        {
-            Result result = new Result();
-            try
-            {
-                result = _service.SaveContainerSelection(
-                    bookingmodel.Booking.bookingid.EncryptedValue,
-                    bookingmodel.Selections
-                );
-            }
-            catch (Exception ex)
-            {
-                result = Common.ErrorMessage(ex.Message);
-            }
-
-            return Ok(result);
-        }
+        }      
 
     }
 }

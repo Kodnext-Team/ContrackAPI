@@ -213,6 +213,47 @@ namespace ContrackAPI
             }
             return voyage;
         }
+        public List<VoyageDTO> SearchVoyage(string search, bool createnew)
+        {
+            var list = new List<VoyageDTO>();
+
+            using (SqlDB db = new SqlDB(DatabaseCollection.Contrack))
+            {
+                string safeSearch = Common.Escape(search ?? "");
+
+                string query = @" SELECT * FROM masters.voyage_search(
+            p_hubid := " + Common.HubID + @",
+            p_allow_create := " + (createnew ? "true" : "false") + @",
+            p_search_text := '" + safeSearch + @"'
+        );";
+
+                DataTable tbl = db.GetDataTable(query);
+
+                foreach (DataRow dr in tbl.Rows)
+                {
+                    list.Add(new VoyageDTO
+                    {
+                        VoyageId = new EncryptedData
+                        {
+                            NumericValue = Common.ToInt(dr["voyageid"]),
+                            EncryptedValue = Common.Encrypt(Common.ToInt(dr["voyageid"]))
+                        },
+                        VoyageNumber = Common.ToString(dr["voyagenumber"]),
+                        ActualVoyageNumber = Common.ToString(dr["actualvoyagenumber"]),
+                        Vesselname = Common.ToString(dr["vesselname"]),
+                        Description = Common.ToString(dr["description"]),
+                        VesseDetailId = new EncryptedData
+                        {
+                            NumericValue = Common.ToInt(dr["vesseldetailid"]),
+                            EncryptedValue = Common.Encrypt(Common.ToInt(dr["vesseldetailid"]))
+                        },
+                        IsNew = Common.ToBool(dr["isnew"])
+                    });
+                }
+            }
+
+            return list;
+        }
 
     }
 }

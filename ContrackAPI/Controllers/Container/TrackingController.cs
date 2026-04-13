@@ -34,14 +34,15 @@ namespace ContrackAPI.Controllers.Container
         [HttpPost("SaveRecordMove")]
         public IActionResult SaveRecordMove([FromBody] TrackingDTO model)
         {
-            Result response = new Result();
+            APIResponse response = new APIResponse();
             try
             {
                 var result = _service.SaveTracking(model);
+                response.Result = result;
             }
             catch (Exception ex)
             {
-                response = Common.ErrorMessage("Error while saving tracking");
+                response.Result = Common.ErrorMessage(ex.Message);
             }
             return Ok(response);
         }

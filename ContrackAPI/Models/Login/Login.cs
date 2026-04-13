@@ -8,8 +8,7 @@ namespace ContrackAPI
 {
     public class Login
     {
-        public string authToken { get; set; }
-        public LoginDTO login { get; set; } = new LoginDTO();
+        public LoginDTO LoginInfo { get; set; } = new LoginDTO();
         //public Result result { get; set; }
         public HubDTO HubInfo { get; set; } = new HubDTO();
     }

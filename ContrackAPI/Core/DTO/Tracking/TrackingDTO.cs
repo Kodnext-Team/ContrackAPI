@@ -10,10 +10,12 @@ namespace ContrackAPI
     {
         public EncryptedData TrackingId { get; set; } = new EncryptedData();
         public string TrackingUuid { get; set; } = "";
-        public MovesDTO Moves { get; set; } = new MovesDTO();
+        //public MovesDTO Moves { get; set; } = new MovesDTO();
+        public EncryptedData Moves { get; set; } = new EncryptedData();
         public EncryptedData LocationDetailId { get; set; } = new EncryptedData();
         public string RecordDateTime { get; set; } = "";
-        public MovesDTO NextMoves { get; set; } = new MovesDTO();
+        public EncryptedData NextMoves { get; set; } = new EncryptedData();
+        //public MovesDTO NextMoves { get; set; } = new MovesDTO();
         public EncryptedData NextLocationDetailId { get; set; } = new EncryptedData();
         public string NextDateTime { get; set; } = "";
         public bool IsDamaged { get; set; } = false;
@@ -22,9 +24,12 @@ namespace ContrackAPI
         public string CurrentVoyageName { get; set; } = "";
         public EncryptedData NextVoyageId { get; set; } = new EncryptedData();
         public string NextVoyageName { get; set; } = "";
-        public CreationInfo CreationInfo { get; set; } = new CreationInfo();
-        public ContainerDTO Container { get; set; } = new ContainerDTO();
-        public ContainerBookingSummaryDTO ContainerBooking { get; set; } = new ContainerBookingSummaryDTO();
+        //public CreationInfo CreationInfo { get; set; } = new CreationInfo();
+        //public ContainerDTO Container { get; set; } = new ContainerDTO();
+        public EncryptedData bookingid { get; set; } = new EncryptedData();
+        public EncryptedData containerid { get; set; } = new EncryptedData();
+
+        //public ContainerBookingSummaryDTO ContainerBooking { get; set; } = new ContainerBookingSummaryDTO();
         public string PickSelectionUuid { get; set; } = "";
         //public List<TrackingDamageDTO> TrackingDamages { get; set; } = new List<TrackingDamageDTO>();
     }

@@ -192,35 +192,6 @@ namespace ContrackAPI
                 return new ContainerSelection();
             }
         }
-        public Result SaveContainerSelection(string bookingid, List<ContainerSelectionDTO> selections)
-        {
-            Result result = new Result();
-
-            try
-            {
-                selections = selections ?? new List<ContainerSelectionDTO>();
-
-                var validSelections = selections
-                    .SelectMany(l => l.Details ?? new List<ContainerSelectionDetailDTO>())
-                    .SelectMany(d => d.Containers ?? new List<SelectionItemDTO>())
-                    .Where(x => x.Selected)
-                    .ToList();
-
-                if (validSelections.Count == 0)
-                {
-                    return Common.ErrorMessage("No containers selected.");
-                }
-
-                result = _repo.SaveContainerSelection(bookingid, selections);
-            }
-            catch (Exception ex)
-            {
-                result = Common.ErrorMessage(ex.Message);
-                RecordException(ex);
-            }
-
-            return result;
-        }
-
+       
     }
 }

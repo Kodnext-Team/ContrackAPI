@@ -4,7 +4,7 @@ namespace ContrackAPI
 {
     public interface ILoginService
     {
-        APIResponse ValidateLogin(LoginUI login);
+        LoginResponse ValidateLogin(LoginUI login);
         UserDTO GetUserById(int userId);
 
     }

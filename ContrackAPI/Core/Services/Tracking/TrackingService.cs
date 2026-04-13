@@ -44,10 +44,10 @@
             {
                 var model = tracking;
 
-                if (string.IsNullOrWhiteSpace(model?.Moves?.MovesId?.EncryptedValue))
+                if (string.IsNullOrWhiteSpace(model?.Moves?.EncryptedValue))
                     return Common.ErrorMessage("Please select a move type.");
 
-                if (!string.IsNullOrWhiteSpace(model?.NextMoves?.MovesId?.EncryptedValue))
+                if (!string.IsNullOrWhiteSpace(model?.NextMoves?.EncryptedValue))
                 {
                     if (string.IsNullOrWhiteSpace(model.NextLocationDetailId?.EncryptedValue) &&
                         string.IsNullOrWhiteSpace(model.NextVoyageId?.EncryptedValue))
@@ -60,7 +60,7 @@
                 if (!string.IsNullOrWhiteSpace(model?.NextLocationDetailId?.EncryptedValue) ||
                     !string.IsNullOrWhiteSpace(model?.NextDateTime))
                 {
-                    if (string.IsNullOrWhiteSpace(model?.NextMoves?.MovesId?.EncryptedValue))
+                    if (string.IsNullOrWhiteSpace(model?.NextMoves?.EncryptedValue))
                         return Common.ErrorMessage("Please select next move.");
                 }
 
