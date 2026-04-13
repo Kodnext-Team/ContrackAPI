@@ -61,7 +61,7 @@ jobs:
             exit $LASTEXITCODE
           }
 
-       - name: Check IIS Folder
+      - name: Check IIS Folder
         run: |
           echo "FILES IN IIS:"
           Get-ChildItem -Path "D:\inetpub\wwwroot\ContrackAPI" -Recurse
