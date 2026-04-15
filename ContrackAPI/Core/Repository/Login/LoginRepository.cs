@@ -1,5 +1,4 @@
 ﻿using System.Data;
-
 namespace ContrackAPI
 {
     public class LoginRepository : CustomException, ILoginRepository
@@ -59,15 +58,11 @@ namespace ContrackAPI
         public UserDTO GetUserByID(int userId)
         {
             UserDTO user = new UserDTO();
-
             try
             {
                 using (var Db = new SqlDB())
                 {
-                    DataTable tbl = Db.GetDataTable(
-                        $"SELECT * FROM masters.getuserbyid('{Common.HubID}','{userId}');"
-                    );
-
+                    DataTable tbl = Db.GetDataTable($"SELECT * FROM masters.getuserbyid('{Common.HubID}','{userId}');");
                     if (tbl.Rows.Count > 0)
                     {
                         DataRow row = tbl.Rows[0];
@@ -77,41 +72,27 @@ namespace ContrackAPI
                             NumericValue = Common.ToInt(row["userid"]),
                             EncryptedValue = Common.Encrypt(Common.ToInt(row["userid"]))
                         };
-
                         user.UserName = Common.ToString(row["username"]);
                         user.Name = Common.ToString(row["fullname"]);
                         user.Email = Common.ToString(row["email"]);
                         user.Phone = Common.ToString(row["phone"]);
                         user.Salt = Common.ToString(row["salt"]);
                         user.Password = Common.ToString(row["passwordhash"]);
-
                         user.Type = new EncryptedData
                         {
                             NumericValue = Common.ToInt(row["usertypeid"]),
                             EncryptedValue = Common.Encrypt(Common.ToInt(row["usertypeid"]))
                         };
-
                         user.TypeName = Common.ToString(row["usertype"]);
-
-                        user.EntityName = string.Join(",",
-                            tbl.AsEnumerable()
-                               .Select(r => Common.ToString(r["entity_name"]))
-                               .Distinct());
-
-                        user.EntityIDEncryptedList = tbl.AsEnumerable()
-                            .Select(r => Common.Encrypt(Common.ToInt(r["entityid"])))
-                            .Distinct()
-                            .ToList();
-
+                        user.EntityName = string.Join(",",tbl.AsEnumerable().Select(r => Common.ToString(r["entity_name"])).Distinct());
+                        user.EntityIDEncryptedList = tbl.AsEnumerable().Select(r => Common.Encrypt(Common.ToInt(r["entityid"]))).Distinct().ToList();
                         user.DateTimeCreated = Common.ToDateTime(row["createdat"]);
                         user.Status = Common.ToInt(row["isactive"]);
-
                         user.RoleID = new EncryptedData
                         {
                             NumericValue = Common.ToInt(row["role_id"]),
                             EncryptedValue = Common.Encrypt(Common.ToInt(row["role_id"]))
                         };
-
                         user.RoleName = Common.ToString(row["role_name"]);
                         user.RoleIcon = Common.ToString(row["role_icon"]);
                     }
@@ -121,7 +102,6 @@ namespace ContrackAPI
             {
                 RecordException(ex);
             }
-
             return user;
         }
     }

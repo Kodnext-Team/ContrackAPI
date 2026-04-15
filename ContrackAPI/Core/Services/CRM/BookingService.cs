@@ -1,17 +1,12 @@
-using System.Collections.Generic;
-
 namespace ContrackAPI
 {
     public class BookingService : CustomException, IBookingService
     {
         private readonly IBookingRepository _repo;
-        private readonly IVoyageRepository _voyageRepo;
-        public BookingService(IBookingRepository repo, IVoyageRepository voyageRepo)
+        public BookingService(IBookingRepository repo)
         {
             _repo = repo;
-            _voyageRepo = voyageRepo;
         }
-
         public List<ContainerBookingListDTO> GetBookingList(BookingListFilter filter)
         {
             try
@@ -24,8 +19,7 @@ namespace ContrackAPI
                 return new List<ContainerBookingListDTO>();
             }
         }
-
-        public ContainerBooking GetbookingByUUID(string bookinguuid, bool getsummary = false)
+        public ContainerBooking GetbookingByUUID(string bookinguuid)
         {
             ContainerBooking booking = new ContainerBooking();
             try
@@ -33,21 +27,18 @@ namespace ContrackAPI
                 if (!string.IsNullOrEmpty(bookinguuid))
                 {
                     booking.booking = _repo.GetbookingByUUID(bookinguuid);
-                    if (getsummary)
-                        booking.bookingSummary = GetBookingSummaryInfo(booking);
+                    //if (getsummary)
+                    //    booking.bookingSummary = GetBookingSummaryInfo(booking);
 
-                    GetVoyageInfo(booking);
+                   // GetVoyageInfo(booking);
                     PrefillShipperConsignee(booking);
-
                     var allServices = _repo.GetBookingAdditionalServices(bookinguuid);
-
                     if (allServices != null && allServices.Count > 0)
                     {
                         booking.booking.additionalservices = allServices
                             .Where(x => x.type == 1)
                             .OrderBy(x => x.order)
                             .ToList();
-
                         booking.booking.PODadditionalservices = allServices
                             .Where(x => x.type == 2)
                             .OrderBy(x => x.order)
@@ -59,56 +50,21 @@ namespace ContrackAPI
             {
                 RecordException(ex);
             }
-
             return booking;
         }
 
-        private void GetVoyageInfo(ContainerBooking booking)
-        {
-            try
-            {
-                if (!string.IsNullOrEmpty(booking.booking.location.voyageuuid))
-                {
-                    booking.voyage = _voyageRepo.GetVoyageByUUID(booking.booking.location.voyageuuid);
-                }
-            }
-            catch (Exception)
-            { }
-        }
-        private BookingSummaryDTO GetBookingSummaryInfo(ContainerBooking booking)
-        {
-            BookingSummaryDTO model = new BookingSummaryDTO();
-            try
-            {
-                model = _repo.GetBookingSummaryInfo(booking.booking.bookinguuid);
-                //if (model.summaryid.NumericValue == 0)
-                //{
-                //    var client = GetBillToAddressByClient(booking.booking.customer.client.clientdetailid.EncryptedValue);
-
-                //    model.currency = client.preferredcurrency;
-
-                //    var pricinglist = _PricingRepository.GetPricingByBookingUUID(booking.booking.bookinguuid, model.currency, booking.booking.customer.client.clientdetailid.EncryptedValue);
-                //    model.freightchargeamount = pricinglist.Details.Where(x => x.IsFrightCharges).Sum(x => x.Amount);
-                //    model.otherfees.AddRange(
-                //                 pricinglist.Details
-                //                 .Where(x => !x.IsFrightCharges)
-                //                 .Select(x => new OtherFeesDTO()
-                //                 {
-                //                     chargename = x.LineItemDesc,
-                //                     amount = x.Amount,
-                //                     remarks = x.Comments,
-                //                     uom = x.UOM
-                //                 })
-                //                 .ToList());
-                //}
-            }
-            catch (Exception ex)
-            {
-                RecordException(ex);
-            }
-            return model;
-        }
-
+        //private void GetVoyageInfo(ContainerBooking booking)
+        //{
+        //    try
+        //    {
+        //        if (!string.IsNullOrEmpty(booking.booking.location.voyageuuid))
+        //        {
+        //            booking.voyage = _voyageRepo.GetVoyageByUUID(booking.booking.location.voyageuuid);
+        //        }
+        //    }
+        //    catch (Exception)
+        //    { }
+        //}       
         private void PrefillShipperConsignee(ContainerBooking booking)
         {
             try
@@ -116,7 +72,6 @@ namespace ContrackAPI
                 var customer = booking.booking.customer;
                 var client = customer.client;
                 var location = booking.booking.location;
-
                 if (client.clientdetailid.NumericValue > 0)
                 {
                     switch (customer.customertype.NumericValue)
@@ -161,29 +116,18 @@ namespace ContrackAPI
                 ContainerBookingDTO booking = _repo.GetbookingByUUID(bookinguuid);
                 var selections = _repo.GetContainerSelection(bookinguuid);
                 var allotted = _repo.GetContainerAllotment(bookinguuid);
-
-                selections
-                    .SelectMany(l => l.Details)
-                    .SelectMany(d => d.Containers)
-                    .ToList()
-                    .ForEach(c =>
+                selections.SelectMany(l => l.Details).SelectMany(d => d.Containers).ToList().ForEach(c =>
                     {
-                        c.Locked = !string.IsNullOrEmpty(c.AllocationBookingUUID)
-                                   && c.AllocationBookingUUID != booking.bookinguuid;
-
-                        c.Allotted = c.AllocationBookingUUID == booking.bookinguuid
-                                     || allotted.Exists(x => x.containerid.NumericValue == c.ContainerID.NumericValue);
+                        c.Locked = !string.IsNullOrEmpty(c.AllocationBookingUUID)&& c.AllocationBookingUUID != booking.bookinguuid;
+                        c.Allotted = c.AllocationBookingUUID == booking.bookinguuid|| allotted.Exists(x => x.containerid.NumericValue == c.ContainerID.NumericValue);
                     });
-
                 ContainerSelection selection = new ContainerSelection()
                 {
                     Selections = selections,
                     Booking = booking,
                     Allotted = allotted
                 };
-
                // SessionManager.CurrentContainerSelection = selection;
-
                 return selection;
             }
             catch (Exception ex)

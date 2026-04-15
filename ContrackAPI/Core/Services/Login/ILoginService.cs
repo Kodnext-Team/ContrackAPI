@@ -1,6 +1,4 @@
-﻿using ContrackAPI;
-
-namespace ContrackAPI
+﻿namespace ContrackAPI
 {
     public interface ILoginService
     {

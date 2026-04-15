@@ -7,11 +7,11 @@ namespace ContrackAPI
     public class AccountController : ControllerBase
     {
         private readonly ILoginService _service;
-
         public AccountController(ILoginService service)
         {
             _service = service;
         }
+
         [AllowAnonymous]
         [HttpPost("Login")]
         public IActionResult Login([FromBody] LoginUI login)
@@ -23,12 +23,8 @@ namespace ContrackAPI
             }
             catch (Exception ex)
             {
-                return Ok(new LoginResponse
-                {
-                    Result = Common.ErrorMessage(ex.Message)
-                });
+                return Ok(new LoginResponse());
             }
         }
-
     }
 }

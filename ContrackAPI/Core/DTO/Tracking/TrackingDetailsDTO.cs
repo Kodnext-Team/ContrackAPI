@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ContrackAPI
+﻿namespace ContrackAPI
 {
     public class TrackingDetailsDTO
     {

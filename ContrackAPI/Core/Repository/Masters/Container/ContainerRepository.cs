@@ -1,14 +1,13 @@
 ﻿using Newtonsoft.Json;
 using System.Data;
 
-namespace ContrackAPI.Core.Repository.Masters.Container
+namespace ContrackAPI
 {
     public class ContainerRepository : CustomException, IContainerRepository
     {
         public List<ContainerDTO> GetContainerList(ContainerFilterPage filter)
         {
             List<ContainerDTO> list = new List<ContainerDTO>();
-
             try
             {
                 using (SqlDB Db = new SqlDB(DatabaseCollection.Contrack))
@@ -18,11 +17,8 @@ namespace ContrackAPI.Core.Repository.Masters.Container
                     string query = "SELECT * FROM masters.container_equip_list(" +
                                    "p_hubid := " + Common.HubID + "," +
                                    "p_filters := '" + Common.Escape(jsonFilters) + "'::jsonb," +
-                                   "p_userid := " + Common.UserID +
-                                   ");";
-
+                                   "p_userid := " + Common.UserID +");";
                     DataTable tbl = Db.GetDataTable(query);
-
                     if (tbl != null)
                     {
                         foreach (DataRow dr in tbl.Rows)
@@ -36,7 +32,6 @@ namespace ContrackAPI.Core.Repository.Masters.Container
             {
                 RecordException(ex);
             }
-
             return list;
         }
         private ContainerDTO ParseContainerList(DataRow dr)

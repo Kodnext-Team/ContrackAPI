@@ -8,6 +8,7 @@ namespace ContrackAPI
     public class VoyageController : ControllerBase
     {
         private readonly IVoyageService _service;
+        APIResponse response = new APIResponse();
         public VoyageController(IVoyageService service)
         {
             _service = service;
@@ -15,16 +16,13 @@ namespace ContrackAPI
         [HttpGet("VoyageDirectSearch")]
         public IActionResult GetDirectVoyageSearch(string Originportid, string Destinationportid)
         {
-            APIResponse response = new APIResponse();
             try
             {
                 var data = _service.GetDirectVoyageSearch(Originportid, Destinationportid);
-                response.Result = Common.SuccessMessage("Success");
                 response.Data = data;
             }
             catch (Exception ex)
             {
-                response.Result = Common.ErrorMessage(ex.Message);
             }
             return Ok(response);
         }

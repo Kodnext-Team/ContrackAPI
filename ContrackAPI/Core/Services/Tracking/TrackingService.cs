@@ -39,31 +39,25 @@
         public Result SaveTracking(TrackingDTO tracking)
         {
             Result result = new Result();
-
             try
             {
                 var model = tracking;
-
                 if (string.IsNullOrWhiteSpace(model?.Moves?.EncryptedValue))
                     return Common.ErrorMessage("Please select a move type.");
-
                 if (!string.IsNullOrWhiteSpace(model?.NextMoves?.EncryptedValue))
                 {
                     if (string.IsNullOrWhiteSpace(model.NextLocationDetailId?.EncryptedValue) &&
                         string.IsNullOrWhiteSpace(model.NextVoyageId?.EncryptedValue))
                         return Common.ErrorMessage("Please select next location or voyage");
-
                     if (string.IsNullOrWhiteSpace(model.NextDateTime))
                         return Common.ErrorMessage("Please select next date time.");
                 }
-
                 if (!string.IsNullOrWhiteSpace(model?.NextLocationDetailId?.EncryptedValue) ||
                     !string.IsNullOrWhiteSpace(model?.NextDateTime))
                 {
                     if (string.IsNullOrWhiteSpace(model?.NextMoves?.EncryptedValue))
                         return Common.ErrorMessage("Please select next move.");
                 }
-
                 if (!string.IsNullOrWhiteSpace(model.CurrentVoyageId?.EncryptedValue))
                     model.LocationDetailId.EncryptedValue = "";
                 else if (!string.IsNullOrWhiteSpace(model.LocationDetailId?.EncryptedValue))
@@ -73,7 +67,6 @@
                     model.NextLocationDetailId.EncryptedValue = "";
                 else if (!string.IsNullOrWhiteSpace(model.NextLocationDetailId?.EncryptedValue))
                     model.NextVoyageId.EncryptedValue = "";
-
                 return _repo.SaveTracking(model);
             }
             catch (Exception ex)
@@ -85,7 +78,6 @@
         public TrackingDetails GetTrackingDetails(string containeruuid, string bookinguuid, ContainerBooking booking)
         {
             List<TrackingDetailsDTO> list = new List<TrackingDetailsDTO>();
-
             try
             {
                 if (!string.IsNullOrEmpty(containeruuid) && !string.IsNullOrEmpty(bookinguuid))
@@ -158,8 +150,8 @@
                     CurrentCountryCode = "",
                     CurrentCountryFlag = "",
                     CurrentPortId = new EncryptedData(),
-                    CurrentPortCode = booking.voyage.Vesselname,
-                    CurrentPortName = booking.voyage.VoyageNumber,
+                    //CurrentPortCode = booking.voyage.Vesselname,
+                    //CurrentPortName = booking.voyage.VoyageNumber,
                     RecordDateTime = booking.booking.location.pod_portname,
                     CurrentCountryName = "",
                 });
@@ -168,7 +160,6 @@
             {
                 RecordException(ex);
             }
-
         }
     }
 }

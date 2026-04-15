@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace ContrackAPI.Controllers.Container
 {
@@ -9,6 +8,7 @@ namespace ContrackAPI.Controllers.Container
     {
         private readonly ITrackingService _service;
         private readonly IBookingService _bookingService;
+        APIResponse response = new APIResponse();
         public TrackingController(ITrackingService service, IBookingService bookingService)
         {
             _service = service;
@@ -17,24 +17,19 @@ namespace ContrackAPI.Controllers.Container
         [HttpPost("List")]
         public IActionResult GetTrackingList([FromBody] TrackingFilterPage filter)
         {
-            APIResponse response = new APIResponse();
             try
             {
                 var data = _service.GetTrackingList(filter);
-                response.Result = Common.SuccessMessage("Success");
                 response.Data = data;
             }
             catch (Exception ex)
             {
-                response.Result = Common.ErrorMessage(ex.Message);
             }
-
             return Ok(response);
         }
         [HttpPost("SaveRecordMove")]
         public IActionResult SaveRecordMove([FromBody] TrackingDTO model)
         {
-            APIResponse response = new APIResponse();
             try
             {
                 var result = _service.SaveTracking(model);
@@ -42,28 +37,22 @@ namespace ContrackAPI.Controllers.Container
             }
             catch (Exception ex)
             {
-                response.Result = Common.ErrorMessage(ex.Message);
             }
             return Ok(response);
         }
         [HttpGet("GetTrackingDetails")]
         public IActionResult GetTrackingDetails(string containeruuid, string bookinguuid)
         {
-            APIResponse response = new APIResponse();
-
             try
             {
                 var booking = _bookingService.GetbookingByUUID(bookinguuid);
                 var trackingDetails = _service.GetTrackingDetails(containeruuid, bookinguuid, booking);
                 trackingDetails.booking = booking;
-                response.Result = Common.SuccessMessage("Success");
                 response.Data = trackingDetails;
             }
             catch (Exception ex)
             {
-                response.Result = Common.ErrorMessage(ex.Message);
             }
-
             return Ok(response);
         }
     }

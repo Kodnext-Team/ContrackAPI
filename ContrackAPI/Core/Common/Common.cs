@@ -220,14 +220,14 @@ namespace ContrackAPI
         {
             get
             {
-                var claim = HttpContextAccessor?.HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "HubId");
-                if (claim != null && !string.IsNullOrEmpty(claim.Value))
-                {
-                    return Convert.ToInt32(claim.Value);
-                }
-                var hubid = HttpContextAccessor?.HttpContext?.Request?.Query["HubID"].ToString();
+                var hubClaim = HttpContextAccessor?.HttpContext?.User.FindFirst("HubId")?.Value;
+                if (!string.IsNullOrEmpty(hubClaim))
+                    return Convert.ToInt32(hubClaim);
+
+                var hubid = HttpContextAccessor?.HttpContext?.Request.Query["HubID"].ToString();
                 if (string.IsNullOrEmpty(hubid))
                     return 0;
+
                 return Convert.ToInt32(hubid);
             }
         }
@@ -235,15 +235,15 @@ namespace ContrackAPI
         {
             get
             {
-                var claim = HttpContextAccessor?.HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "UserId");
-                if (claim != null && !string.IsNullOrEmpty(claim.Value))
-                {
-                    return Convert.ToInt32(claim.Value);
-                }
-                var UserId = HttpContextAccessor?.HttpContext?.Request?.Query["UserId"].ToString();
-                if (string.IsNullOrEmpty(UserId))
+                var userClaim = HttpContextAccessor.HttpContext.User.FindFirst("UserId")?.Value;
+                if (!string.IsNullOrEmpty(userClaim))
+                    return Convert.ToInt32(userClaim);
+
+                var userId = HttpContextAccessor.HttpContext.Request.Query["UserId"].ToString();
+                if (string.IsNullOrEmpty(userId))
                     return 0;
-                return Convert.ToInt32(UserId);
+
+                return Convert.ToInt32(userId);
             }
         }
         public static int ToInt(object data)

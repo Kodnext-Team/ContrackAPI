@@ -30,11 +30,7 @@
             response.Result = validationResult;
             if (validationResult.ResultId == 1)
             {
-                response.Token = JwtTokenService.GenerateToken(
-                    loginDto.UserID.NumericValue,
-                    loginDto.HubID,
-                    _configuration
-                );
+                response.Token = JwtTokenService.GenerateToken(loginDto.UserID.NumericValue, loginDto.HubID, _configuration);
                 response.Data = new Login
                 {
                     LoginInfo = loginDto,

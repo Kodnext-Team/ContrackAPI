@@ -1,17 +1,13 @@
-﻿using ContrackAPI.Core.Repository.Masters.Container;
-
-namespace ContrackAPI
+﻿namespace ContrackAPI
 {
     public class ContainerService : CustomException, IContainerService
     {
         private readonly IContainerRepository _repo;
         Result result = new Result();
-
         public ContainerService(IContainerRepository repo)
         {
             _repo = repo;
         }
-
         public List<ContainerDTO> GetContainerList(ContainerFilterPage filter)
         {
             try
@@ -23,7 +19,6 @@ namespace ContrackAPI
                         ? Math.Abs(x.manufacturedate.NumericValue / 365)
                         : 0
                 );
-
                 return list;
             }
             catch (Exception ex)
@@ -74,9 +69,7 @@ namespace ContrackAPI
             try
             {
                 var dto = _repo.GetContainerByUUID(containeruuid);
-
                 var model = new ContainerModal { container = dto };
-
                 if (dto.manufacturedate.Value != DateTime.MinValue)
                 {
                     model.MakeMonth = dto.manufacturedate.Value.Month;
