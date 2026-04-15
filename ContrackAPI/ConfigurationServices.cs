@@ -1,8 +1,4 @@
-﻿using ContrackAPI.Core.Repository.Masters.Container;
-using Microsoft.AspNetCore.Connections;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace ContrackAPI
+﻿namespace ContrackAPI
 {
     public static class ConfigurationServices
     {

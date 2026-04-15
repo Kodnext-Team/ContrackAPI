@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System.Data;
-
 namespace ContrackAPI
 {
     public class BookingRepository : CustomException, IBookingRepository
@@ -17,8 +16,7 @@ namespace ContrackAPI
                         "SELECT * FROM booking.booking_list('"
                         + Common.HubID + "','"
                         + filters + "','"
-                        + Common.UserID + "');"
-                    );
+                        + Common.UserID + "');");
                     var statusList = Status.GetStatus();
                     list = (from DataRow dr in tbl.Rows
                             select new ContainerBookingListDTO
@@ -172,7 +170,6 @@ namespace ContrackAPI
             {
                 RecordException(ex);
             }
-
             return model;
         }
 
@@ -186,9 +183,7 @@ namespace ContrackAPI
                     DataTable tbl = Db.GetDataTable(
                         "SELECT * FROM booking.booking_get_location(" +
                         "p_bookinguuid := '" + Common.Escape(bookinguuid) + "'," +
-                        "p_hubid := '" + Common.HubID + "'" +
-                        ");");
-
+                        "p_hubid := '" + Common.HubID + "'" +");");
                     if (tbl.Rows.Count > 0)
                     {
                         DataRow dr = tbl.Rows[0];
@@ -294,7 +289,6 @@ namespace ContrackAPI
             {
                 RecordException(ex);
             }
-
             return booking;
         }
         public BookingSummaryDTO GetBookingSummaryInfo(string bookinguuid)
@@ -367,7 +361,6 @@ namespace ContrackAPI
                         "p_hubid := '" + Common.HubID + "'" +
                         ");"
                     );
-
                     services = (from DataRow dr in tbl.Rows
                                 select new BookingAdditionalServicesDTO
                                 {
@@ -405,7 +398,6 @@ namespace ContrackAPI
             {
                 RecordException(ex);
             }
-
             return services;
         }
         public List<ContainerBookingDetailDTO> GetContainerBookingDetailByBookingUUId(string bookinguuid)
@@ -421,9 +413,7 @@ namespace ContrackAPI
                         "p_bookinguuid := '" + Common.Escape(bookinguuid) + "'," +
                         "p_hubid := '" + Common.HubID + "')"
                     );
-
                     var rows = tbl.AsEnumerable();
-
                     list = rows.GroupBy(r => Common.ToInt(r["bookingdetailid"]))
                         .Select(containerGrp =>
                         {
@@ -487,7 +477,6 @@ namespace ContrackAPI
                                 icon = Common.ToString(first["icon"]),
                                 empty_full = Common.ToString(first["empty_full"]),
                             };
-
                             dto.services = containerGrp
                                 .Where(r => Common.ToInt(r["serviceid"]) > 0)
                                 .GroupBy(r => Common.ToInt(r["serviceid"]))
@@ -572,17 +561,14 @@ namespace ContrackAPI
                                     CountryCode = Common.ToString(loc["countrycode"]),
                                     CountryFlag = Common.ToString(loc["flag"])
                                 };
-
                                 dto.Details = locationGroup
                                     .GroupBy(x => Common.ToString(x["modeluuid"]))
                                     .Select(modelGroup =>
                                     {
                                         var first = modelGroup.First();
-
                                         int reservationId = Common.ToInt(first["reservationid"]);
                                         int bookingDetailId = Common.ToInt(first["bookingdetailid"]);
                                         int modelId = Common.ToInt(first["modelid"]);
-
                                         var detail = new ContainerSelectionDetailDTO
                                         {
                                             ReservationID = new EncryptedData
@@ -630,19 +616,15 @@ namespace ContrackAPI
                                         };
 
                                         return detail;
-                                    })
-                                    .ToList();
-
+                                    }).ToList();
                                 return dto;
-                            })
-                            .ToList();
+                            }).ToList();
                 }
             }
             catch (Exception ex)
             {
                 RecordException(ex);
             }
-
             return list;
         }
         public List<ContainerAllottedDTO> GetContainerAllotment(string bookinguuid)

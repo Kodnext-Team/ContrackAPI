@@ -76,13 +76,11 @@ namespace ContrackAPI
                                                 NumericValue = Common.ToInt(d.voyagedetailid),
                                                 EncryptedValue = Common.Encrypt(Common.ToInt(d.voyagedetailid))
                                             },
-
                                             VoyageId = new EncryptedData
                                             {
                                                 NumericValue = Common.ToInt(r["voyageid"]),
                                                 EncryptedValue = Common.Encrypt(Common.ToInt(r["voyageid"]))
                                             },
-
                                             PortId = new EncryptedData
                                             {
                                                 NumericValue = Common.ToInt(d.portid),
@@ -201,7 +199,6 @@ namespace ContrackAPI
 
                     DateTime mindate, maxdate;
                     (mindate, maxdate) = GetMaxMinDate(voyage.VoyageDetails);
-
                     voyage.minDate = FormatConvertor.ToDateTimeFormat(mindate);
                     voyage.maxDate = FormatConvertor.ToDateTimeFormat(maxdate);
                     voyage.NoOfDays = voyage.maxDate.Value.Date.Subtract(voyage.minDate.Value.Date).Days;
@@ -251,7 +248,6 @@ namespace ContrackAPI
                     });
                 }
             }
-
             return list;
         }
 

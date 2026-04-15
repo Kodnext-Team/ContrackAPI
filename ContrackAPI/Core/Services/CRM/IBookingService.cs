@@ -3,7 +3,7 @@
     public interface IBookingService
     {
         List<ContainerBookingListDTO> GetBookingList(BookingListFilter filter);
-        ContainerBooking GetbookingByUUID(string bookinguuid, bool getsummary = false);
+        ContainerBooking GetbookingByUUID(string bookinguuid);
         ContainerSelection GetContainerSelection(string bookinguuid);
 
 
