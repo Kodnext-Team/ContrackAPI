@@ -1,9 +1,9 @@
-﻿namespace ContrackAPI
+namespace ContrackAPI
 {
     public interface IContainerService
     {
-        List<ContainerDTO> GetContainerList(ContainerFilterPage filter);
-        ContainerModal GetContainerByUUID(string containeruuid);
+        APIResponse GetContainerList(ContainerFilterPage filter);
+        APIResponse GetContainerByUUID(string containeruuid);
 
     }
 }

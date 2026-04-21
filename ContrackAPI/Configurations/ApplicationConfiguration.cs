@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ContrackAPI
 {
-    public static class ApplicationConfiguration
+    public static class ApplicationConfiguration    
     {
         // Register all services
         public static IServiceCollection AddApplicationConfiguration(this IServiceCollection services)

@@ -18,15 +18,14 @@ namespace ContrackAPI
         {
             try
             {
-                var data = _service.GetBookingList(filter);
-               // response.Result = Common.SuccessMessage("Success");
-                response.Data = data;
+                response = _service.GetBookingList(filter);
+                return Ok(response);
             }
             catch (Exception ex)
             {
-               // response.Result = Common.ErrorMessage(ex.Message);
+                return Ok(new APIResponse());
             }
-            return Ok(response);
+           
         }
 
         [HttpGet("GetByBookingUUID")]
@@ -34,13 +33,13 @@ namespace ContrackAPI
         {
             try
             {
-                var data = _service.GetbookingByUUID(bookinguuid);
-                response.Data = data;
+                response = _service.GetBookingByUUID(bookinguuid);
+                return Ok(response);
             }
             catch (Exception ex)
             {
+                return Ok(new APIResponse());
             }
-            return Ok(response);
         }
 
         [HttpGet("ContainerSelection")]
@@ -48,13 +47,26 @@ namespace ContrackAPI
         {
             try
             {
-                var data = _service.GetContainerSelection(bookinguuid);
-                response.Data = data;
+                response = _service.GetContainerSelection(bookinguuid);
+                return Ok(response);
             }
             catch (Exception ex)
             {
+                return Ok(new APIResponse());
             }
-            return Ok(response);
+        }
+        [HttpPost("SaveSelection")]
+        public IActionResult SaveContainerSelection([FromBody] ContainerSelection bookingmodel)
+        {
+            try
+            {
+                response = _service.SaveContainerSelection(bookingmodel);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return Ok(new APIResponse());
+            }
         }
     }
 }

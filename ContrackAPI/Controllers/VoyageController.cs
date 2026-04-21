@@ -19,7 +19,15 @@ namespace ContrackAPI
             try
             {
                 var data = _service.GetDirectVoyageSearch(Originportid, Destinationportid);
-                response.Data = data;
+                if (data != null)
+                {
+                    response.Result = Common.SuccessMessage("Success");
+                    response.Data = data;
+                }
+                else
+                {
+                    response.Result = Common.ErrorMessage("No data found");
+                }
             }
             catch (Exception ex)
             {

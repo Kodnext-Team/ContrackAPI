@@ -15,10 +15,12 @@ namespace ContrackAPI.Controllers.Masters
             try
             {
                 var data = Dropdowns.GetMovesDropdown(showempty);
+                response.Result = Common.SuccessMessage("Success");
                 response.Data = data;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                response.Result = Common.ErrorMessage(ex.Message);
             }
             return Ok(response);
         }
@@ -28,10 +30,12 @@ namespace ContrackAPI.Controllers.Masters
             try
             {
                 var data = Dropdowns.GetLocationDropdown(showempty);
+                response.Result = Common.SuccessMessage("Success");
                 response.Data = data;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                response.Result = Common.ErrorMessage(ex.Message);
             }
             return Ok(response);
         }
@@ -41,10 +45,12 @@ namespace ContrackAPI.Controllers.Masters
             try
             {
                 var data = Dropdowns.GetNewMovesDropdown(showempty);
+                response.Result = Common.SuccessMessage("Success");
                 response.Data = data;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                response.Result = Common.ErrorMessage(ex.Message);
             }
             return Ok(response);
         }
@@ -54,6 +60,7 @@ namespace ContrackAPI.Controllers.Masters
             try
             {
                 var data = Dropdowns.GetVoyageSearch(SearchText, createnew);
+                response.Result = Common.SuccessMessage("Success");
                 var list = data.Select(g => new
                 {
                     NumericValue = g.VoyageId?.NumericValue,
@@ -66,8 +73,9 @@ namespace ContrackAPI.Controllers.Masters
                 }).ToList();
                 response.Data = list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                response.Result = Common.ErrorMessage(ex.Message);
             }
             return Ok(response);
         }

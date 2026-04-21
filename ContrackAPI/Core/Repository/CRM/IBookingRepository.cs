@@ -11,6 +11,8 @@
         List<BookingAdditionalServicesDTO> GetBookingAdditionalServices(string bookinguuid);
         List<ContainerSelectionDTO> GetContainerSelection(string bookinguuid);
         List<ContainerAllottedDTO> GetContainerAllotment(string bookinguuid);
+        Result SaveContainerSelection(string bookingid, List<ContainerSelectionDTO> selections);
+
 
     }
 }

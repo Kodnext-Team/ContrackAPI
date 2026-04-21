@@ -1,10 +1,10 @@
-﻿namespace ContrackAPI
+namespace ContrackAPI
 {
     public interface ITrackingService
     {
-        List<TrackingListDTO> GetTrackingList(TrackingFilterPage filter);
-        public Result SaveTracking(TrackingDTO tracking);
-        TrackingDetails GetTrackingDetails(string containeruuid, string bookinguuid, ContainerBooking booking);
+        APIResponse GetTrackingList(TrackingFilterPage filter);
+        APIResponse SaveTracking(TrackingDTO tracking);
+        APIResponse GetTrackingDetails(string containeruuid, string bookinguuid);
 
 
     }

@@ -8,29 +8,33 @@ namespace ContrackAPI
         public List<TrackingListDTO> GetTrackingList(TrackingFilterPage filter)
         {
             List<TrackingListDTO> list = new List<TrackingListDTO>();
+
             try
             {
                 using (SqlDB Db = new SqlDB(DatabaseCollection.Contrack))
                 {
                     string jsonFilters = JsonConvert.SerializeObject(filter);
+
                     string query = "SELECT * FROM tracking.container_movement_tracking_list(" +
                                    "p_hubid := " + Common.HubID + "," +
                                    "p_containeruuid := " + (string.IsNullOrEmpty(filter.ContainerUUID) ? "NULL" : $"'{filter.ContainerUUID}'::uuid") + "," +
                                    "p_filters := '" + Common.Escape(jsonFilters) + "'::jsonb," +
-                                   "p_userid := " + Common.UserID + "" +");";
+                                   "p_userid := " + Common.UserID + ");";
+
                     DataTable tbl = Db.GetDataTable(query);
-                    if (tbl != null)
+                    if (tbl == null || tbl.Rows.Count == 0)
+                        return null;
+
+                    foreach (DataRow dr in tbl.Rows)
                     {
-                        foreach (DataRow dr in tbl.Rows)
-                        {
-                            list.Add(ParseTrackingList(dr));
-                        }
+                        list.Add(ParseTrackingList(dr));
                     }
                 }
             }
             catch (Exception ex)
             {
                 RecordException(ex);
+                throw;
             }
             return list;
         }
@@ -138,7 +142,8 @@ namespace ContrackAPI
                 using (SqlDB Db = new SqlDB(DatabaseCollection.Contrack))
                 {
                     DataTable tbl = Db.GetDataTable("SELECT * FROM tracking.container_movement_tracking_get_by_uuid('" + containerUuid + "', '" + bookingUuid + "', " + Common.HubID + ", " + Common.UserID + ");");
-
+                    if (tbl == null || tbl.Rows.Count == 0)
+                        return null;
                     trackingdetails = (from DataRow dr in tbl.Rows
                                        select new TrackingDetailsDTO
                                        {
@@ -238,6 +243,7 @@ namespace ContrackAPI
             catch (Exception ex)
             {
                 RecordException(ex);
+                throw;
             }
             return trackingdetails;
         }

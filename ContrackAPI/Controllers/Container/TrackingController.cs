@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ContrackAPI.Controllers.Container
 {
@@ -7,33 +8,30 @@ namespace ContrackAPI.Controllers.Container
     public class TrackingController : ControllerBase
     {
         private readonly ITrackingService _service;
-        private readonly IBookingService _bookingService;
         APIResponse response = new APIResponse();
-        public TrackingController(ITrackingService service, IBookingService bookingService)
+        public TrackingController(ITrackingService service)
         {
             _service = service;
-            _bookingService = bookingService;
         }
         [HttpPost("List")]
         public IActionResult GetTrackingList([FromBody] TrackingFilterPage filter)
         {
             try
             {
-                var data = _service.GetTrackingList(filter);
-                response.Data = data;
+                response = _service.GetTrackingList(filter);
+                return Ok(response);
             }
             catch (Exception ex)
             {
+                return Ok(new APIResponse());
             }
-            return Ok(response);
         }
         [HttpPost("SaveRecordMove")]
         public IActionResult SaveRecordMove([FromBody] TrackingDTO model)
         {
             try
             {
-                var result = _service.SaveTracking(model);
-                response.Result = result;
+                response = _service.SaveTracking(model);
             }
             catch (Exception ex)
             {
@@ -45,15 +43,14 @@ namespace ContrackAPI.Controllers.Container
         {
             try
             {
-                var booking = _bookingService.GetbookingByUUID(bookinguuid);
-                var trackingDetails = _service.GetTrackingDetails(containeruuid, bookinguuid, booking);
-                trackingDetails.booking = booking;
-                response.Data = trackingDetails;
+                response = _service.GetTrackingDetails(containeruuid, bookinguuid);
+                return Ok(response);
             }
             catch (Exception ex)
             {
+                return Ok(new APIResponse());
             }
-            return Ok(response);
+
         }
     }
 }

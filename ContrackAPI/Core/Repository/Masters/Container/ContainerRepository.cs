@@ -19,6 +19,8 @@ namespace ContrackAPI
                                    "p_filters := '" + Common.Escape(jsonFilters) + "'::jsonb," +
                                    "p_userid := " + Common.UserID +");";
                     DataTable tbl = Db.GetDataTable(query);
+                    if (tbl == null || tbl.Rows.Count == 0)
+                        return new List<ContainerDTO>();
                     if (tbl != null)
                     {
                         foreach (DataRow dr in tbl.Rows)
@@ -31,6 +33,7 @@ namespace ContrackAPI
             catch (Exception ex)
             {
                 RecordException(ex);
+                throw;
             }
             return list;
         }
