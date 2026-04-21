@@ -1,24 +1,36 @@
-﻿namespace ContrackAPI
+namespace ContrackAPI
 {
     public class TrackingService : CustomException, ITrackingService
     {
         private readonly ITrackingRepository _repo;
-        public TrackingService(ITrackingRepository repo)
+        private readonly IBookingService _bookingService;
+        APIResponse response = new APIResponse();
+        public TrackingService(ITrackingRepository repo, IBookingService bookingService)
         {
             _repo = repo;
+            _bookingService = bookingService;
         }
-        public List<TrackingListDTO> GetTrackingList(TrackingFilterPage filter)
+        public APIResponse GetTrackingList(TrackingFilterPage filter)
         {
             try
             {
                 ProcessFilters(filter);
-                return _repo.GetTrackingList(filter);
+                var data = _repo.GetTrackingList(filter);
+                if (data != null)
+                {
+                    response.Result = Common.SuccessMessage("Success");
+                    response.Data = data;
+                }
+                else
+                {
+                    response.Result = Common.ErrorMessage("No data found");
+                }
             }
             catch (Exception ex)
             {
                 RecordException(ex);
-                return new List<TrackingListDTO>();
             }
+            return response;
         }
         private void ProcessFilters(TrackingFilterPage filter)
         {
@@ -36,27 +48,38 @@
             if (string.IsNullOrWhiteSpace(filter.filters.enddate))
                 filter.filters.enddate = null;
         }
-        public Result SaveTracking(TrackingDTO tracking)
+        public APIResponse SaveTracking(TrackingDTO tracking)
         {
-            Result result = new Result();
             try
             {
                 var model = tracking;
                 if (string.IsNullOrWhiteSpace(model?.Moves?.EncryptedValue))
-                    return Common.ErrorMessage("Please select a move type.");
+                {
+                    response.Result = Common.ErrorMessage("Please select a move type.");
+                    return response;
+                }
                 if (!string.IsNullOrWhiteSpace(model?.NextMoves?.EncryptedValue))
                 {
                     if (string.IsNullOrWhiteSpace(model.NextLocationDetailId?.EncryptedValue) &&
                         string.IsNullOrWhiteSpace(model.NextVoyageId?.EncryptedValue))
-                        return Common.ErrorMessage("Please select next location or voyage");
+                    {
+                        response.Result = Common.ErrorMessage("Please select next location or voyage");
+                        return response;
+                    }
                     if (string.IsNullOrWhiteSpace(model.NextDateTime))
-                        return Common.ErrorMessage("Please select next date time.");
+                    {
+                        response.Result = Common.ErrorMessage("Please select next date time.");
+                        return response;
+                    }
                 }
                 if (!string.IsNullOrWhiteSpace(model?.NextLocationDetailId?.EncryptedValue) ||
                     !string.IsNullOrWhiteSpace(model?.NextDateTime))
                 {
                     if (string.IsNullOrWhiteSpace(model?.NextMoves?.EncryptedValue))
-                        return Common.ErrorMessage("Please select next move.");
+                    {
+                        response.Result = Common.ErrorMessage("Please select next move.");
+                        return response;
+                    }
                 }
                 if (!string.IsNullOrWhiteSpace(model.CurrentVoyageId?.EncryptedValue))
                     model.LocationDetailId.EncryptedValue = "";
@@ -67,39 +90,54 @@
                     model.NextLocationDetailId.EncryptedValue = "";
                 else if (!string.IsNullOrWhiteSpace(model.NextLocationDetailId?.EncryptedValue))
                     model.NextVoyageId.EncryptedValue = "";
-                return _repo.SaveTracking(model);
+                response.Result = _repo.SaveTracking(model);
             }
             catch (Exception ex)
             {
                 RecordException(ex);
-                return Common.ErrorMessage("Error while saving tracking");
+                response.Result = Common.ErrorMessage("Error while saving tracking");
             }
+            return response;
         }
-        public TrackingDetails GetTrackingDetails(string containeruuid, string bookinguuid, ContainerBooking booking)
+        public APIResponse GetTrackingDetails(string containeruuid, string bookinguuid)
         {
-            List<TrackingDetailsDTO> list = new List<TrackingDetailsDTO>();
+            var response = new APIResponse();
+
             try
             {
-                if (!string.IsNullOrEmpty(containeruuid) && !string.IsNullOrEmpty(bookinguuid))
+                if (string.IsNullOrEmpty(containeruuid) || string.IsNullOrEmpty(bookinguuid))
                 {
-                    list = _repo.GetTrackingDetails(containeruuid, bookinguuid);
-
-                    if (list.Count > 0)
-                    {
-                        AddNextMoveOfLastMove(list);
-                        AddVoyageOfBooking(list, booking);
-                    }
+                    response.Result = Common.ErrorMessage("Invalid input");
+                    return response;
                 }
+                var bookingResponse = _bookingService.GetBookingByUUID(bookinguuid);
+                var booking = bookingResponse.Data as ContainerBooking;
+                var list = _repo.GetTrackingDetails(containeruuid, bookinguuid);
+                var resultData = new TrackingDetails
+                {
+                    Trackingdetails = list ?? new List<TrackingDetailsDTO>(),
+                    booking = booking
+                };
+                if (list == null)
+                {
+                    response.Result = Common.ErrorMessage("No tracking data found");
+                }
+                else
+                {
+                    AddNextMoveOfLastMove(list);
+                    AddVoyageOfBooking(list, booking);
+
+                    response.Result = Common.SuccessMessage("Success");
+                }
+                response.Data = resultData;
             }
             catch (Exception ex)
             {
                 RecordException(ex);
+                response.Result = Common.ErrorMessage(ex.Message);
             }
 
-            return new TrackingDetails()
-            {
-                Trackingdetails = list
-            };
+            return response;
         }
         private void AddNextMoveOfLastMove(List<TrackingDetailsDTO> list)
         {

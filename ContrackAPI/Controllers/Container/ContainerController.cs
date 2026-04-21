@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ContrackAPI
 {
@@ -17,8 +17,7 @@ namespace ContrackAPI
         {
             try
             {
-                var data = _service.GetContainerList(filter);
-                response.Data = data;
+                response = _service.GetContainerList(filter);
             }
             catch (Exception ex)
             {
@@ -30,8 +29,7 @@ namespace ContrackAPI
         {
             try
             {
-                var data = _service.GetContainerByUUID(containeruuid);
-                response.Data = data;
+                response = _service.GetContainerByUUID(containeruuid);
             }
             catch (Exception ex)
             {

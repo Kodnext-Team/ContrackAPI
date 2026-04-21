@@ -1,10 +1,12 @@
-﻿namespace ContrackAPI
+namespace ContrackAPI
 {
     public interface IBookingService
     {
-        List<ContainerBookingListDTO> GetBookingList(BookingListFilter filter);
-        ContainerBooking GetbookingByUUID(string bookinguuid);
-        ContainerSelection GetContainerSelection(string bookinguuid);
+        APIResponse GetBookingList(BookingListFilter filter);
+        APIResponse GetBookingByUUID(string bookinguuid);
+        APIResponse GetContainerSelection(string bookinguuid);
+        APIResponse SaveContainerSelection(ContainerSelection bookingmodel);
+
 
 
     }

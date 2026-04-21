@@ -1,14 +1,16 @@
-﻿namespace ContrackAPI
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace ContrackAPI
 {
     public class ContainerService : CustomException, IContainerService
     {
         private readonly IContainerRepository _repo;
-        Result result = new Result();
+        APIResponse response = new APIResponse();
         public ContainerService(IContainerRepository repo)
         {
             _repo = repo;
         }
-        public List<ContainerDTO> GetContainerList(ContainerFilterPage filter)
+        public APIResponse GetContainerList(ContainerFilterPage filter)
         {
             try
             {
@@ -19,13 +21,22 @@
                         ? Math.Abs(x.manufacturedate.NumericValue / 365)
                         : 0
                 );
-                return list;
+                if (list.Count == 0)
+                {
+                    response.Result = Common.ErrorMessage("No data found");
+                }
+                else
+                {
+                    response.Result = Common.SuccessMessage("Success");
+                }
+                response.Data = list;
             }
             catch (Exception ex)
             {
                 RecordException(ex);
-                return new List<ContainerDTO>();
+                response.Result = Common.ErrorMessage(ex.Message);
             }
+            return response;
         }
         private void ProcessFilters(ContainerFilterPage filter)
         {
@@ -64,24 +75,33 @@
             else
                 filter.filters.status_list = new List<int>();
         }
-        public ContainerModal GetContainerByUUID(string containeruuid)
+        public APIResponse GetContainerByUUID(string containeruuid)
         {
             try
             {
                 var dto = _repo.GetContainerByUUID(containeruuid);
-                var model = new ContainerModal { container = dto };
-                if (dto.manufacturedate.Value != DateTime.MinValue)
+                if (dto != null && !string.IsNullOrEmpty(dto.containeruuid))
                 {
-                    model.MakeMonth = dto.manufacturedate.Value.Month;
-                    model.MakeYear = dto.manufacturedate.Value.Year;
+                    var model = new ContainerModal { container = dto };
+                    if (dto.manufacturedate.Value != DateTime.MinValue)
+                    {
+                        model.MakeMonth = dto.manufacturedate.Value.Month;
+                        model.MakeYear = dto.manufacturedate.Value.Year;
+                    }
+                    response.Result = Common.SuccessMessage("Success");
+                    response.Data = model;
                 }
-                return model;
+                else
+                {
+                    response.Result = Common.ErrorMessage("No data found");
+                }
             }
             catch (Exception ex)
             {
                 RecordException(ex);
-                return new ContainerModal();
+                response.Result = Common.ErrorMessage(ex.Message);
             }
+            return response;
         }
     }
 }

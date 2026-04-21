@@ -15,48 +15,41 @@ public class JwtMiddleware : CustomException
     public JwtMiddleware(RequestDelegate next, IConfiguration configuration)
     {
         _next = next;
-        _secretKey = configuration["Jwt:Key"];
-        _issuer = configuration["Jwt:Issuer"];
-        _audience = configuration["Jwt:Audience"];
+        _secretKey = configuration["Jwt:Key"] ?? "";
+        _issuer = configuration["Jwt:Issuer"] ?? "";
+        _audience = configuration["Jwt:Audience"] ?? "";
     }
 
     public async Task Invoke(HttpContext context)
     {
-        var endpoint = context.GetEndpoint();
-
-        if (endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() != null)
+        if (context.GetEndpoint()?.Metadata?.GetMetadata<IAllowAnonymous>() != null)
         {
             await _next(context);
             return;
         }
-        var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-        if (string.IsNullOrEmpty(token))
+        var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+        if (string.IsNullOrWhiteSpace(authHeader) || !authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
         {
-            await WriteResponse(context, Common.ErrorMessage("Unauthorized User"));
+            await WriteUnauthorized(context, "Unauthorized User");
             return;
         }
+        var token = authHeader.Substring("Bearer ".Length).Trim();
+
         try
         {
-            var claimsPrincipal = ValidateJwtToken(token);
-
-            if (claimsPrincipal != null)
-            {
-                context.User = claimsPrincipal;
-            }
+            context.User = ValidateJwtToken(token);
+            await _next(context);
         }
         catch (SecurityTokenExpiredException ex)
         {
             RecordException(ex);
-            await WriteResponse(context, Common.ErrorMessage("Token expired"));
-            return;
+            await WriteUnauthorized(context, "Token expired");
         }
         catch (Exception ex)
         {
             RecordException(ex);
-            await WriteResponse(context, Common.ErrorMessage("Invalid token"));
-            return;
+            await WriteUnauthorized(context, "Invalid token");
         }
-        await _next(context);
     }
 
     private ClaimsPrincipal ValidateJwtToken(string token)
@@ -64,7 +57,7 @@ public class JwtMiddleware : CustomException
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.UTF8.GetBytes(_secretKey);
 
-        var parameters = new TokenValidationParameters
+        var validationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(key),
@@ -76,14 +69,14 @@ public class JwtMiddleware : CustomException
             ClockSkew = TimeSpan.Zero
         };
 
-        return tokenHandler.ValidateToken(token, parameters, out _);
+        return tokenHandler.ValidateToken(token, validationParameters, out _);
     }
 
-    private async Task WriteResponse(HttpContext context, Result result)
+    private static async Task WriteUnauthorized(HttpContext context, string message)
     {
-        context.Response.StatusCode = 401;
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
         context.Response.ContentType = "application/json";
-        var json = System.Text.Json.JsonSerializer.Serialize(result);
+        var json = System.Text.Json.JsonSerializer.Serialize(Common.ErrorMessage(message));
         await context.Response.WriteAsync(json);
     }
 }
