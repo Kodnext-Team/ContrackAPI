@@ -79,5 +79,119 @@ namespace ContrackAPI.Controllers.Masters
             }
             return Ok(response);
         }
+        [HttpGet("PortDropdown")]
+        public IActionResult GetPortDropdown([FromQuery] string countryid = "", [FromQuery] bool showempty = true)
+        {
+            try
+            {
+                var data = Dropdowns.GetPortDropdown(countryid, showempty);           
+                response.Result = Common.SuccessMessage("Success");               
+                response.Data = data;
+            }
+            catch (Exception ex)
+            {
+                response.Result = Common.ErrorMessage(ex.Message);
+            }
+
+            return Ok(response);
+        }
+        [HttpGet("AgencyDropdown")]
+        public IActionResult GetAgenciesUUIDDropdown([FromQuery] bool multiple = true)
+        {
+            try
+            {
+                var data = Dropdowns.GetAgenciesUUIDDropdown(multiple);
+                response.Result = Common.SuccessMessage("Success");
+                response.Data = data;
+            }
+            catch (Exception ex)
+            {
+                response.Result = Common.ErrorMessage(ex.Message);
+            }
+
+            return Ok(response);
+        }
+        [HttpGet("ClientDropdown")]
+        public IActionResult GetClientsByUserIDDropdown([FromQuery] bool multiple = false)
+        {
+            try
+            {
+                var data = Dropdowns.GetClientsByUserIDDropdown(multiple);
+                response.Result = Common.SuccessMessage("Success");
+                response.Data = data;
+            }
+            catch (Exception ex)
+            {
+                response.Result = Common.ErrorMessage(ex.Message);
+            }
+
+            return Ok(response);
+        }
+        [HttpGet("CreatedByDropdown")]
+        public IActionResult GetCreatedByDropdown()
+        {
+            try
+            {
+                var data = Dropdowns.GetLoginUsersByRole(Common.Encrypt(0), "",false,false);
+                response.Result = Common.SuccessMessage("Success");
+                response.Data = data;
+            }
+            catch (Exception ex)
+            {
+                response.Result = Common.ErrorMessage(ex.Message);
+            }
+
+            return Ok(response);
+        }
+        [HttpGet("StatusDropdown")]
+        public IActionResult GetStatusDropdown()
+        {
+            try
+            {
+                var data = Dropdowns.GetStatusDropdown(105, false);
+                response.Result = Common.SuccessMessage("Success");
+                response.Data = data;
+            }
+            catch (Exception ex)
+            {
+                response.Result = Common.ErrorMessage(ex.Message);
+            }
+
+            return Ok(response);
+        }
+        [HttpGet("VesselDropdown")]
+        public IActionResult GetVesselDropdown(string q = "", string AgencyDetailID = "", string multiple = "")
+        {
+            try
+            {
+                List<DropdownItem> results;
+
+                if (string.IsNullOrEmpty(AgencyDetailID) || AgencyDetailID == "0")
+                {
+                    results = Dropdowns.GetVesselDropdownSearch(q, multiple);
+                }
+                else
+                {
+                    results = Dropdowns.GetVesselDropdown(AgencyDetailID, q, multiple);
+                }
+                var data = results.Select(x => new
+                {
+                    id = x.Value,
+                    text = x.Text
+                }).ToList();
+                return Ok(new APIResponse
+                {
+                    Result = Common.SuccessMessage("Success"),
+                    Data = data
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new APIResponse
+                {
+                    Result = Common.ErrorMessage(ex.Message)
+                });
+            }
+        }
     }
 }

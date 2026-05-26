@@ -14,9 +14,9 @@ namespace ContrackAPI
                     string filters = JsonConvert.SerializeObject(filter ?? new BookingListFilter());
                     DataTable tbl = db.GetDataTable(
                         "SELECT * FROM booking.booking_list('"
-                        + Common.HubID + "','"
+                        + 1 + "','"
                         + Common.Escape(filters) + "','"
-                        + Common.UserID + "');");
+                        + 2 + "');");
                       if (tbl == null || tbl.Rows.Count == 0)
                 return null;
                     var statusList = Status.GetStatus();
