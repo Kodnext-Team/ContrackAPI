@@ -104,5 +104,53 @@ namespace ContrackAPI
             }
             return user;
         }
+        public List<UserDTO> GetUserLoginList(UserFilter filter)
+        {
+            var list = new List<UserDTO>();
+            try
+            {
+                using (var Db = new SqlDB())
+                {
+                    string query = $"SELECT * FROM masters.getuserslist('{Common.HubID}', '{Common.Decrypt(filter.UserType)}', '{Common.Decrypt(filter.Role)}', '{{{(filter.EntityID.Any() ? string.Join(",", filter.EntityID.Select(Common.Decrypt)) : "0")}}}', '{Common.Escape(filter.Search)}', '{filter.limit}', '{filter.offset}', '{{{Common.UserID}}}', '{filter.sorting}', '{filter.sortingorder}');";
+                    DataTable tbl = Db.GetDataTable(query);
+
+                    list = (from DataRow dr in tbl.Rows
+                            select new UserDTO()
+                            {
+                                row_index = Common.ToInt(dr["row_index"]),
+                                totalnoofrows = Common.ToInt(dr["totalnoofrows"]),
+                                UserID = new EncryptedData { NumericValue = Common.ToInt(dr["userid"]), EncryptedValue = Common.Encrypt(Common.ToInt(dr["userid"])) },
+                                UserName = Common.ToString(dr["username"]),
+                                Name = Common.ToString(dr["fullname"]),
+                                Email = Common.ToString(dr["email"]),
+                                Phone = Common.ToString(dr["phone"]),
+                                Type = new EncryptedData { NumericValue = Common.ToInt(dr["usertypeid"]) },
+                                TypeName = Common.ToString(dr["usertype"]),
+                                EntityName = Common.ToString(dr["entity_name"]),
+                                DateTimeCreated = Common.ToClientDateTime(dr["createdat"]),
+                                Status = Common.ToInt(dr["isactive"]),
+                                RoleName = Common.ToString(dr["role_names"]),
+                                RoleIcon = Common.ToString(dr["role_icons"]),
+                            }).ToList();
+                    try
+                    {
+                        list.ForEach(x =>
+                        {
+                            x.extras.shortcode = Common.GetShortcode(x.Name);
+                            var colors = Common.GetColorFromName(x.extras.shortcode);
+                            x.extras.color = colors.Color;
+                            x.extras.bgcolor = colors.Bg;
+                        });
+                    }
+                    catch (Exception)
+                    { }
+                }
+            }
+            catch (Exception ex)
+            {
+                RecordException(ex);
+            }
+            return list;
+        }
     }
 }
