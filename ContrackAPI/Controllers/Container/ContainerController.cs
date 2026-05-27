@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContrackAPI
@@ -12,6 +13,7 @@ namespace ContrackAPI
         {
             _service = service;
         }
+        [AllowAnonymous]
         [HttpPost("List")]
         public IActionResult GetContainerList([FromBody] ContainerFilterPage filter)
         {
@@ -24,6 +26,7 @@ namespace ContrackAPI
             }
             return Ok(response);
         }
+        [AllowAnonymous]
         [HttpGet("GetByContainerUUID")]
         public IActionResult GetContainerByUUID(string containeruuid)
         {

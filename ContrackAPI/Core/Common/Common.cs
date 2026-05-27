@@ -454,18 +454,31 @@ namespace ContrackAPI
                 return "";
             }
         }
-        //public static string GetIconPath(int iconid, bool filenameonly = false)
-        //{
-        //    var icon = GetIcon(iconid);
-        //    string iconfile = icon.icon;
-        //    return icon.iscss ? iconfile : (filenameonly ? (IconFolder + iconfile) : "<img class='dynamicicon' src='" + (IconFolder + iconfile) + "'/>");
-        //}
-        //public static string GetSelectedIconPath(int iconid, bool filenameonly = false)
-        //{
-        //    var icon = GetIcon(iconid);
-        //    string iconfile = icon.iconselected;
-        //    return icon.iscss ? iconfile : (filenameonly ? (IconFolder + iconfile) : "<img class='dynamicicon' src='" + (IconFolder + iconfile) + "'/>");
-        //}
+        private static List<IconDTO> _icons;
+        public static string BaseUrl =>
+            $"{HttpContextAccessor.HttpContext.Request.Scheme}://{HttpContextAccessor.HttpContext.Request.Host}";
+
+        public static IconDTO GetIcon(int iconid)
+        {
+            _icons ??= new CommonRepository().GetIcons();
+
+            return _icons.FirstOrDefault(x => x.IconId == iconid)
+                   ?? new IconDTO();
+        }
+
+        public static string GetIconPath(int iconid)
+        {
+            var icon = GetIcon(iconid);
+
+            return icon.iscss? icon.icon: $"{BaseUrl}{IconFolder}{icon.icon}";
+        }
+
+        public static string GetSelectedIconPath(int iconid)
+        {
+            var icon = GetIcon(iconid);
+
+            return icon.iscss? icon.iconselected: $"{BaseUrl}{IconFolder}{icon.iconselected}";
+        }
 
         public static decimal ToDecimal(object data)
         {

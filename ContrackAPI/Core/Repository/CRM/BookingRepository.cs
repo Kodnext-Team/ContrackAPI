@@ -107,7 +107,7 @@ namespace ContrackAPI
                     DataTable tbl = Db.GetDataTable(
                         "SELECT * FROM booking.booking_get_customer(" +
                         "p_bookinguuid := '" + Common.Escape(bookinguuid) + "'," +
-                        "p_hubid := '" + Common.HubID + "'" +
+                        "p_hubid := '" + 1 + "'" +
                         ");");
                     var statusList = Status.GetStatus();
                     if (tbl.Rows.Count > 0)
@@ -186,7 +186,7 @@ namespace ContrackAPI
                     DataTable tbl = Db.GetDataTable(
                         "SELECT * FROM booking.booking_get_location(" +
                         "p_bookinguuid := '" + Common.Escape(bookinguuid) + "'," +
-                        "p_hubid := '" + Common.HubID + "'" +");");
+                        "p_hubid := '" + 1 + "'" +");");
                     if (tbl.Rows.Count > 0)
                     {
                         DataRow dr = tbl.Rows[0];
@@ -304,7 +304,7 @@ namespace ContrackAPI
                     DataTable tbl = Db.GetDataTable(
                         "SELECT * FROM booking.booking_get_summary(" +
                         "p_bookinguuid := '" + Common.Escape(bookinguuid) + "'," +
-                        "p_hubid := '" + Common.HubID + "'" + ");");
+                        "p_hubid := '" + 1 + "'" + ");");
 
                     if (tbl.Rows.Count > 0)
                     {
@@ -361,7 +361,7 @@ namespace ContrackAPI
                     DataTable tbl = db.GetDataTable(
                         "SELECT * FROM booking.booking_get_additional_services(" +
                         "p_bookinguuid := '" + bookinguuid + "', " +
-                        "p_hubid := '" + Common.HubID + "'" +
+                        "p_hubid := '" + 1 + "'" +
                         ");"
                     );
                     services = (from DataRow dr in tbl.Rows
@@ -414,7 +414,7 @@ namespace ContrackAPI
                     DataTable tbl = Db.GetDataTable(
                         @"SELECT * FROM booking.booking_get_containerdetail(" +
                         "p_bookinguuid := '" + Common.Escape(bookinguuid) + "'," +
-                        "p_hubid := '" + Common.HubID + "')"
+                        "p_hubid := '" + 1 + "')"
                     );
                     var rows = tbl.AsEnumerable();
                     list = rows.GroupBy(r => Common.ToInt(r["bookingdetailid"]))
@@ -535,7 +535,7 @@ namespace ContrackAPI
                     string query = @"SELECT * 
                                     FROM booking.container_equip_selection_list(
                                     p_bookinguuid := '" + bookinguuid + @"',
-                                    p_hubid := '" + Common.HubID + @"'
+                                    p_hubid := '" + 1 + @"'
                                     );";
 
                     DataTable tbl = db.GetDataTable(query);
@@ -637,7 +637,7 @@ namespace ContrackAPI
             {
                 using (SqlDB db = new SqlDB(DatabaseCollection.Contrack))
                 {
-                    DataTable tbl = db.GetDataTable("SELECT * FROM booking.container_selection_get('" + Common.HubID + "','" + bookinguuid + "');");
+                    DataTable tbl = db.GetDataTable("SELECT * FROM booking.container_selection_get('" + 1+ "','" + bookinguuid + "');");
                     list = (from DataRow dr in tbl.Rows
                             select new ContainerAllottedDTO
                             {

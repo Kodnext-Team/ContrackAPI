@@ -52,7 +52,7 @@ namespace ContrackAPI
                 return Ok(new APIResponse());
             }
         }
-
+        [AllowAnonymous]
         [HttpGet("GetByBookingUUID")]
         public IActionResult GetbookingByUUID(string bookinguuid)
         {

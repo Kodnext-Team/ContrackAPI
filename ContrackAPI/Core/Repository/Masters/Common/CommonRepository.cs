@@ -17,7 +17,7 @@ namespace ContrackAPI
                 using (SqlDB Db = new SqlDB(DatabaseCollection.Contrack))
                 {
                     DataTable tbl = Db.GetDataTable(
-                        "SELECT * FROM masters.icons where hubid='" + Common.HubID + "'");
+                        "SELECT * FROM masters.icons where hubid='" + 1 + "'");
 
                     list = (from DataRow dr in tbl.Rows
                             select new IconDTO()

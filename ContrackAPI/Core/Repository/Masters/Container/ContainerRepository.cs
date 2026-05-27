@@ -15,9 +15,9 @@ namespace ContrackAPI
                     string jsonFilters = JsonConvert.SerializeObject(filter);
 
                     string query = "SELECT * FROM masters.container_equip_list(" +
-                                   "p_hubid := " + Common.HubID + "," +
+                                   "p_hubid := " + 1 + "," +
                                    "p_filters := '" + Common.Escape(jsonFilters) + "'::jsonb," +
-                                   "p_userid := " + Common.UserID +");";
+                                   "p_userid := " + 2 +");";
                     DataTable tbl = Db.GetDataTable(query);
                     if (tbl == null || tbl.Rows.Count == 0)
                         return new List<ContainerDTO>();
@@ -90,8 +90,8 @@ namespace ContrackAPI
                 manufacturedate = formattedAge,
                 lastbookingdate = formattedLastBooking,
                 locationtypename = Common.ToString(dr["locationtypename"]),
-                //locationicon = Common.GetIconPath(Common.ToInt(dr["locationtypeiconid"])),
-                //moveicon = Common.GetSelectedIconPath(Common.ToInt(dr["moveiconid"])),
+                locationicon = Common.GetIconPath(Common.ToInt(dr["locationtypeiconid"])),
+                moveicon = Common.GetSelectedIconPath(Common.ToInt(dr["moveiconid"])),
                 lastmove = Common.ToString(dr["movesname"]),
                 is_empty = Common.ToBool(dr["is_empty"]),
                 status_code = Common.ToInt(dr["status_code"]),
@@ -107,7 +107,7 @@ namespace ContrackAPI
                 if (string.IsNullOrEmpty(containeruuid)) return model;
                 using (SqlDB Db = new SqlDB(DatabaseCollection.Contrack))
                 {
-                    DataTable tbl = Db.GetDataTable("SELECT * FROM masters.container_equip_get_byuuid('" + containeruuid + "'," + Common.HubID + ");");
+                    DataTable tbl = Db.GetDataTable("SELECT * FROM masters.container_equip_get_byuuid('" + containeruuid + "'," + 1 + ");");
                     if (tbl != null && tbl.Rows.Count > 0)
                         model = ParseContainerDetail(tbl.Rows[0]);
                 }
@@ -162,7 +162,7 @@ namespace ContrackAPI
                 },
                 is_empty = dr.Table.Columns.Contains("is_empty") ? Common.ToBool(dr["is_empty"]) : false,
                 ageinyears = formattedAge.NumericValue != 0 ? Math.Abs(formattedAge.NumericValue / 365) : 0,
-                //moveicon = Common.GetSelectedIconPath(Common.ToInt(dr["moveiconid"])),
+                moveicon = Common.GetSelectedIconPath(Common.ToInt(dr["moveiconid"])),
                 lastmove = Common.ToString(dr["movesname"]),
                 status_code = Common.ToInt(dr["status_code"]),
                 bookingno = Common.ToString(dr["bookingno"]),
