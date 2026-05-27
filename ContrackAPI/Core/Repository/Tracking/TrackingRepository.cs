@@ -16,10 +16,10 @@ namespace ContrackAPI
                     string jsonFilters = JsonConvert.SerializeObject(filter);
 
                     string query = "SELECT * FROM tracking.container_movement_tracking_list(" +
-                                   "p_hubid := " + Common.HubID + "," +
+                                   "p_hubid := " + 1 + "," +
                                    "p_containeruuid := " + (string.IsNullOrEmpty(filter.ContainerUUID) ? "NULL" : $"'{filter.ContainerUUID}'::uuid") + "," +
                                    "p_filters := '" + Common.Escape(jsonFilters) + "'::jsonb," +
-                                   "p_userid := " + Common.UserID + ");";
+                                   "p_userid := " + 2 + ");";
 
                     DataTable tbl = Db.GetDataTable(query);
                     if (tbl == null || tbl.Rows.Count == 0)
@@ -55,7 +55,7 @@ namespace ContrackAPI
                 trackinguuid = Common.ToString(dr["trackinguuid"]),
                 recorddatetime = FormatConvertor.ToDateTimeFormat(Common.ToDateTime(dr["recorddatetime"])),
                 movesname = Common.ToString(dr["movesname"]),
-                //move_icon = Common.GetSelectedIconPath(Common.ToInt(dr["move_iconid"])),
+                move_icon = Common.GetSelectedIconPath(Common.ToInt(dr["move_iconid"])),
                 containerid = new EncryptedData
                 {
                     NumericValue = Common.ToInt(dr["containerid"]),
@@ -141,7 +141,7 @@ namespace ContrackAPI
             {
                 using (SqlDB Db = new SqlDB(DatabaseCollection.Contrack))
                 {
-                    DataTable tbl = Db.GetDataTable("SELECT * FROM tracking.container_movement_tracking_get_by_uuid('" + containerUuid + "', '" + bookingUuid + "', " + Common.HubID + ", " + Common.UserID + ");");
+                    DataTable tbl = Db.GetDataTable("SELECT * FROM tracking.container_movement_tracking_get_by_uuid('" + containerUuid + "', '" + bookingUuid + "', " + 1 + ", " + 2 + ");");
                     if (tbl == null || tbl.Rows.Count == 0)
                         return null;
                     trackingdetails = (from DataRow dr in tbl.Rows

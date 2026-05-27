@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -13,6 +14,7 @@ namespace ContrackAPI.Controllers.Container
         {
             _service = service;
         }
+        [AllowAnonymous]
         [HttpPost("List")]
         public IActionResult GetTrackingList([FromBody] TrackingFilterPage filter)
         {
