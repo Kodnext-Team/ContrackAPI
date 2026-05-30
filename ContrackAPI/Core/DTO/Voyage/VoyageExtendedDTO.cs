@@ -63,6 +63,8 @@
     public class BookingVoyageDTO
     {
         public string Vesselname { get; set; } = "";
+        public string Voyagenumber { get; set; } = "";
+
 
         public FormattedValue<DateTime> minDate { get; set; }
             = FormatConvertor.ToDateTimeFormat(DateTime.MinValue);

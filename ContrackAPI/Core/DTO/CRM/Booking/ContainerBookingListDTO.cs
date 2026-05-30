@@ -21,5 +21,7 @@
         public string vesselname { get; set; } = "";
         public FormattedValue<int> status { get; set; } = new FormattedValue<int>();
         public string agencyname { get; set; } = "";
+        public string customername { get; set; } = "";
+
     }
 }

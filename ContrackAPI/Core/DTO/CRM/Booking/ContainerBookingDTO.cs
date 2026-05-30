@@ -17,6 +17,10 @@
         public EncryptedData customertype { get; set; } = new EncryptedData() { EncryptedValue = Common.Encrypt(1), NumericValue = 1 };
         public FormattedValue<int> status { get; set; } = new FormattedValue<int>();
         public string fullempty { get; set; } = "";
+        public string fullemptyname { get; set; } = "";
+
+        public int mode { get; set; } = 0;
+        public string modename { get; set; } = "";
         public ClientDTO client { get; set; } = new ClientDTO();
        
     }

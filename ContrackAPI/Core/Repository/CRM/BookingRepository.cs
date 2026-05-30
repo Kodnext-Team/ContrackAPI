@@ -45,7 +45,9 @@ namespace ContrackAPI
                                 voyagenumber = Common.ToString(dr["voyagenumber"]),
                                 vesselname = Common.ToString(dr["vesselname"]),
                                 status = FormatConvertor.ToStatus(Common.ToInt(dr["status"]), StatusEnum.Booking, statusList),                              
-                                agencyname = Common.ToString(dr["agencyname"]),                              
+                                agencyname = Common.ToString(dr["agencyname"]),
+                                customername = Common.ToString(dr["customername"]),
+
                             }).ToList();
                 }
             }
@@ -86,6 +88,9 @@ namespace ContrackAPI
                         
                         model.agencyname = Common.ToString(dr["agencyname"]);
                         model.fullempty = Common.ToString(dr["fullempty"]);
+                        model.mode = Common.ToInt(dr["mode"]);
+                        model.modename = Common.GetTransferTypeName(model.mode);
+                        model.fullemptyname = Common.GetFullEmptyName(model.fullempty);
                         model.status = FormatConvertor.ToStatus(Common.ToInt(dr["status"]), StatusEnum.Booking, statusList);
                         model.client = new ClientDTO()
                         {
