@@ -618,7 +618,36 @@ namespace ContrackAPI
             }
             return num.ToString("0");
         }
+        public static string GetTransferTypeName(int mode)
+        {
+            switch (mode)
+            {
+                case 1:
+                    return "Door to Door";
+                case 2:
+                    return "Door to Port";
+                case 3:
+                    return "Port to Port";
+                case 4:
+                    return "Port to Door";
+                default:
+                    return "";
+            }
+        }
+        public static string GetFullEmptyName(string value)
+        {
+            switch (Common.ToString(value).ToUpper())
+            {
+                case "F":
+                    return "Full";
 
+                case "E":
+                    return "Empty";
+
+                default:
+                    return "";
+            }
+        }
         public static string GetShortcode(string name)
         {
             string output = "";
@@ -733,6 +762,7 @@ namespace ContrackAPI
         //}
 
     }
+
     public static class Constants
     {
         public static string DateFormat = "dd'/'MM'/'yyyy";

@@ -134,11 +134,10 @@ namespace ContrackAPI
                         voyageData.maxDate.Value.Date
                         .Subtract(voyageData.minDate.Value.Date)
                         .Days;
-
-                    // Return only required fields
                     booking.voyage = new BookingVoyageDTO
                     {
                         Vesselname = voyageData.Vesselname,
+                        Voyagenumber = voyageData.VoyageNumber,
                         minDate = voyageData.minDate,
                         maxDate = voyageData.maxDate,
                         NoOfDays = voyageData.NoOfDays
