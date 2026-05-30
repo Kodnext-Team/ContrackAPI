@@ -32,8 +32,7 @@ namespace ContrackAPI
                                 },
                                 bookinguuid = Common.ToString(dr["bookinguuid"]),
                                 bookingno = Common.ToString(dr["bookingno"]),
-                                bookingdate = Common.ToDateTime(dr["bookingdate"]),
-                                
+                                bookingdate = Common.ToDateTime(dr["bookingdate"]),                    
                                 pol_portname = Common.ToString(dr["pol_portname"]),
                                 pol_portcode = Common.ToString(dr["pol_portcode"]),
                                 pol_countryname = Common.ToString(dr["pol_countryname"]),
@@ -87,10 +86,8 @@ namespace ContrackAPI
                         }
                         
                         model.agencyname = Common.ToString(dr["agencyname"]);
-                        model.fullempty = Common.ToString(dr["fullempty"]);
-                        model.mode = Common.ToInt(dr["mode"]);
-                        model.modename = Common.GetTransferTypeName(model.mode);
-                        model.fullemptyname = Common.GetFullEmptyName(model.fullempty);
+                        model.fullempty = Common.GetFullEmptyName(Common.ToString(dr["fullempty"]));
+                        model.mode = Common.GetTransferTypeName(Common.ToInt(dr["mode"]));
                         model.status = FormatConvertor.ToStatus(Common.ToInt(dr["status"]), StatusEnum.Booking, statusList);
                         model.client = new ClientDTO()
                         {

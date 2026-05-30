@@ -8,7 +8,7 @@
         public string bookinguuid { get; set; } = "";
         public string bookingno { get; set; } = "";
         public DateTime bookingdate { get; set; } = DateTime.Now;
-  
+ 
         public string pol_portname { get; set; } = "";
         public string pol_portcode { get; set; } = "";
         public string pol_countryname { get; set; } = "";
