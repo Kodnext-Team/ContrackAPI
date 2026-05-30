@@ -60,7 +60,18 @@
         public int SortOrder { get; set; } = 0;
         public DateTime CreatedAt { get; set; } = DateTime.MinValue;
     }
+    public class BookingVoyageDTO
+    {
+        public string Vesselname { get; set; } = "";
 
+        public FormattedValue<DateTime> minDate { get; set; }
+            = FormatConvertor.ToDateTimeFormat(DateTime.MinValue);
+
+        public FormattedValue<DateTime> maxDate { get; set; }
+            = FormatConvertor.ToDateTimeFormat(DateTime.MinValue);
+
+        public int NoOfDays { get; set; } = 0;
+    }
 
 
 }

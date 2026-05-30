@@ -56,17 +56,16 @@ namespace ContrackAPI
                 recorddatetime = FormatConvertor.ToDateTimeFormat(Common.ToDateTime(dr["recorddatetime"])),
                 movesname = Common.ToString(dr["movesname"]),
                 move_icon = Common.GetSelectedIconPath(Common.ToInt(dr["move_iconid"])),
-                containerid = new EncryptedData
-                {
-                    NumericValue = Common.ToInt(dr["containerid"]),
-                    EncryptedValue = Common.Encrypt(Common.ToInt(dr["containerid"]))
-                },
+                //containerid = new EncryptedData
+                //{
+                //    NumericValue = Common.ToInt(dr["containerid"]),
+                //    EncryptedValue = Common.Encrypt(Common.ToInt(dr["containerid"]))
+                //},
                 bookingid = new EncryptedData
                 {
                     NumericValue = Common.ToInt(dr["bookingid"]),
                     EncryptedValue = Common.Encrypt(Common.ToInt(dr["bookingid"]))
                 },
-                locationuuid = Common.ToString(dr["locationuuid"]),
                 locationname = Common.ToString(dr["locationname"]),
                 location_portcode = Common.ToString(dr["location_portcode"]),
                 location_countryname = Common.ToString(dr["location_countryname"]),
@@ -81,7 +80,6 @@ namespace ContrackAPI
                 nextmovename = Common.ToString(dr["nextmovename"]),
                 nextlocationname = Common.ToString(dr["nextlocationname"]),
                 nextdatetime = FormatConvertor.ToDateTimeFormat(Common.ToDateTime(dr["nextdatetime"])),
-                canedit = Common.ToBool(dr["canedit"])
             };
         }
         public Result SaveTracking(TrackingDTO tracking)

@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using static System.Collections.Specialized.BitVector32;
 
 namespace ContrackAPI
@@ -5,9 +6,12 @@ namespace ContrackAPI
     public class BookingService : CustomException, IBookingService
     {
         private readonly IBookingRepository _repo;
-        public BookingService(IBookingRepository repo)
+        private readonly IVoyageRepository _Voyagerepo;
+        public BookingService(IBookingRepository repo, IVoyageRepository voyagerepo)
         {
             _repo = repo;
+            _Voyagerepo = voyagerepo;
+
         }
         public APIResponse GetBookingList(BookingListFilter filter)
         {
@@ -43,20 +47,22 @@ namespace ContrackAPI
                     {
                         booking = data
                     };
-                    PrefillShipperConsignee(booking);
-                    var allServices = _repo.GetBookingAdditionalServices(bookinguuid);
-                    if (allServices != null && allServices.Count > 0)
-                    {
-                        booking.booking.additionalservices = allServices
-                            .Where(x => x.type == 1)
-                            .OrderBy(x => x.order)
-                            .ToList();
+                    GetVoyageInfo(booking);
 
-                        booking.booking.PODadditionalservices = allServices
-                            .Where(x => x.type == 2)
-                            .OrderBy(x => x.order)
-                            .ToList();
-                    }
+                    PrefillShipperConsignee(booking);
+                    //var allServices = _repo.GetBookingAdditionalServices(bookinguuid);
+                    //if (allServices != null && allServices.Count > 0)
+                    //{
+                    //    booking.booking.additionalservices = allServices
+                    //        .Where(x => x.type == 1)
+                    //        .OrderBy(x => x.order)
+                    //        .ToList();
+
+                    //    booking.booking.PODadditionalservices = allServices
+                    //        .Where(x => x.type == 2)
+                    //        .OrderBy(x => x.order)
+                    //        .ToList();
+                    //}
                   //  SessionManager.Booking = booking;
                     response.Result = Common.SuccessMessage("Success");
                     response.Data = booking;
@@ -73,18 +79,77 @@ namespace ContrackAPI
             return response;
         }
 
-        //private void GetVoyageInfo(ContainerBooking booking)
-        //{
-        //    try
-        //    {
-        //        if (!string.IsNullOrEmpty(booking.booking.location.voyageuuid))
-        //        {
-        //            booking.voyage = _voyageRepo.GetVoyageByUUID(booking.booking.location.voyageuuid);
-        //        }
-        //    }
-        //    catch (Exception)
-        //    { }
-        //}       
+        private void GetVoyageInfo(ContainerBooking booking)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(booking.booking.location.voyageuuid))
+                {
+                    // Full voyage data for internal calculation
+                    var voyageData = _Voyagerepo.GetVoyageByUUID(
+                        booking.booking.location.voyageuuid
+                    );
+
+                    if (voyageData == null)
+                        return;
+
+                    var pol = booking.booking.location.pol.NumericValue;
+                    var pod = booking.booking.location.pod.NumericValue;
+
+                    voyageData.VoyageDetails = voyageData.VoyageDetails
+                        .OrderBy(x =>
+                            x.ATA.Value != DateTime.MinValue
+                                ? x.ATA.Value
+                                : x.ETA.Value)
+                        .ToList();
+
+                    var details = Cloner.DeepClone(voyageData.VoyageDetails);
+
+                    var polIndex = details.FindIndex(
+                        x => x.PortId.NumericValue == pol);
+
+                    var podIndex = details.FindIndex(
+                        polIndex + 1,
+                        x => x.PortId.NumericValue == pod);
+
+                    if (polIndex >= 0 && podIndex > polIndex)
+                    {
+                        voyageData.VoyageDetails.Clear();
+                        voyageData.VoyageDetails.Add(details[polIndex]);
+                        voyageData.VoyageDetails.Add(details[podIndex]);
+                    }
+
+                    DateTime mindate, maxdate;
+
+                    (mindate, maxdate) =
+                        Common.GetMaxMinDate(voyageData.VoyageDetails);
+
+                    voyageData.minDate =
+                        FormatConvertor.ToDateTimeFormat(mindate);
+
+                    voyageData.maxDate =
+                        FormatConvertor.ToDateTimeFormat(maxdate);
+
+                    voyageData.NoOfDays =
+                        voyageData.maxDate.Value.Date
+                        .Subtract(voyageData.minDate.Value.Date)
+                        .Days;
+
+                    // Return only required fields
+                    booking.voyage = new BookingVoyageDTO
+                    {
+                        Vesselname = voyageData.Vesselname,
+                        minDate = voyageData.minDate,
+                        maxDate = voyageData.maxDate,
+                        NoOfDays = voyageData.NoOfDays
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                RecordException(ex);
+            }
+        }
         private void PrefillShipperConsignee(ContainerBooking booking)
         {
             try
@@ -99,8 +164,8 @@ namespace ContrackAPI
                         case 1: // Shipper
                             if (string.IsNullOrEmpty(location.shippername))
                             {
-                                location.shipperdetailid = client.clientdetailid;
-                                location.shipperpic = location.shipperpic;
+                                //location.shipperdetailid = client.clientdetailid;
+                                //location.shipperpic = location.shipperpic;
                                 location.shipperpiccustom = location.shipperpiccustom;
                                 location.shippername = client.clientname;
                                 location.shipperemail = client.email;
@@ -112,7 +177,7 @@ namespace ContrackAPI
                         case 2: // Consignee
                             if (string.IsNullOrEmpty(location.consigneename))
                             {
-                                location.consigneedetailid = client.clientdetailid;
+                                //location.consigneedetailid = client.clientdetailid;
                                 location.consigneepic = location.consigneepic;
                                 location.shipperpiccustom = location.shipperpiccustom;
                                 location.consigneename = client.clientname;

@@ -9,7 +9,7 @@ namespace ContrackAPI
     public class ContainerBooking
     {
         public ContainerBookingDTO booking { get; set; } = new ContainerBookingDTO();
-        //public VoyageDTO voyage { get; set; } = new VoyageDTO();
+        public BookingVoyageDTO voyage { get; set; } = new BookingVoyageDTO();
         //public BookingSummaryDTO bookingSummary { get; set; } = new BookingSummaryDTO();
     }
 

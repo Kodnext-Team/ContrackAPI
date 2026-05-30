@@ -3,7 +3,7 @@
     public interface IContainerRepository
     {
         List<ContainerDTO> GetContainerList(ContainerFilterPage filter);
-        ContainerDTO GetContainerByUUID(string containeruuid);
+        ContainerDetailDTO GetContainerByUUID(string containeruuid);
 
     }
 }

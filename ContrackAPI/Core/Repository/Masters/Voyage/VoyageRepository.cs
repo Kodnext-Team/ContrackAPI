@@ -130,7 +130,7 @@ namespace ContrackAPI
             {
                 using (SqlDB Db = new SqlDB(DatabaseCollection.Contrack))
                 {
-                    string query = "SELECT * FROM masters.voyage_get_by_uuid(" + "p_hubid := '" + Common.HubID + "', " + "p_voyageuuid := '" + Common.Escape(uuid) + "'::uuid" + "," + "p_userid := '" + Common.UserID + "');";
+                    string query = "SELECT * FROM masters.voyage_get_by_uuid(" + "p_hubid := '" + 1 + "', " + "p_voyageuuid := '" + Common.Escape(uuid) + "'::uuid" + "," + "p_userid := '" + 2 + "');";
                     DataTable dt = Db.GetDataTable(query);
                     if (dt == null || dt.Rows.Count == 0)
                         return null;
