@@ -68,27 +68,8 @@ namespace ContrackAPI
                 type_name = Common.ToString(dr["typename"]),
                 operatorname = Common.GetOperatorName(Common.ToInt(dr["operatorid"])),
                 locationname = Common.ToString(dr["locationname"]),
-                portname = Common.ToString(dr["portname"]),
-                countryflag = !string.IsNullOrEmpty(Common.ToString(dr["countryflag"])) ? Common.FlagFolder + Common.ToString(dr["countryflag"]) : "",
-                bookingid = new EncryptedData()
-                {
-                    NumericValue = Common.ToInt(dr["bookingid"]),
-                    EncryptedValue = Common.Encrypt(Common.ToInt(dr["bookingid"]))
-                },
-                bookingno = Common.ToString(dr["bookingno"]),
-                bookinguuid = Common.ToString(dr["bookinguuid"]),
-                customername = Common.ToString(dr["customername"]),
-                islive = Common.ToBool(dr["islive"]),
-                isdamaged = dr.Table.Columns.Contains("isdamaged") ? Common.ToBool(dr["isdamaged"]) : false,
-                isblocked = dr.Table.Columns.Contains("isblocked") ? Common.ToBool(dr["isblocked"]) : false,
-                polname = Common.ToString(dr["pol_portname"]),
-                polcode = Common.ToString(dr["pol_portcode"]),
-                pol_flag = !string.IsNullOrEmpty(Common.ToString(dr["pol_flag"])) ? Common.FlagFolder + Common.ToString(dr["pol_flag"]) : "",
-                podcode = Common.ToString(dr["pod_portcode"]),
-                podname = Common.ToString(dr["pod_portname"]),
-                pod_flag = !string.IsNullOrEmpty(Common.ToString(dr["pod_flag"])) ? Common.FlagFolder + Common.ToString(dr["pod_flag"]) : "",
                 manufacturedate = formattedAge,
-                lastbookingdate = formattedLastBooking,
+                //lastbookingdate = formattedLastBooking,
                 locationtypename = Common.ToString(dr["locationtypename"]),
                 locationicon = Common.GetIconPath(Common.ToInt(dr["locationtypeiconid"])),
                 moveicon = Common.GetSelectedIconPath(Common.ToInt(dr["moveiconid"])),
@@ -96,12 +77,11 @@ namespace ContrackAPI
                 is_empty = Common.ToBool(dr["is_empty"]),
                 status_code = Common.ToInt(dr["status_code"]),
                 lastmovedatetime = Common.ToDateTimeString(Common.ToDateTime(dr["lastmovedatetime"]), Common.HumanDateTimeformat),
-                containercreatedat = FormatConvertor.ToDateTimeFormat(Common.ToDateTime(dr["containercreatedat"]))
             };
         }
-        public ContainerDTO GetContainerByUUID(string containeruuid)
+        public ContainerDetailDTO GetContainerByUUID(string containeruuid)
         {
-            ContainerDTO model = new ContainerDTO();
+            ContainerDetailDTO model = new ContainerDetailDTO();
             try
             {
                 if (string.IsNullOrEmpty(containeruuid)) return model;
@@ -119,47 +99,28 @@ namespace ContrackAPI
             return model;
         }
     
-    private ContainerDTO ParseContainerDetail(DataRow dr)
+    private ContainerDetailDTO ParseContainerDetail(DataRow dr)
         {
+
             var formattedAge = FormatConvertor.ToDateTimeFormat(Common.ToDateTime(dr["manufacturedate"]));
             if (!string.IsNullOrEmpty(formattedAge.SubText))
             {
                 formattedAge.SubText = formattedAge.SubText.Replace("ago", "old");
             }
-            return new ContainerDTO()
+            return new ContainerDetailDTO()
             {
                 containerid = new EncryptedData()
                 {
                     NumericValue = Common.ToInt(dr["containerid"]),
                     EncryptedValue = Common.Encrypt(Common.ToInt(dr["containerid"]))
                 },
-                operatorid = new EncryptedData()
-                {
-                    NumericValue = Common.ToInt(dr["operatorid"]),
-                    EncryptedValue = Common.Encrypt(Common.ToInt(dr["operatorid"]))
-                },
-
-                currentlocationid = new EncryptedData()
-                {
-                    NumericValue = Common.ToInt(dr["locationdetailid"]),
-                    EncryptedValue = Common.Encrypt(Common.ToInt(dr["locationdetailid"]))
-                },
                 containeruuid = Common.ToString(dr["containeruuid"]),
                 equipmentno = Common.ToString(dr["equipmentno"]),
                 containermodeluuid = Common.ToString(dr["containermodeluuid"]),
-                model_iso_code = Common.ToString(dr["model_iso_code"]),
-                sizename = Common.ToString(dr["sizename"]),
                 type_name = Common.ToString(dr["typename"]),
                 operatorname = Common.GetOperatorName(Common.ToInt(dr["operatorid"])),
                 locationname = Common.ToString(dr["locationname"]),
-                portname = Common.ToString(dr["portname"]),
-                islive = Common.ToBool(dr["islive"]),
                 manufacturedate = formattedAge,
-                bookingid = new EncryptedData()
-                {
-                    NumericValue = Common.ToInt(dr["bookingid"]),
-                    EncryptedValue = Common.Encrypt(Common.ToInt(dr["bookingid"]))
-                },
                 is_empty = dr.Table.Columns.Contains("is_empty") ? Common.ToBool(dr["is_empty"]) : false,
                 ageinyears = formattedAge.NumericValue != 0 ? Math.Abs(formattedAge.NumericValue / 365) : 0,
                 moveicon = Common.GetSelectedIconPath(Common.ToInt(dr["moveiconid"])),

@@ -5,29 +5,20 @@
         public EncryptedData bookingid { get; set; } = new EncryptedData();
         public string bookinguuid { get; set; } = "";
         public string bookingno { get; set; } = "";
-        public DateTime createdat { get; set; } = new DateTime();
-        public string createdusername { get; set; } = "";
         public BookingCustomerDTO customer { get; set; } = new BookingCustomerDTO();
         public BookingLocationDTO location { get; set; } = new BookingLocationDTO();
         public List<ContainerBookingDetailDTO> details { get; set; } = new List<ContainerBookingDetailDTO>();
-        // using for pol
-        public List<BookingAdditionalServicesDTO> additionalservices { get; set; } = new List<BookingAdditionalServicesDTO>();
-        public List<BookingAdditionalServicesDTO> PODadditionalservices { get; set; } = new List<BookingAdditionalServicesDTO>();
+       
     }
 
     public class BookingCustomerDTO
     {
-        public EncryptedData agencydetailid { get; set; } = new EncryptedData();
         public string agencyname { get; set; } = "";
-        public string bookingdate { get; set; } = Common.ToDateTimeString(DateTime.Now, "yyyy-MM-dd HH:mm");
         public EncryptedData customertype { get; set; } = new EncryptedData() { EncryptedValue = Common.Encrypt(1), NumericValue = 1 };
-        public EncryptedData mode { get; set; } = new EncryptedData();
         public FormattedValue<int> status { get; set; } = new FormattedValue<int>();
         public string fullempty { get; set; } = "";
         public ClientDTO client { get; set; } = new ClientDTO();
-        public CustomerAnalyticsDTO analytics { get; set; } = new CustomerAnalyticsDTO();
-        public bool isconfirmed { get; set; } = false;
-
+       
     }
 
     public class BookingLocationDTO
@@ -35,79 +26,56 @@
         public EncryptedData pol { get; set; } = new EncryptedData();
         public string pol_portname { get; set; } = "";
         public string pol_portcode { get; set; } = "";
-        public int pol_countryid { get; set; }
         public string pol_countryname { get; set; } = "";
         public string pol_countrycode { get; set; } = "";
         public string pol_countryflag { get; set; } = "";
         public EncryptedData pod { get; set; } = new EncryptedData();
         public string pod_portname { get; set; } = "";
         public string pod_portcode { get; set; } = "";
-        public int pod_countryid { get; set; }
         public string pod_countryname { get; set; } = "";
         public string pod_countrycode { get; set; } = "";
         public string pod_countryflag { get; set; } = "";
-        public EncryptedData shipperdetailid { get; set; } = new EncryptedData();
         public string shippername { get; set; } = "";
-        public EncryptedData shipperpic { get; set; } = new EncryptedData();
         public string shipperpiccustom { get; set; } = "";
-        public string shipperpic_name { get; set; } = "";
-        public string shipperpic_email { get; set; } = "";
-        public string shipperpic_phone { get; set; } = "";
+        //public string shipperpic_name { get; set; } = "";
+       // public string shipperpic_email { get; set; } = "";
+       // public string shipperpic_phone { get; set; } = "";
         public string shipperemail { get; set; } = "";
-        public string shipperemailtemp { get; set; } = "";
+       // public string shipperemailtemp { get; set; } = "";
         public string shipperphone { get; set; } = "";
-        public string shipperphonetemp { get; set; } = "";
+        //public string shipperphonetemp { get; set; } = "";
         public string shipperaddress { get; set; } = "";
-        public EncryptedData consigneedetailid { get; set; } = new EncryptedData();
         public string consigneename { get; set; } = "";
         public EncryptedData consigneepic { get; set; } = new EncryptedData();
-        public string consigneepiccustom { get; set; } = "";
-        public string consigneepic_name { get; set; } = "";
-        public string consigneepic_email { get; set; } = "";
-        public string consigneepic_phone { get; set; } = "";
+      //  public string consigneepiccustom { get; set; } = "";
+      //  public string consigneepic_name { get; set; } = "";
+       // public string consigneepic_email { get; set; } = "";
+       // public string consigneepic_phone { get; set; } = "";
         public string consigneeemail { get; set; } = "";
-        public string consigneeemailtemp { get; set; } = "";
+      //  public string consigneeemailtemp { get; set; } = "";
         public string consigneephone { get; set; } = "";
-        public string consigneephonetemp { get; set; } = "";
+       // public string consigneephonetemp { get; set; } = "";
         public string consigneeaddress { get; set; } = "";
         public string voyageuuid { get; set; } = "";
     }
 
     public class ContainerBookingDetailDTO
     {
-        public EncryptedData bookingdetailid { get; set; } = new EncryptedData();
+     public EncryptedData bookingdetailid { get; set; } = new EncryptedData();
         public string bookingdetailuuid { get; set; } = "";
-        public EncryptedData bookingid { get; set; } = new EncryptedData();
-        public string bookinguuid { get; set; } = "";
-        public string containermodeluuid { get; set; } = "";
-        public EncryptedData containertypeid { get; set; } = new EncryptedData();
-        public EncryptedData sizeid { get; set; } = new EncryptedData();
+       // public EncryptedData bookingid { get; set; } = new EncryptedData();
+       
         public int ownership { get; set; }
         public int qty { get; set; } = 0;
         public string commodity { get; set; } = "";
-        public decimal grossweight { get; set; }
         public decimal volumeweight { get; set; }
-        public string hscode { get; set; } = "";
-        public decimal cargovalue { get; set; }
-        public EncryptedData packagetype { get; set; } = new EncryptedData();
-        public FormattedValue<DateTime> expectedstuffingdate { get; set; } = FormatConvertor.ToDateTimeFormat(DateTime.MinValue);
-        public string stuffinglocation { get; set; } = "";
-        public string pickuplocation { get; set; } = "";
-        public bool isdg { get; set; }
-        public bool isreefer { get; set; }
+        public EncryptedData packagetype { get; set; } = new EncryptedData();    
         public string sizename { get; set; } = "";
-        public string length { get; set; } = "";
-        public string width { get; set; } = "";
-        public string height { get; set; } = "";
         public string isocode { get; set; } = "";
-        public string modeldescription { get; set; } = "";
         public string containertypeuuid { get; set; } = "";
         public string containertypename { get; set; } = "";
-        public string containertypeshortname { get; set; } = "";
-        public EncryptedData iconid { get; set; } = new EncryptedData();
         public string icon { get; set; } = "";
         public string empty_full { get; set; } = "";
-        public List<ContainerBookingDetailServicesDTO> services { get; set; } = new List<ContainerBookingDetailServicesDTO>();
     }
     public class ContainerBookingDetailServicesDTO
     {
@@ -131,6 +99,7 @@
         public string description { get; set; } = "";
         public int order { get; set; } = 0;
         public string uom { get; set; } = "";
+
         public int type { get; set; } = 0;
     }
 

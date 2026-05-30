@@ -36,14 +36,12 @@
         public FormattedValue<DateTime> recorddatetime { get; set; } = FormatConvertor.ToDateTimeFormat(DateTime.MinValue);
         public string movesname { get; set; } = "";
         public string move_icon { get; set; } = "";
-        public string in_out { get; set; } = "";
-        public EncryptedData containerid { get; set; } = new EncryptedData();
+        //public EncryptedData containerid { get; set; } = new EncryptedData();
         public EncryptedData bookingid { get; set; } = new EncryptedData();
-        public string locationuuid { get; set; } = "";
+        //public string locationuuid { get; set; } = "";
         public string locationname { get; set; } = "";
         public string location_portcode { get; set; } = "";
         public string location_countryname { get; set; } = "";
-        public string containeruuid { get; set; } = "";
         public string containerno { get; set; } = "";
         public string containersizetype { get; set; } = "";
         public bool isempty { get; set; }
@@ -54,7 +52,6 @@
         public string nextmovename { get; set; } = "";
         public string nextlocationname { get; set; } = "";
         public FormattedValue<DateTime> nextdatetime { get; set; } = FormatConvertor.ToDateTimeFormat(DateTime.MinValue);
-        public bool canedit { get; set; } = false;
     }
     public class TrackingDamageDTO
     {

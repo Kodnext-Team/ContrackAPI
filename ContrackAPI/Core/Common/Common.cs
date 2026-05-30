@@ -299,7 +299,29 @@ namespace ContrackAPI
                 return 0;
             }
         }
-        
+        public static (DateTime MinDate, DateTime MaxDate) GetMaxMinDate(List<VoyageDetailDTO> list)
+        {
+            DateTime mindate = DateTime.MinValue;
+            DateTime maxdate = DateTime.MinValue;
+            try
+            {
+                var arrivals = list
+               .Select(x => x.ATA.Value != DateTime.MinValue ? x.ATA : x.ETA)
+               .Select(d => d).ToList();
+
+                var departures = list
+                                .Select(x => x.ATD.Value != DateTime.MinValue ? x.ATD : x.ETD)
+                                .Select(d => d).ToList();
+
+                arrivals.AddRange(departures);
+
+                mindate = arrivals.Min(x => x.Value);
+                maxdate = arrivals.Max(x => x.Value);
+            }
+            catch (Exception)
+            { }
+            return (mindate, maxdate);
+        }
         public static DateTime ToClientDateTime(object data)
         {
             try
@@ -419,14 +441,15 @@ namespace ContrackAPI
 
         public static DateTime ToDateTime(object data)
         {
-            try
-            {
-                return string.IsNullOrEmpty(Convert.ToString(data)) ? DateTime.MinValue : Convert.ToDateTime(data);
-            }
-            catch (Exception ex)
-            {
+            if (data == null || data == DBNull.Value)
                 return DateTime.MinValue;
-            }
+
+            if (data is DateTime dt)
+                return dt;
+
+            return DateTime.TryParse(Convert.ToString(data), out DateTime result)
+                ? result
+                : DateTime.MinValue;
         }
 
         //public static DateTime ToClientDateTime(object data)
