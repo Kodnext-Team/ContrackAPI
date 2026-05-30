@@ -437,9 +437,19 @@ namespace ContrackAPI
                 return new int[] { };
             }
         }
-
-
         public static DateTime ToDateTime(object data)
+        {
+            try
+            {
+                return string.IsNullOrEmpty(Convert.ToString(data)) ? DateTime.MinValue : Convert.ToDateTime(data);
+            }
+            catch (Exception ex)
+            {
+                return DateTime.MinValue;
+            }
+        }
+
+        public static DateTime ToDateTimeOff(object data)
         {
             if (data == null || data == DBNull.Value)
                 return DateTime.MinValue;

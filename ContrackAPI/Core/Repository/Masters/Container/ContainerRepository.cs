@@ -39,12 +39,12 @@ namespace ContrackAPI
         }
         private ContainerDTO ParseContainerList(DataRow dr)
         {
-            var formattedAge = FormatConvertor.ToDateTimeFormat(Common.ToDateTime(dr["manufacturedate"]));
+            var formattedAge = FormatConvertor.ToDateTimeFormat(Common.ToDateTimeOff(dr["manufacturedate"]));
             if (!string.IsNullOrEmpty(formattedAge.SubText))
             {
                 formattedAge.SubText = formattedAge.SubText.Replace("ago", "old");
             }
-            var formattedLastBooking = FormatConvertor.ToDateTimeFormat(Common.ToDateTime(dr["lastbookingdate"]));
+            var formattedLastBooking = FormatConvertor.ToDateTimeFormat(Common.ToDateTimeOff(dr["lastbookingdate"]));
             if (!string.IsNullOrEmpty(formattedLastBooking.SubText))
             {
                 formattedLastBooking.SubText = formattedLastBooking.SubText.Replace("ago", "");
@@ -102,7 +102,7 @@ namespace ContrackAPI
     private ContainerDetailDTO ParseContainerDetail(DataRow dr)
         {
 
-            var formattedAge = FormatConvertor.ToDateTimeFormat(Common.ToDateTime(dr["manufacturedate"]));
+            var formattedAge = FormatConvertor.ToDateTimeFormat(Common.ToDateTimeOff(dr["manufacturedate"]));
             if (!string.IsNullOrEmpty(formattedAge.SubText))
             {
                 formattedAge.SubText = formattedAge.SubText.Replace("ago", "old");
