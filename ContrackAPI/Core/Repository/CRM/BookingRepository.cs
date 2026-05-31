@@ -98,13 +98,22 @@ namespace ContrackAPI
                         }
                         
                         model.agencyname = Common.ToString(dr["agencyname"]);
+                        int customerType = Common.ToInt(dr["customertype"]);
+
+                        model.customertype = new EncryptedData()
+                        {
+                            NumericValue = customerType,
+                            EncryptedValue = Common.Encrypt(customerType)
+                        };
+
+                        model.customertypename = Common.GetCustomerTypeName(customerType);
                         model.fullempty = Common.GetFullEmptyName(Common.ToString(dr["fullempty"]));
                         model.mode = new EncryptedData()
                         {
                             NumericValue = Common.ToInt(dr["mode"]),
                             EncryptedValue = Common.Encrypt(Common.ToInt(dr["mode"]))
                         };
-                        model.modeName = Common.GetTransferTypeName(model.mode.NumericValue);
+                        model.modename = Common.GetTransferTypeName(model.mode.NumericValue);
                         model.status = FormatConvertor.ToStatus(Common.ToInt(dr["status"]), StatusEnum.Booking, statusList);
                         model.client = new ClientDTO()
                         {

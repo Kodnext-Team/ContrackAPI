@@ -15,11 +15,13 @@
     {
         public string agencyname { get; set; } = "";
         public EncryptedData customertype { get; set; } = new EncryptedData() { EncryptedValue = Common.Encrypt(1), NumericValue = 1 };
+        public string customertypename { get; set; } = "";
+
         public FormattedValue<int> status { get; set; } = new FormattedValue<int>();
         public string fullempty { get; set; } = "";
         public EncryptedData mode { get; set; } = new EncryptedData();
 
-        public string modeName { get; set; } = "";
+        public string modename { get; set; } = "";
         public ClientDTO client { get; set; } = new ClientDTO();
        
     }
