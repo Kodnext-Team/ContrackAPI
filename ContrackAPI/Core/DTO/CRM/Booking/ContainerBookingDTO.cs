@@ -71,6 +71,7 @@
        // public EncryptedData bookingid { get; set; } = new EncryptedData();
        
         public int ownership { get; set; }
+        public string ownershipname { get; set; } = "";
         public int qty { get; set; } = 0;
         public string commodity { get; set; } = "";
         public decimal volumeweight { get; set; }
