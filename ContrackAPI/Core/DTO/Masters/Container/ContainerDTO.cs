@@ -64,4 +64,16 @@
         public FormattedValue<int> is_empty { get; set; } = new FormattedValue<int>();
         public FormattedValue<int> status_code { get; set; } = new FormattedValue<int>();
     }
+    public class ContainerEquipmentDTO
+    {
+        public EncryptedData containerid { get; set; } = new EncryptedData();
+        public string containeruuid { get; set; } = "";
+        //public FormattedValue<DateTime> lastbookingdate { get; set; } = FormatConvertor.ToDateTimeFormat(DateTime.MinValue);
+        public string sizename { get; set; } = "";
+        public string model_iso_code { get; set; } = "";
+
+        public string type_name { get; set; } = "";
+        public string operatorname { get; set; }
+        
+    }
 }
