@@ -350,6 +350,22 @@ namespace ContrackAPI
                     return "COC";
             }
         }
+        public static string GetAgeGrade(int ageInYears)
+        {
+            if (ageInYears >= 12)
+                return "D";
+
+            if (ageInYears >= 7)
+                return "C";
+
+            if (ageInYears >= 3)
+                return "B";
+
+            if (ageInYears >= 1)
+                return "A";
+
+            return "A+";
+        }
         public static bool ToBool(object data)
         {
             try
