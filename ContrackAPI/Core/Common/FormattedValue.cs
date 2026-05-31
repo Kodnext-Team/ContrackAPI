@@ -83,5 +83,24 @@
 
             return result;
         }
+        public static FormattedValue<int> ToEmptyFull(bool isEmpty)
+        {
+            return new FormattedValue<int>()
+            {
+                Value = isEmpty ? 1 : 0,
+                NumericValue = isEmpty ? 1 : 0,
+                Text = isEmpty ? "Empty" : "Full"
+            };
+        }
+
+        public static FormattedValue<int> ToContainerStatus(int statusCode)
+        {
+            return new FormattedValue<int>()
+            {
+                Value = statusCode,
+                NumericValue = statusCode,
+                Text = statusCode == 2 ? "Booked" : "Available"
+            };
+        }
     }
 }

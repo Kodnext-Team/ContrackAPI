@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Data;
+using System.Reflection;
 
 namespace ContrackAPI
 {
@@ -39,16 +40,16 @@ namespace ContrackAPI
         }
         private ContainerDTO ParseContainerList(DataRow dr)
         {
-            var formattedAge = FormatConvertor.ToDateTimeFormat(Common.ToDateTimeOff(dr["manufacturedate"]));
-            if (!string.IsNullOrEmpty(formattedAge.SubText))
-            {
-                formattedAge.SubText = formattedAge.SubText.Replace("ago", "old");
-            }
-            var formattedLastBooking = FormatConvertor.ToDateTimeFormat(Common.ToDateTimeOff(dr["lastbookingdate"]));
-            if (!string.IsNullOrEmpty(formattedLastBooking.SubText))
-            {
-                formattedLastBooking.SubText = formattedLastBooking.SubText.Replace("ago", "");
-            }
+            //var formattedAge = FormatConvertor.ToDateTimeFormat(Common.ToDateTimeOff(dr["manufacturedate"]));
+            //if (!string.IsNullOrEmpty(formattedAge.SubText))
+            //{
+            //    formattedAge.SubText = formattedAge.SubText.Replace("ago", "old");
+            //}
+            //var formattedLastBooking = FormatConvertor.ToDateTimeFormat(Common.ToDateTimeOff(dr["lastbookingdate"]));
+            //if (!string.IsNullOrEmpty(formattedLastBooking.SubText))
+            //{
+            //    formattedLastBooking.SubText = formattedLastBooking.SubText.Replace("ago", "");
+            //}
             return new ContainerDTO()
             {
                 rowcount = new TableCounts
@@ -68,15 +69,20 @@ namespace ContrackAPI
                 type_name = Common.ToString(dr["typename"]),
                 operatorname = Common.GetOperatorName(Common.ToInt(dr["operatorid"])),
                 locationname = Common.ToString(dr["locationname"]),
-                manufacturedate = formattedAge,
                 //lastbookingdate = formattedLastBooking,
                 locationtypename = Common.ToString(dr["locationtypename"]),
                 locationicon = Common.GetIconPath(Common.ToInt(dr["locationtypeiconid"])),
                 moveicon = Common.GetSelectedIconPath(Common.ToInt(dr["moveiconid"])),
                 lastmove = Common.ToString(dr["movesname"]),
-                is_empty = Common.ToBool(dr["is_empty"]),
-                status_code = Common.ToInt(dr["status_code"]),
-                lastmovedatetime = Common.ToDateTimeString(Common.ToDateTime(dr["lastmovedatetime"]), Common.HumanDateTimeformat),
+                isdamaged = dr.Table.Columns.Contains("isdamaged") ? Common.ToBool(dr["isdamaged"]) : false,
+                is_empty = FormatConvertor.ToEmptyFull(
+    Common.ToBool(dr["is_empty"])),
+                status_code = FormatConvertor.ToContainerStatus(
+    Common.ToInt(dr["status_code"])),
+             
+                lastmovedatetime = FormatConvertor.ToClientDateTimeFormat(
+                                                        Common.ToDateTime(dr["lastmovedatetime"])
+                                                    ),
             };
         }
         public ContainerDetailDTO GetContainerByUUID(string containeruuid)
@@ -120,12 +126,16 @@ namespace ContrackAPI
                 type_name = Common.ToString(dr["typename"]),
                 operatorname = Common.GetOperatorName(Common.ToInt(dr["operatorid"])),
                 locationname = Common.ToString(dr["locationname"]),
+                model_iso_code = Common.ToString(dr["model_iso_code"]),
+                sizename = Common.ToString(dr["sizename"]),
                 manufacturedate = formattedAge,
-                is_empty = dr.Table.Columns.Contains("is_empty") ? Common.ToBool(dr["is_empty"]) : false,
+                is_empty = FormatConvertor.ToEmptyFull(
+    Common.ToBool(dr["is_empty"])),
+                status_code = FormatConvertor.ToContainerStatus(
+    Common.ToInt(dr["status_code"])),
                 ageinyears = formattedAge.NumericValue != 0 ? Math.Abs(formattedAge.NumericValue / 365) : 0,
                 moveicon = Common.GetSelectedIconPath(Common.ToInt(dr["moveiconid"])),
                 lastmove = Common.ToString(dr["movesname"]),
-                status_code = Common.ToInt(dr["status_code"]),
                 bookingno = Common.ToString(dr["bookingno"]),
                 bookinguuid = Common.ToString(dr["bookinguuid"]),
                 lastmovedatetime = Common.ToDateTimeString(Common.ToDateTime(dr["lastmovedatetime"]), Common.HumanDateTimeformat),

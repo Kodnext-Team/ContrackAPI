@@ -7,12 +7,13 @@
         public EncryptedData bookingid { get; set; } = new EncryptedData();
         public string bookinguuid { get; set; } = "";
         public string bookingno { get; set; } = "";
-        public DateTime bookingdate { get; set; } = DateTime.Now;
- 
+        public FormattedValue<DateTime> bookingdate { get; set; } = FormatConvertor.ToDateTimeFormat(DateTime.MinValue);
+        public EncryptedData pol { get; set; } = new EncryptedData();
         public string pol_portname { get; set; } = "";
         public string pol_portcode { get; set; } = "";
         public string pol_countryname { get; set; } = "";
         public string pol_countryflag { get; set; } = "";
+        public EncryptedData pod { get; set; } = new EncryptedData();
         public string pod_portname { get; set; } = "";
         public string pod_portcode { get; set; } = "";
         public string pod_countryname { get; set; } = "";
