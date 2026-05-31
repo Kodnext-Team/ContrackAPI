@@ -658,6 +658,23 @@ namespace ContrackAPI
                     return "";
             }
         }
+        public static string GetCustomerTypeName(int customerType)
+        {
+            switch (customerType)
+            {
+                case 1:
+                    return "Shipper";
+
+                case 2:
+                    return "Consignee";
+
+                case 3:
+                    return "Forwarder";
+
+                default:
+                    return "";
+            }
+        }
         public static string GetShortcode(string name)
         {
             string output = "";
