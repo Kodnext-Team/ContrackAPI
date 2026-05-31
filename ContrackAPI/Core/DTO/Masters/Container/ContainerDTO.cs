@@ -58,7 +58,7 @@
         public decimal ageinyears { get; set; } = 0;
         public string lastmove { get; set; } = "";
         public string moveicon { get; set; } = "";
-        public string lastmovedatetime { get; set; } = "";
+        public FormattedValue<DateTime> lastmovedatetime { get; set; } = FormatConvertor.ToDateTimeFormat(DateTime.MinValue);
 
         public FormattedValue<int> is_empty { get; set; } = new FormattedValue<int>();
         public FormattedValue<int> status_code { get; set; } = new FormattedValue<int>();
