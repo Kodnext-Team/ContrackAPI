@@ -113,6 +113,9 @@ namespace ContrackAPI
             {
                 formattedAge.SubText = formattedAge.SubText.Replace("ago", "old");
             }
+            int ageInYears = formattedAge.NumericValue != 0
+    ? Math.Abs(formattedAge.NumericValue / 365)
+    : 0;
             return new ContainerDetailDTO()
             {
                 containerid = new EncryptedData()
@@ -133,7 +136,8 @@ namespace ContrackAPI
     Common.ToBool(dr["is_empty"])),
                 status_code = FormatConvertor.ToContainerStatus(
     Common.ToInt(dr["status_code"])),
-                ageinyears = formattedAge.NumericValue != 0 ? Math.Abs(formattedAge.NumericValue / 365) : 0,
+                ageinyears = ageInYears,
+                agetext = Common.GetAgeGrade(ageInYears),
                 moveicon = Common.GetSelectedIconPath(Common.ToInt(dr["moveiconid"])),
                 lastmove = Common.ToString(dr["movesname"]),
                 bookingno = Common.ToString(dr["bookingno"]),

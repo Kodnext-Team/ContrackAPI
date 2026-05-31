@@ -56,6 +56,7 @@
         public string bookingno { get; set; } = "";
         public string bookinguuid { get; set; } = "";
         public decimal ageinyears { get; set; } = 0;
+        public string agetext { get; set; } = "";
         public string lastmove { get; set; } = "";
         public string moveicon { get; set; } = "";
         public FormattedValue<DateTime> lastmovedatetime { get; set; } = FormatConvertor.ToDateTimeFormat(DateTime.MinValue);
