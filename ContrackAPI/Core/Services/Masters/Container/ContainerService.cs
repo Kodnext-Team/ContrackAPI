@@ -99,5 +99,33 @@ namespace ContrackAPI
             }
             return response;
         }
+        public APIResponse GetContainerByEquipmentno(string equipmentno)
+        {
+            try
+            {
+                var dto = _repo.GetContainerByEquipmentno(equipmentno);
+                if (dto != null && !string.IsNullOrEmpty(dto.containeruuid))
+                {
+                    var model = new ContainerModal { container = dto };
+                    if (dto.manufacturedate.Value != DateTime.MinValue)
+                    {
+                        model.MakeMonth = dto.manufacturedate.Value.Month;
+                        model.MakeYear = dto.manufacturedate.Value.Year;
+                    }
+                    response.Result = Common.SuccessMessage("Success");
+                    response.Data = model;
+                }
+                else
+                {
+                    response.Result = Common.ErrorMessage("No data found");
+                }
+            }
+            catch (Exception ex)
+            {
+                RecordException(ex);
+                response.Result = Common.ErrorMessage(ex.Message);
+            }
+            return response;
+        }
     }
 }

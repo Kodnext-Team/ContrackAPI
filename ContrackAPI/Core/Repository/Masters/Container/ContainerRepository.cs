@@ -147,5 +147,27 @@ namespace ContrackAPI
                                                     )
             };
         }
+    
+    public ContainerDetailDTO GetContainerByEquipmentno(string equipementno)
+        {
+            ContainerDetailDTO model = new ContainerDetailDTO();
+            try
+            {
+                if (string.IsNullOrEmpty(equipementno)) return model;
+                using (SqlDB Db = new SqlDB(DatabaseCollection.Contrack))
+                {
+                    DataTable tbl = Db.GetDataTable("SELECT * FROM masters.container_equip_get_byequipmentno('" + equipementno + "'," + 1 + ");");
+                    if (tbl != null && tbl.Rows.Count > 0)
+                        model = ParseContainerDetail(tbl.Rows[0]);
+                }
+            }
+            catch (Exception ex)
+            {
+                RecordException(ex);
+            }
+            return model;
+        }
+
+       
     }
 }

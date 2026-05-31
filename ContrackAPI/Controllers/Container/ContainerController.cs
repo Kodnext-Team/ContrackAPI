@@ -39,5 +39,18 @@ namespace ContrackAPI
             }
             return Ok(response);
         }
+        [AllowAnonymous]
+        [HttpGet("GetByContainerEquipmentno")]
+        public IActionResult GetContainerByEquipmentno(string equipmentno)
+        {
+            try
+            {
+                response = _service.GetContainerByEquipmentno(equipmentno);
+            }
+            catch (Exception ex)
+            {
+            }
+            return Ok(response);
+        }
     }
 }

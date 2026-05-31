@@ -4,6 +4,7 @@
     {
         List<ContainerDTO> GetContainerList(ContainerFilterPage filter);
         ContainerDetailDTO GetContainerByUUID(string containeruuid);
+        ContainerDetailDTO GetContainerByEquipmentno(string equipmentno);
 
     }
 }
