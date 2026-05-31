@@ -198,6 +198,7 @@ namespace ContrackAPI
                     EncryptedValue = Common.Encrypt(Common.ToInt(dr["containerid"]))
                 },
                 containeruuid = Common.ToString(dr["containeruuid"]),
+                equipmentno = Common.ToString(dr["equipmentno"]),
                 type_name = Common.ToString(dr["typename"]),
                 operatorname = Common.GetOperatorName(Common.ToInt(dr["operatorid"])),
                 model_iso_code = Common.ToString(dr["model_iso_code"]),
