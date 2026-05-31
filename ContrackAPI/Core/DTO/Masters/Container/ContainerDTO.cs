@@ -70,6 +70,7 @@
         public string containeruuid { get; set; } = "";
         //public FormattedValue<DateTime> lastbookingdate { get; set; } = FormatConvertor.ToDateTimeFormat(DateTime.MinValue);
         public string sizename { get; set; } = "";
+        public string equipmentno { get; set; } = "";
         public string model_iso_code { get; set; } = "";
 
         public string type_name { get; set; } = "";
