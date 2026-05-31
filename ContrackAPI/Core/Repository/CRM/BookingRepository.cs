@@ -32,11 +32,23 @@ namespace ContrackAPI
                                 },
                                 bookinguuid = Common.ToString(dr["bookinguuid"]),
                                 bookingno = Common.ToString(dr["bookingno"]),
-                                bookingdate = Common.ToDateTime(dr["bookingdate"]),                    
+                                bookingdate = FormatConvertor.ToClientDateTimeFormat(
+                                                        Common.ToDateTime(dr["bookingdate"])
+                                                    ),
+                                pol = new EncryptedData
+                                {
+                                    NumericValue = Common.ToInt(dr["pol"]),
+                                    EncryptedValue = Common.Encrypt(Common.ToInt(dr["pol"]))
+                                },
                                 pol_portname = Common.ToString(dr["pol_portname"]),
                                 pol_portcode = Common.ToString(dr["pol_portcode"]),
                                 pol_countryname = Common.ToString(dr["pol_countryname"]),
-                                pol_countryflag = Common.ToString(dr["pol_countryflag"]),                              
+                                pol_countryflag = Common.ToString(dr["pol_countryflag"]),
+                                pod = new EncryptedData
+                                {
+                                    NumericValue = Common.ToInt(dr["pod"]),
+                                    EncryptedValue = Common.Encrypt(Common.ToInt(dr["pod"]))
+                                },
                                 pod_portname = Common.ToString(dr["pod_portname"]),
                                 pod_portcode = Common.ToString(dr["pod_portcode"]),
                                 pod_countryname = Common.ToString(dr["pod_countryname"]),
