@@ -104,16 +104,11 @@ namespace ContrackAPI
             try
             {
                 var dto = _repo.GetContainerByEquipmentno(equipmentno);
-                if (dto != null && !string.IsNullOrEmpty(dto.containeruuid))
+
+                if (dto != null && dto.Count > 0)
                 {
-                    var model = new ContainerModal { container = dto };
-                    if (dto.manufacturedate.Value != DateTime.MinValue)
-                    {
-                        model.MakeMonth = dto.manufacturedate.Value.Month;
-                        model.MakeYear = dto.manufacturedate.Value.Year;
-                    }
                     response.Result = Common.SuccessMessage("Success");
-                    response.Data = model;
+                    response.Data = dto;
                 }
                 else
                 {
@@ -125,6 +120,7 @@ namespace ContrackAPI
                 RecordException(ex);
                 response.Result = Common.ErrorMessage(ex.Message);
             }
+
             return response;
         }
     }

@@ -147,27 +147,63 @@ namespace ContrackAPI
                                                     )
             };
         }
-    
-    public ContainerDetailDTO GetContainerByEquipmentno(string equipementno)
+
+        public List<ContainerEquipmentDTO> GetContainerByEquipmentno(string equipmentno)
         {
-            ContainerDetailDTO model = new ContainerDetailDTO();
+            List<ContainerEquipmentDTO> result = new List<ContainerEquipmentDTO>();
+
             try
             {
-                if (string.IsNullOrEmpty(equipementno)) return model;
+                if (string.IsNullOrEmpty(equipmentno))
+                    return result;
+
                 using (SqlDB Db = new SqlDB(DatabaseCollection.Contrack))
                 {
-                    DataTable tbl = Db.GetDataTable("SELECT * FROM masters.container_equip_get_byequipmentno('" + equipementno + "'," + 1 + ");");
+                    DataTable tbl = Db.GetDataTable(
+                        "SELECT * FROM masters.container_equip_get_byequipmentno('" +
+                        Common.Escape(equipmentno) + "'," + 1 + ");");
+
                     if (tbl != null && tbl.Rows.Count > 0)
-                        model = ParseContainerDetail(tbl.Rows[0]);
+                    {
+                        foreach (DataRow dr in tbl.Rows)
+                        {
+                            result.Add(ParseContainerEquipment(dr));
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
                 RecordException(ex);
             }
-            return model;
-        }
 
-       
+            return result;
+        }
+        private ContainerEquipmentDTO ParseContainerEquipment(DataRow dr)
+        {
+
+            var formattedAge = FormatConvertor.ToDateTimeFormat(Common.ToDateTimeOff(dr["manufacturedate"]));
+            if (!string.IsNullOrEmpty(formattedAge.SubText))
+            {
+                formattedAge.SubText = formattedAge.SubText.Replace("ago", "old");
+            }
+            int ageInYears = formattedAge.NumericValue != 0
+    ? Math.Abs(formattedAge.NumericValue / 365)
+    : 0;
+            return new ContainerEquipmentDTO()
+            {
+                containerid = new EncryptedData()
+                {
+                    NumericValue = Common.ToInt(dr["containerid"]),
+                    EncryptedValue = Common.Encrypt(Common.ToInt(dr["containerid"]))
+                },
+                containeruuid = Common.ToString(dr["containeruuid"]),
+                type_name = Common.ToString(dr["typename"]),
+                operatorname = Common.GetOperatorName(Common.ToInt(dr["operatorid"])),
+                model_iso_code = Common.ToString(dr["model_iso_code"]),
+                sizename = Common.ToString(dr["sizename"]),
+                
+            };
+        }
     }
 }
