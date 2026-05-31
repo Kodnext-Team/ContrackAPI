@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System.Data;
+using System.Reflection;
 namespace ContrackAPI
 {
     public class BookingRepository : CustomException, IBookingRepository
@@ -493,6 +494,8 @@ namespace ContrackAPI
                                 //    EncryptedValue = Common.Encrypt(Common.ToInt(first["bookingid"]))
                                 //},
                                 ownership = Common.ToInt(first["ownership"]),
+                                ownershipname = Common.GetOperatorName(Common.ToInt(first["ownership"])),
+
                                 qty = Common.ToInt(first["qty"]),
                                 commodity = Common.ToString(first["commodity"]),
                                 volumeweight = Common.ToDecimal(first["volumeweight"]),
@@ -506,7 +509,8 @@ namespace ContrackAPI
                                 containertypeuuid = Common.ToString(first["typeuuid"]),
                                 containertypename = Common.ToString(first["typename"]),
                                 icon = Common.ToString(first["icon"]),
-                                empty_full = Common.ToString(first["empty_full"])
+                                empty_full = Common.GetFullEmptyName(Common.ToString(first["empty_full"]))
+
                             };
 
                             return dto;
