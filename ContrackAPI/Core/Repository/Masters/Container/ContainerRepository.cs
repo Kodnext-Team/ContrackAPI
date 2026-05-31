@@ -138,7 +138,9 @@ namespace ContrackAPI
                 lastmove = Common.ToString(dr["movesname"]),
                 bookingno = Common.ToString(dr["bookingno"]),
                 bookinguuid = Common.ToString(dr["bookinguuid"]),
-                lastmovedatetime = Common.ToDateTimeString(Common.ToDateTime(dr["lastmovedatetime"]), Common.HumanDateTimeformat),
+                lastmovedatetime = FormatConvertor.ToClientDateTimeFormat(
+                                                        Common.ToDateTime(dr["lastmovedatetime"])
+                                                    )
             };
         }
     }
