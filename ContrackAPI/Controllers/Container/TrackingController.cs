@@ -54,5 +54,18 @@ namespace ContrackAPI.Controllers.Container
             }
 
         }
+        [AllowAnonymous]
+        [HttpGet("GetTrackingByUUID")]
+        public IActionResult GetTrackingByUUID(string trackinguuid)
+        {
+            try
+            {
+                response = _service.GetTrackingByUUID(trackinguuid);
+            }
+            catch (Exception ex)
+            {
+            }
+            return Ok(response);
+        }
     }
 }

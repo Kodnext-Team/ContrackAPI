@@ -16,7 +16,6 @@ namespace ContrackAPI
             {
                 ProcessFilters(filter);
                 var list = _repo.GetContainerList(filter);
-               // list.ForEach(x => x.ageinyears = x.manufacturedate.NumericValue != 0 ? Math.Abs(x.manufacturedate.NumericValue / 365) : 0);
                 if (list.Count == 0)
                 {
                     response.Result = Common.ErrorMessage("No data found");

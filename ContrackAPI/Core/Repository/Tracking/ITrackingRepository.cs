@@ -6,6 +6,7 @@
         Result SaveTracking(TrackingDTO tracking);
         List<TrackingDetailsDTO> GetTrackingDetails(string containerUuid, string bookingUuid);
 
+        TrackingDTO GetTrackingByUUID(string trackinguuid);
 
     }
 }

@@ -5,6 +5,7 @@ namespace ContrackAPI
         APIResponse GetTrackingList(TrackingFilterPage filter);
         APIResponse SaveTracking(TrackingDTO tracking);
         APIResponse GetTrackingDetails(string containeruuid, string bookinguuid);
+        APIResponse GetTrackingByUUID(string trackinguuid);
 
 
     }

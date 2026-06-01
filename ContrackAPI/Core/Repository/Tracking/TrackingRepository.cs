@@ -55,12 +55,7 @@ namespace ContrackAPI
                 trackinguuid = Common.ToString(dr["trackinguuid"]),
                 recorddatetime = FormatConvertor.ToDateTimeFormat(Common.ToDateTime(dr["recorddatetime"])),
                 movesname = Common.ToString(dr["movesname"]),
-                move_icon = Common.GetSelectedIconPath(Common.ToInt(dr["move_iconid"])),
-                //containerid = new EncryptedData
-                //{
-                //    NumericValue = Common.ToInt(dr["containerid"]),
-                //    EncryptedValue = Common.Encrypt(Common.ToInt(dr["containerid"]))
-                //},
+                move_icon = Common.GetSelectedIconPath(Common.ToInt(dr["move_iconid"])),               
                 bookingid = new EncryptedData
                 {
                     NumericValue = Common.ToInt(dr["bookingid"]),
@@ -244,6 +239,100 @@ namespace ContrackAPI
                 throw;
             }
             return trackingdetails;
+        }
+        public TrackingDTO GetTrackingByUUID(string trackingUuid)
+        {
+            TrackingDTO tracking = new TrackingDTO();
+            try
+            {
+                if (trackingUuid != "")
+                {
+                    tracking = ParseTracking("SELECT * FROM tracking.container_movement_tracking_get_by_trackinguuid('" + trackingUuid + "', '" + 1 + "', '" + 2 + "');");
+                }
+            }
+            catch (Exception ex)
+            {
+                RecordException(ex);
+            }
+            return tracking;
+        }
+
+        private TrackingDTO ParseTracking(string qry)
+        {
+            TrackingDTO tracking = new TrackingDTO();
+            try
+            {
+                using (SqlDB Db = new SqlDB(DatabaseCollection.Contrack))
+                {
+                    DataTable tbl = Db.GetDataTable(qry);
+                    if (tbl == null || tbl.Rows.Count == 0)
+                        return null;
+                    {
+                        tracking.TrackingId = new EncryptedData()
+                        {
+                            NumericValue = Common.ToInt(tbl.Rows[0]["cmt_trackingid"]),
+                            EncryptedValue = Common.Encrypt(Common.ToInt(tbl.Rows[0]["cmt_trackingid"]))
+                        };
+                        tracking.TrackingUuid = Common.ToString(tbl.Rows[0]["cmt_trackinguuid"]);
+                        //tracking.Container.containerid = new EncryptedData()
+                        //{
+                        //    NumericValue = Common.ToInt(tbl.Rows[0]["cmt_containerid"]),
+                        //    EncryptedValue = Common.Encrypt(Common.ToInt(tbl.Rows[0]["cmt_containerid"]))
+                        //};
+                        //tracking.Container.containeruuid = Common.ToString(tbl.Rows[0]["cmt_containeruuid"]);
+                        //tracking.ContainerBooking.bookingid = new EncryptedData()
+                        //{
+                        //    NumericValue = Common.ToInt(tbl.Rows[0]["cmt_bookingid"]),
+                        //    EncryptedValue = Common.Encrypt(Common.ToInt(tbl.Rows[0]["cmt_bookingid"]))
+                        //};
+                       // tracking.ContainerBooking.bookinguuid = Common.ToString(tbl.Rows[0]["cmt_bookinguuid"]);
+                        //tracking.Moves.MovesId = new EncryptedData()
+                        //{
+                        //    NumericValue = Common.ToInt(tbl.Rows[0]["cmt_movetype"]),
+                        //    EncryptedValue = Common.Encrypt(Common.ToInt(tbl.Rows[0]["cmt_movetype"]))
+                        //};
+                        tracking.LocationDetailId = new EncryptedData()
+                        {
+                            NumericValue = Common.ToInt(tbl.Rows[0]["cmt_locationdetailid"]),
+                            EncryptedValue = Common.Encrypt(Common.ToInt(tbl.Rows[0]["cmt_locationdetailid"]))
+                        };
+                        tracking.RecordDateTime = Common.ToDateTimeString(tbl.Rows[0]["cmt_recorddatetime"], Common.DBDateTimeformat);
+                        tracking.CurrentVoyageId = new EncryptedData()
+                        {
+                            NumericValue = Common.ToInt(tbl.Rows[0]["cmt_voyageid"]),
+                            EncryptedValue = Common.Encrypt(Common.ToInt(tbl.Rows[0]["cmt_voyageid"]))
+                        };
+                        tracking.CurrentVoyageName = Common.ToString(tbl.Rows[0]["cmt_currentvoyagename"]);
+                        //tracking.NextMoves.MovesId = new EncryptedData()
+                        //{
+                        //    NumericValue = Common.ToInt(tbl.Rows[0]["cmt_nextmove"]),
+                        //    EncryptedValue = Common.Encrypt(Common.ToInt(tbl.Rows[0]["cmt_nextmove"]))
+                        //};
+                        tracking.NextLocationDetailId = new EncryptedData()
+                        {
+                            NumericValue = Common.ToInt(tbl.Rows[0]["cmt_nextlocationdetailid"]),
+                            EncryptedValue = Common.Encrypt(Common.ToInt(tbl.Rows[0]["cmt_nextlocationdetailid"]))
+                        };
+                        tracking.NextDateTime = Common.ToDateTimeString(tbl.Rows[0]["cmt_nextdatetime"], Common.DBDateTimeformat);
+                        tracking.NextVoyageId = new EncryptedData()
+                        {
+                            NumericValue = Common.ToInt(tbl.Rows[0]["cmt_nextvoyageid"]),
+                            EncryptedValue = Common.Encrypt(Common.ToInt(tbl.Rows[0]["cmt_nextvoyageid"]))
+                        };
+                        tracking.NextVoyageName = Common.ToString(tbl.Rows[0]["cmt_nextvoyagename"]);
+                        tracking.IsDamaged = Common.ToBool(tbl.Rows[0]["cmt_isdamaged"]);
+                        tracking.NoOfDamages = Common.ToInt(tbl.Rows[0]["cmt_noofdamages"]);
+                       // tracking.CreationInfo.Timestamp = Common.ToDateTime(tbl.Rows[0]["cmt_createdat"]);
+                       // tracking.CreationInfo.ID = Common.ToInt(tbl.Rows[0]["cmt_createdby"]);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                RecordException(ex);
+            }
+
+            return tracking;
         }
     }
 }
