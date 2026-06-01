@@ -14,10 +14,7 @@ namespace ContrackAPI
                 {
                     string filters = JsonConvert.SerializeObject(filter ?? new BookingListFilter());
                     DataTable tbl = db.GetDataTable(
-                        "SELECT * FROM booking.booking_list('"
-                        + 1 + "','"
-                        + Common.Escape(filters) + "','"
-                        + 2 + "');");
+                        "SELECT * FROM booking.booking_list('" + 1 + "','" + Common.Escape(filters) + "','" + 2 + "');");
                       if (tbl == null || tbl.Rows.Count == 0)
                 return null;
                     var statusList = Status.GetStatus();
@@ -33,9 +30,7 @@ namespace ContrackAPI
                                 },
                                 bookinguuid = Common.ToString(dr["bookinguuid"]),
                                 bookingno = Common.ToString(dr["bookingno"]),
-                                bookingdate = FormatConvertor.ToClientDateTimeFormat(
-                                                        Common.ToDateTime(dr["bookingdate"])
-                                                    ),
+                                bookingdate = FormatConvertor.ToClientDateTimeFormat(Common.ToDateTime(dr["bookingdate"])),
                                 pol = new EncryptedData
                                 {
                                     NumericValue = Common.ToInt(dr["pol"]),
@@ -80,8 +75,7 @@ namespace ContrackAPI
                     DataTable tbl = Db.GetDataTable(
                         "SELECT * FROM booking.booking_get_customer(" +
                         "p_bookinguuid := '" + Common.Escape(bookinguuid) + "'," +
-                        "p_hubid := '" + 1 + "'" +
-                        ");");
+                        "p_hubid := '" + 1 + "'" + ");");
                     var statusList = Status.GetStatus();
                     if (tbl.Rows.Count > 0)
                     {
@@ -337,127 +331,7 @@ namespace ContrackAPI
             }
             return services;
         }
-        //public List<ContainerBookingDetailDTO> GetContainerBookingDetailByBookingUUId(string bookinguuid)
-        //{
-        //    List<ContainerBookingDetailDTO> list = new List<ContainerBookingDetailDTO>();
-
-        //    try
-        //    {
-        //        using (SqlDB Db = new SqlDB(DatabaseCollection.Contrack))
-        //        {
-        //            DataTable tbl = Db.GetDataTable(
-        //                @"SELECT * FROM booking.booking_get_containerdetail(" +
-        //                "p_bookinguuid := '" + Common.Escape(bookinguuid) + "'," +
-        //                "p_hubid := '" + 1 + "')"
-        //            );
-        //            var rows = tbl.AsEnumerable();
-        //            list = rows.GroupBy(r => Common.ToInt(r["bookingdetailid"]))
-        //                .Select(containerGrp =>
-        //                {
-        //                    var first = containerGrp.First();
-
-        //                    var dto = new ContainerBookingDetailDTO
-        //                    {
-        //                        bookingdetailid = new EncryptedData
-        //                        {
-        //                            NumericValue = Common.ToInt(first["bookingdetailid"]),
-        //                            EncryptedValue = Common.Encrypt(Common.ToInt(first["bookingdetailid"]))
-        //                        },
-        //                        bookingdetailuuid = Common.ToString(first["bookingdetailuuid"]),
-        //                        bookingid = new EncryptedData
-        //                        {
-        //                            NumericValue = Common.ToInt(first["bookingid"]),
-        //                            EncryptedValue = Common.Encrypt(Common.ToInt(first["bookingid"]))
-        //                        },
-        //                        //containermodeluuid = Common.ToString(first["modeluuid"]),
-        //                        //containertypeid = new EncryptedData
-        //                        //{
-        //                        //    NumericValue = Common.ToInt(first["typeid"]),
-        //                        //    EncryptedValue = Common.Encrypt(Common.ToInt(first["typeid"]))
-        //                        //},
-        //                        //sizeid = new EncryptedData
-        //                        //{
-        //                        //    NumericValue = Common.ToInt(first["sizeid"]),
-        //                        //    EncryptedValue = Common.Encrypt(Common.ToInt(first["sizeid"]))
-        //                        //},
-        //                        ownership = Common.ToInt(first["ownership"]),
-        //                        qty = Common.ToInt(first["qty"]),
-        //                        commodity = Common.ToString(first["commodity"]),
-        //                        grossweight = Common.ToDecimal(first["grossweight"]),
-        //                        volumeweight = Common.ToDecimal(first["volumeweight"]),
-        //                        hscode = Common.ToString(first["hscode"]),
-        //                        cargovalue = Common.ToDecimal(first["cargovalue"]),
-        //                        packagetype = new EncryptedData
-        //                        {
-        //                            NumericValue = Common.ToInt(first["packagetype"]),
-        //                            EncryptedValue = Common.Encrypt(Common.ToInt(first["packagetype"]))
-        //                        },
-        //                        //expectedstuffingdate = FormatConvertor.ToDateFormat(Common.ToDateTime(first["expectedstuffingdate"])),
-        //                        stuffinglocation = Common.ToString(first["stuffinglocation"]),
-        //                        pickuplocation = Common.ToString(first["pickuplocation"]),
-        //                        //isdg = Common.ToBool(first["isdg"]),
-        //                        //isreefer = Common.ToBool(first["isreefer"]),
-        //                        sizename = Common.ToString(first["sizename"]),
-        //                        length = Common.ToString(first["length"]),
-        //                        width = Common.ToString(first["width"]),
-        //                        height = Common.ToString(first["height"]),
-        //                        isocode = Common.ToString(first["iso_code"]),
-        //                        modeldescription = Common.ToString(first["description"]),
-        //                        containertypeuuid = Common.ToString(first["typeuuid"]),
-        //                        containertypename = Common.ToString(first["typename"]),
-        //                        containertypeshortname = Common.ToString(first["typeshortname"]),
-        //                        //iconid = new EncryptedData
-        //                        //{
-        //                        //    NumericValue = Common.ToInt(first["iconid"]),
-        //                        //    EncryptedValue = Common.Encrypt(Common.ToInt(first["iconid"]))
-        //                        //},
-        //                        icon = Common.ToString(first["icon"]),
-        //                        empty_full = Common.ToString(first["empty_full"]),
-        //                    };
-        //                    //dto.services = containerGrp
-        //                    //    .Where(r => Common.ToInt(r["serviceid"]) > 0)
-        //                    //    .GroupBy(r => Common.ToInt(r["serviceid"]))
-        //                    //    .Select(serviceGrp =>
-        //                    //    {
-        //                    //        var s = serviceGrp.First();
-
-        //                    //        return new ContainerBookingDetailServicesDTO
-        //                    //        {
-        //                    //            bookingdetailserviceid = new EncryptedData
-        //                    //            {
-        //                    //                NumericValue = Common.ToInt(s["bookingdetailserviceid"]),
-        //                    //                EncryptedValue = Common.Encrypt(Common.ToInt(s["bookingdetailserviceid"]))
-        //                    //            },
-        //                    //            bookingdetailid = new EncryptedData
-        //                    //            {
-        //                    //                NumericValue = Common.ToInt(first["bookingdetailid"]),
-        //                    //                EncryptedValue = Common.Encrypt(Common.ToInt(first["bookingdetailid"]))
-        //                    //            },
-        //                    //            serviceid = new EncryptedData
-        //                    //            {
-        //                    //                NumericValue = Common.ToInt(s["serviceid"]),
-        //                    //                EncryptedValue = Common.Encrypt(Common.ToInt(s["serviceid"]))
-        //                    //            },
-        //                    //            servicetype = new EncryptedData
-        //                    //            {
-        //                    //                NumericValue = Common.ToInt(s["servicetype"]),
-        //                    //                EncryptedValue = Common.Encrypt(Common.ToInt(s["servicetype"]))
-        //                    //            },
-        //                    //            servicename = Common.ToString(s["servicename"]),
-        //                    //            serviceorderby = Common.ToInt(s["serviceorderby"])
-        //                    //        };
-        //                    //    }).OrderBy(s => s.serviceorderby).ToList();
-        //                    //return dto;
-        //                }).ToList();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        RecordException(ex);
-        //    }
-
-        //    return list;
-        //}
+       
         public List<ContainerBookingDetailDTO> GetContainerBookingDetailByBookingUUId(string bookinguuid)
         {
             List<ContainerBookingDetailDTO> list = new List<ContainerBookingDetailDTO>();
@@ -488,14 +362,8 @@ namespace ContrackAPI
                                     EncryptedValue = Common.Encrypt(Common.ToInt(first["bookingdetailid"]))
                                 },
                                 bookingdetailuuid = Common.ToString(first["bookingdetailuuid"]),
-                                //bookingid = new EncryptedData
-                                //{
-                                //    NumericValue = Common.ToInt(first["bookingid"]),
-                                //    EncryptedValue = Common.Encrypt(Common.ToInt(first["bookingid"]))
-                                //},
                                 ownership = Common.ToInt(first["ownership"]),
                                 ownershipname = Common.GetOperatorName(Common.ToInt(first["ownership"])),
-
                                 qty = Common.ToInt(first["qty"]),
                                 commodity = Common.ToString(first["commodity"]),
                                 volumeweight = Common.ToDecimal(first["volumeweight"]),
@@ -510,7 +378,6 @@ namespace ContrackAPI
                                 containertypename = Common.ToString(first["typename"]),
                                 icon = Common.ToString(first["icon"]),
                                 empty_full = Common.GetFullEmptyName(Common.ToString(first["empty_full"]))
-
                             };
 
                             return dto;

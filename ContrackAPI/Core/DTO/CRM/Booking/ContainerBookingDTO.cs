@@ -42,24 +42,13 @@
         public string pod_countryflag { get; set; } = "";
         public string shippername { get; set; } = "";
         public string shipperpiccustom { get; set; } = "";
-        //public string shipperpic_name { get; set; } = "";
-       // public string shipperpic_email { get; set; } = "";
-       // public string shipperpic_phone { get; set; } = "";
         public string shipperemail { get; set; } = "";
-       // public string shipperemailtemp { get; set; } = "";
         public string shipperphone { get; set; } = "";
-        //public string shipperphonetemp { get; set; } = "";
         public string shipperaddress { get; set; } = "";
         public string consigneename { get; set; } = "";
         public EncryptedData consigneepic { get; set; } = new EncryptedData();
-      //  public string consigneepiccustom { get; set; } = "";
-      //  public string consigneepic_name { get; set; } = "";
-       // public string consigneepic_email { get; set; } = "";
-       // public string consigneepic_phone { get; set; } = "";
         public string consigneeemail { get; set; } = "";
-      //  public string consigneeemailtemp { get; set; } = "";
         public string consigneephone { get; set; } = "";
-       // public string consigneephonetemp { get; set; } = "";
         public string consigneeaddress { get; set; } = "";
         public string voyageuuid { get; set; } = "";
     }
@@ -67,9 +56,7 @@
     public class ContainerBookingDetailDTO
     {
      public EncryptedData bookingdetailid { get; set; } = new EncryptedData();
-        public string bookingdetailuuid { get; set; } = "";
-       // public EncryptedData bookingid { get; set; } = new EncryptedData();
-       
+        public string bookingdetailuuid { get; set; } = "";       
         public int ownership { get; set; }
         public string ownershipname { get; set; } = "";
         public int qty { get; set; } = 0;

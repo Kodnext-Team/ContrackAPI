@@ -199,5 +199,27 @@ namespace ContrackAPI
                 RecordException(ex);
             }
         }
+        public APIResponse GetTrackingByUUID(string trackinguuid)
+        {
+            try
+            {
+                var dto = _repo.GetTrackingByUUID(trackinguuid);
+                if (dto != null && !string.IsNullOrEmpty(dto.TrackingUuid))
+                {
+                    response.Result = Common.SuccessMessage("Success");
+                    response.Data = dto;
+                }
+                else
+                {
+                    response.Result = Common.ErrorMessage("No data found");
+                }
+            }
+            catch (Exception ex)
+            {
+                RecordException(ex);
+                response.Result = Common.ErrorMessage(ex.Message);
+            }
+            return response;
+        }
     }
 }
