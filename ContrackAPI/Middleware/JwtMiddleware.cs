@@ -1,4 +1,4 @@
-﻿using ContrackAPI;
+using ContrackAPI;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -57,6 +57,19 @@ public class JwtMiddleware : CustomException
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.UTF8.GetBytes(_secretKey);
 
+        bool shouldValidateLifetime = true;
+        if (ExtendedTokenStore.TryGetExpiry(token, out DateTime customExpiry))
+        {
+            if (DateTime.UtcNow < customExpiry)
+            {
+                shouldValidateLifetime = false;
+            }
+            else
+            {
+                throw new SecurityTokenExpiredException("Token custom extension expired");
+            }
+        }
+
         var validationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
@@ -65,7 +78,7 @@ public class JwtMiddleware : CustomException
             ValidIssuer = _issuer,
             ValidateAudience = true,
             ValidAudience = _audience,
-            ValidateLifetime = true,
+            ValidateLifetime = shouldValidateLifetime,
             ClockSkew = TimeSpan.Zero
         };
 
