@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace ContrackAPI.Controllers.Container
+namespace ContrackAPI
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -40,6 +40,7 @@ namespace ContrackAPI.Controllers.Container
             }
             return Ok(response);
         }
+        [AllowAnonymous]
         [HttpGet("GetTrackingDetails")]
         public IActionResult GetTrackingDetails(string containeruuid, string bookinguuid)
         {
@@ -54,18 +55,18 @@ namespace ContrackAPI.Controllers.Container
             }
 
         }
-        [AllowAnonymous]
-        [HttpGet("GetTrackingByUUID")]
-        public IActionResult GetTrackingByUUID(string trackinguuid)
-        {
-            try
-            {
-                response = _service.GetTrackingByUUID(trackinguuid);
-            }
-            catch (Exception ex)
-            {
-            }
-            return Ok(response);
-        }
+        //[AllowAnonymous]
+        //[HttpGet("GetTrackingByUUID")]
+        //public IActionResult GetTrackingByUUID(string trackinguuid)
+        //{
+        //    try
+        //    {
+        //        response = _service.GetTrackingByUUID(trackinguuid);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //    }
+        //    return Ok(response);
+        //}
     }
 }

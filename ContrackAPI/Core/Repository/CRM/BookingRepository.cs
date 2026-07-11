@@ -102,6 +102,7 @@ namespace ContrackAPI
                         };
 
                         model.customertypename = Common.GetCustomerTypeName(customerType);
+                        model.bookingdate = Common.ToDateTimeString(dr["bookingdate"], "yyyy-MM-dd HH:mm");
                         model.fullempty = Common.GetFullEmptyName(Common.ToString(dr["fullempty"]));
                         model.mode = new EncryptedData()
                         {
@@ -577,5 +578,72 @@ namespace ContrackAPI
             return result;
         }
 
+        public List<BookedContainerDTO> GetBookedContainers(string bookinguuid, BookedContainerFilter filters)
+        {
+            List<BookedContainerDTO> list = new List<BookedContainerDTO>();
+            try
+            {
+                using (SqlDB db = new SqlDB(DatabaseCollection.Contrack))
+                {
+                    string filterJson = JsonConvert.SerializeObject(filters ?? new BookedContainerFilter());
+                    string query = "SELECT * FROM booking.booked_container_list('" + 1 + "','" + Common.Escape(bookinguuid) + "','" + Common.Escape(filterJson) + "','" + 2 + "');";
+                    DataTable tbl = db.GetDataTable(query);
+                    if (tbl != null)
+                    {
+                        foreach (DataRow dr in tbl.Rows)
+                        {
+                            list.Add(new BookedContainerDTO
+                            {
+                                RowIndex = Common.ToInt(dr["row_index"]),
+                                TotalCount = Common.ToLong(dr["total_count"]),
+
+                                ContainerId = new EncryptedData()
+                                {
+                                    EncryptedValue = Common.Encrypt(Common.ToInt(dr["containerid"])),
+                                    NumericValue = Common.ToInt(dr["containerid"]),
+                                },
+                                ContainerUuid = Common.ToString(dr["containeruuid"]),
+                                ContainerNo = Common.ToString(dr["containerno"]),
+
+                                IsoCode = Common.ToString(dr["iso_code"]),
+                                ContainerTypeName = Common.ToString(dr["containertypename"]),
+                                ContainerSizeName = Common.ToString(dr["containersizename"]),
+                                operatorname = Common.GetOperatorName(Common.ToInt(dr["operator_code"])),
+                                IsDamaged = Common.ToBool(dr["isdamaged"]),
+                                VoyageUuid = Common.ToString(dr["voyageuuid"]),
+                                VoyageNumber = Common.ToString(dr["voyagenumber"]),
+                                PolPortCode = Common.ToString(dr["pol_portcode"]),
+                                PolPortName = Common.ToString(dr["pol_portname"]),
+                                PolCountryCode = Common.ToString(dr["pol_countrycode"]),
+                                PolCountryName = Common.ToString(dr["pol_countryname"]),
+                                PolCountryFlag = Common.ToString(dr["pol_countryflag"]),
+                                PodPortCode = Common.ToString(dr["pod_portcode"]),
+                                PodPortName = Common.ToString(dr["pod_portname"]),
+                                PodCountryCode = Common.ToString(dr["pod_countrycode"]),
+                                PodCountryName = Common.ToString(dr["pod_countryname"]),
+                                PodCountryFlag = Common.ToString(dr["pod_countryflag"]),
+                                CurrentLocationName = Common.ToString(dr["current_locationname"]),
+                                CurrentPortName = Common.ToString(dr["current_portname"]),
+                                CurrentCountryName = Common.ToString(dr["current_countryname"]),
+                                CurrentCountryFlag = Common.ToString(dr["current_countryflag"]),
+                                MoveName = Common.ToString(dr["movename"]),
+                                MoveIconID = Common.ToInt(dr["iconid"]),
+                                IsEmpty = FormatConvertor.ToEmptyFull(Common.ToBool(dr["isempty"])),
+
+                                //ContainerTypeID = Common.ToInt(dr["typeid"]),
+                                //ContainerSizeID = Common.ToInt(dr["sizeid"]),
+                                lastmovedatetime = FormatConvertor.ToClientDateTimeFormat(Common.ToDateTime(dr["lastmovedatetime"]))
+
+                            });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                RecordException(ex);
+            }
+            return list;
+        }
     }
 }

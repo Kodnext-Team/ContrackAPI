@@ -136,7 +136,7 @@ namespace ContrackAPI
                 {
                     DataTable tbl = Db.GetDataTable("SELECT * FROM tracking.container_movement_tracking_get_by_uuid('" + containerUuid + "', '" + bookingUuid + "', " + 1 + ", " + 2 + ");");
                     if (tbl == null || tbl.Rows.Count == 0)
-                        return null;
+                        return new List<TrackingDetailsDTO>();
                     trackingdetails = (from DataRow dr in tbl.Rows
                                        select new TrackingDetailsDTO
                                        {
@@ -146,18 +146,18 @@ namespace ContrackAPI
                                                EncryptedValue = Common.Encrypt(Common.ToInt(dr["trackingid"]))
                                            },
                                            TrackingUuid = Common.ToString(dr["trackinguuid"]),
-                                           ContainerId = new EncryptedData
-                                           {
-                                               NumericValue = Common.ToInt(dr["containerid"]),
-                                               EncryptedValue = Common.Encrypt(Common.ToInt(dr["containerid"]))
-                                           },
-                                           ContainerUuid = Common.ToString(dr["containeruuid"]),
-                                           BookingId = new EncryptedData
-                                           {
-                                               NumericValue = Common.ToInt(dr["bookingid"]),
-                                               EncryptedValue = Common.Encrypt(Common.ToInt(dr["bookingid"]))
-                                           },
-                                           BookingUuid = Common.ToString(dr["bookinguuid"]),
+                                           //ContainerId = new EncryptedData
+                                           //{
+                                           //    NumericValue = Common.ToInt(dr["containerid"]),
+                                           //    EncryptedValue = Common.Encrypt(Common.ToInt(dr["containerid"]))
+                                           //},
+                                           //ContainerUuid = Common.ToString(dr["containeruuid"]),
+                                           //BookingId = new EncryptedData
+                                           //{
+                                           //    NumericValue = Common.ToInt(dr["bookingid"]),
+                                           //    EncryptedValue = Common.Encrypt(Common.ToInt(dr["bookingid"]))
+                                           //},
+                                           //BookingUuid = Common.ToString(dr["bookinguuid"]),
                                            MoveTypeId = new EncryptedData
                                            {
                                                NumericValue = Common.ToInt(dr["movetype"]),
@@ -165,19 +165,19 @@ namespace ContrackAPI
                                            },
                                            CurrentMovesName = Common.ToString(dr["currentmovesname"]),
                                            CurrentMovesIcon = Common.ToString(dr["currentmovesicon"]),
-                                           LocationDetailId = new EncryptedData
-                                           {
-                                               NumericValue = Common.ToInt(dr["locationdetailid"]),
-                                               EncryptedValue = Common.Encrypt(Common.ToInt(dr["locationdetailid"]))
-                                           },
-                                           LocationUuid = Common.ToString(dr["locationuuid"]),
+                                           //LocationDetailId = new EncryptedData
+                                           //{
+                                           //    NumericValue = Common.ToInt(dr["locationdetailid"]),
+                                           //    EncryptedValue = Common.Encrypt(Common.ToInt(dr["locationdetailid"]))
+                                           //},
+                                           //LocationUuid = Common.ToString(dr["locationuuid"]),
                                            CurrentLocationName = Common.ToString(dr["currentlocationname"]),
                                            CurrentLocationCode = Common.ToString(dr["currentlocationcode"]),
-                                           CurrentPortId = new EncryptedData
-                                           {
-                                               NumericValue = Common.ToInt(dr["currentportid"]),
-                                               EncryptedValue = Common.Encrypt(Common.ToInt(dr["currentportid"]))
-                                           },
+                                           //CurrentPortId = new EncryptedData
+                                           //{
+                                           //    NumericValue = Common.ToInt(dr["currentportid"]),
+                                           //    EncryptedValue = Common.Encrypt(Common.ToInt(dr["currentportid"]))
+                                           //},
                                            CurrentLocationTypeName = Common.ToString(dr["currentlocationtypename"]),
                                            CurrentPortName = Common.ToString(dr["currentportname"]),
                                            CurrentPortCode = Common.ToString(dr["currentportcode"]),
@@ -192,11 +192,11 @@ namespace ContrackAPI
                                            },
                                            NextMovesName = Common.ToString(dr["nextmovesname"]),
                                            NextMovesIcon = Common.ToString(dr["nextmovesicon"]),
-                                           NextLocationDetailId = new EncryptedData
-                                           {
-                                               NumericValue = Common.ToInt(dr["nextlocationdetailid"]),
-                                               EncryptedValue = Common.Encrypt(Common.ToInt(dr["nextlocationdetailid"]))
-                                           },
+                                           //NextLocationDetailId = new EncryptedData
+                                           //{
+                                           //    NumericValue = Common.ToInt(dr["nextlocationdetailid"]),
+                                           //    EncryptedValue = Common.Encrypt(Common.ToInt(dr["nextlocationdetailid"]))
+                                           //},
                                            NextLocationUuid = Common.ToString(dr["nextlocationuuid"]),
                                            NextLocationName = Common.ToString(dr["nextlocationname"]),
                                            NextLocationCode = Common.ToString(dr["nextlocationcode"]),
@@ -213,23 +213,23 @@ namespace ContrackAPI
                                            NextCountryFlag = Common.ToString(dr["nextcountryflag"]),
                                            NextDateTime = Common.ToDateTimeString(dr["nextdatetime"], Common.HumanDateTimeformat),
                                            IsDamaged = Common.ToBool(dr["isdamaged"]),
-                                           NoOfDamages = Common.ToInt(dr["noofdamages"]),
+                                          // NoOfDamages = Common.ToInt(dr["noofdamages"]),
                                            ContainerEquipmentno = Common.ToString(dr["containerequipmentno"]),
                                            ContainerTypeName = Common.ToString(dr["containertypename"]),
                                            ContainerSizeName = Common.ToString(dr["containersizename"]),
-                                           CreatedAt = Common.ToDateTimeString(Common.ToClientDateTime(dr["createdat"]), Common.HumanDateTimeformat),
-                                           CreatedBy = new EncryptedData
-                                           {
-                                               NumericValue = Common.ToInt(dr["createdby"]),
-                                               EncryptedValue = Common.Encrypt(Common.ToInt(dr["createdby"]))
-                                           },
-                                           IsDeleted = Common.ToBool(dr["isdeleted"]),
-                                           DeletedBy = new EncryptedData
-                                           {
-                                               NumericValue = Common.ToInt(dr["deletedby"]),
-                                               EncryptedValue = Common.Encrypt(Common.ToInt(dr["deletedby"]))
-                                           },
-                                           DeletedAt = Common.ToDateTimeString(dr["deletedat"], "yyyy-MM-dd HH:mm")
+                                           //CreatedAt = Common.ToDateTimeString(Common.ToClientDateTime(dr["createdat"]), Common.HumanDateTimeformat),
+                                           //CreatedBy = new EncryptedData
+                                           //{
+                                           //    NumericValue = Common.ToInt(dr["createdby"]),
+                                           //    EncryptedValue = Common.Encrypt(Common.ToInt(dr["createdby"]))
+                                           //},
+                                           //IsDeleted = Common.ToBool(dr["isdeleted"]),
+                                           //DeletedBy = new EncryptedData
+                                           //{
+                                           //    NumericValue = Common.ToInt(dr["deletedby"]),
+                                           //    EncryptedValue = Common.Encrypt(Common.ToInt(dr["deletedby"]))
+                                           //},
+                                           //DeletedAt = Common.ToDateTimeString(dr["deletedat"], "yyyy-MM-dd HH:mm")
                                        }).ToList();
                 }
             }

@@ -66,7 +66,7 @@ namespace ContrackAPI
                 return Ok(new APIResponse());
             }
         }
-
+        [AllowAnonymous]
         [HttpGet("ContainerSelection")]
         public IActionResult GetContainerSelection(string bookinguuid)
         {
@@ -86,6 +86,21 @@ namespace ContrackAPI
             try
             {
                 response = _service.SaveContainerSelection(bookingmodel);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return Ok(new APIResponse());
+            }
+        }
+        [AllowAnonymous]
+        [HttpPost("GetBookedContainers")]
+        public IActionResult GetBookedContainers([FromQuery] string bookinguuid, [FromBody] BookedContainerFilter filter)
+        {
+            try
+            {
+                filter ??= new BookedContainerFilter();
+                response = _service.GetBookedContainers(bookinguuid, filter);
                 return Ok(response);
             }
             catch (Exception ex)

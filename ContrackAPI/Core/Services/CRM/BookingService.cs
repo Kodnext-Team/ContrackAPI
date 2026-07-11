@@ -342,5 +342,28 @@ namespace ContrackAPI
             }
             return response;
         }
+
+        public APIResponse GetBookedContainers(string bookinguuid, BookedContainerFilter filter)
+        {
+            var response = new APIResponse();
+            try
+            {
+                var data = _repo.GetBookedContainers(bookinguuid, filter);
+                if (data == null)
+                {
+                    response.Result = Common.ErrorMessage("No data found");
+                }
+                else
+                {
+                    response.Result = Common.SuccessMessage("Success");
+                    response.Data = data;
+                }
+            }
+            catch (Exception ex)
+            {
+                RecordException(ex);
+            }
+            return response;
+        }
     }
 }

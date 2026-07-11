@@ -10,6 +10,6 @@ namespace ContrackAPI
     {
         public LoginDTO LoginInfo { get; set; } = new LoginDTO();
         //public Result result { get; set; }
-        public HubDTO HubInfo { get; set; } = new HubDTO();
+       // public HubDTO HubInfo { get; set; } = new HubDTO();
     }
 }
