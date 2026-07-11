@@ -34,7 +34,7 @@
                 response.Data = new Login
                 {
                     LoginInfo = loginDto,
-                    HubInfo = _HubRepository.GetHubByID(loginDto.HubID)
+                   // HubInfo = _HubRepository.GetHubByID(loginDto.HubID)
                 };
             }
             return response;

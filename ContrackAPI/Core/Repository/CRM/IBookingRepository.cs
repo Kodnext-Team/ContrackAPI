@@ -1,4 +1,4 @@
-﻿namespace ContrackAPI
+namespace ContrackAPI
 {
     public interface IBookingRepository
     {
@@ -12,7 +12,6 @@
         List<ContainerSelectionDTO> GetContainerSelection(string bookinguuid);
         List<ContainerAllottedDTO> GetContainerAllotment(string bookinguuid);
         Result SaveContainerSelection(string bookingid, List<ContainerSelectionDTO> selections);
-
-
+        List<BookedContainerDTO> GetBookedContainers(string bookinguuid, BookedContainerFilter filters);
     }
 }

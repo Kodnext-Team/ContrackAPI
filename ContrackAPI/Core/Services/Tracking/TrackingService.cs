@@ -101,35 +101,56 @@ namespace ContrackAPI
         }
         public APIResponse GetTrackingDetails(string containeruuid, string bookinguuid)
         {
-            var response = new APIResponse();
+            APIResponse response = new APIResponse();
 
             try
             {
-                if (string.IsNullOrEmpty(containeruuid) || string.IsNullOrEmpty(bookinguuid))
+                if (string.IsNullOrWhiteSpace(containeruuid) || string.IsNullOrWhiteSpace(bookinguuid))
                 {
                     response.Result = Common.ErrorMessage("Invalid input");
                     return response;
                 }
+
+                // Get Booking Details
                 var bookingResponse = _bookingService.GetBookingByUUID(bookinguuid);
                 var booking = bookingResponse.Data as ContainerBooking;
-                var list = _repo.GetTrackingDetails(containeruuid, bookinguuid);
-                var resultData = new TrackingDetails
+
+                if (booking == null)
                 {
-                    Trackingdetails = list ?? new List<TrackingDetailsDTO>(),
-                    booking = booking
-                };
-                if (list == null)
-                {
-                    response.Result = Common.ErrorMessage("No tracking data found");
+                    response.Result = Common.ErrorMessage("Booking not found");
+                    return response;
                 }
-                else
+
+                TrackingBookingSummaryDTO bookingSummary = new TrackingBookingSummaryDTO
                 {
-                    AddNextMoveOfLastMove(list);
-                    AddVoyageOfBooking(list, booking);
+                    bookingid = booking.booking.bookingid,
+                    bookinguuid = booking.booking.bookinguuid,
+                    bookingno = booking.booking.bookingno,
+                    customer = booking.booking.customer,
+                    location = booking.booking.location
+                };
+                List<TrackingDetailsDTO> trackingList = _repo.GetTrackingDetails(containeruuid, bookinguuid);
+                if (trackingList == null)
+                {
+                    trackingList = new List<TrackingDetailsDTO>();
+                }
+                if (trackingList.Any())
+                {
+                    AddNextMoveOfLastMove(trackingList);
+                    AddVoyageOfBooking(trackingList, booking);
 
                     response.Result = Common.SuccessMessage("Success");
                 }
-                response.Data = resultData;
+                else
+                {
+                    response.Result = Common.SuccessMessage("Booking found. No tracking data available.");
+                }
+
+                response.Data = new TrackingDetails
+                {
+                    booking = bookingSummary,
+                    Trackingdetails = trackingList
+                };
             }
             catch (Exception ex)
             {
@@ -153,12 +174,12 @@ namespace ContrackAPI
                             MoveTypeId = lastmove.NextMoveId,
                             CurrentMovesName = lastmove.NextMovesName,
                             CurrentMovesIcon = lastmove.NextMovesIcon,
-                            LocationDetailId = lastmove.NextLocationDetailId,
+                           // LocationDetailId = lastmove.NextLocationDetailId,
                             CurrentLocationName = lastmove.NextLocationName,
                             CurrentLocationCode = lastmove.NextLocationCode,
                             CurrentCountryCode = lastmove.NextCountryCode,
                             CurrentCountryFlag = lastmove.NextCountryFlag,
-                            CurrentPortId = lastmove.NextPortId,
+                           // CurrentPortId = lastmove.NextPortId,
                             CurrentPortCode = lastmove.NextPortCode,
                             CurrentPortName = lastmove.NextPortName,
                             RecordDateTime = lastmove.NextDateTime,
@@ -182,12 +203,12 @@ namespace ContrackAPI
                     MoveTypeId = new EncryptedData(),
                     CurrentMovesName = "Port of Discharge",
                     CurrentMovesIcon = "",
-                    LocationDetailId = new EncryptedData(),
+                  //  LocationDetailId = new EncryptedData(),
                     CurrentLocationName = "",
                     CurrentLocationCode = "",
                     CurrentCountryCode = "",
                     CurrentCountryFlag = "",
-                    CurrentPortId = new EncryptedData(),
+                   // CurrentPortId = new EncryptedData(),
                     //CurrentPortCode = booking.voyage.Vesselname,
                     //CurrentPortName = booking.voyage.VoyageNumber,
                     RecordDateTime = booking.booking.location.pod_portname,

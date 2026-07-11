@@ -10,12 +10,14 @@
         public List<ContainerBookingDetailDTO> details { get; set; } = new List<ContainerBookingDetailDTO>();
        
     }
+    
 
     public class BookingCustomerDTO
     {
         public string agencyname { get; set; } = "";
         public EncryptedData customertype { get; set; } = new EncryptedData() { EncryptedValue = Common.Encrypt(1), NumericValue = 1 };
         public string customertypename { get; set; } = "";
+        public string bookingdate { get; set; } = Common.ToDateTimeString(DateTime.Now, "yyyy-MM-dd HH:mm");
 
         public FormattedValue<int> status { get; set; } = new FormattedValue<int>();
         public string fullempty { get; set; } = "";

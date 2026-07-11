@@ -9,6 +9,6 @@ namespace ContrackAPI
     public class TrackingDetails
     {
         public List<TrackingDetailsDTO> Trackingdetails { get; set; } = new List<TrackingDetailsDTO>();
-        public ContainerBooking booking { get; set; } = new ContainerBooking();
+        public TrackingBookingSummaryDTO booking { get; set; } = new TrackingBookingSummaryDTO();
     }
 }
