@@ -63,6 +63,7 @@
 
         public FormattedValue<int> is_empty { get; set; } = new FormattedValue<int>();
         public FormattedValue<int> status_code { get; set; } = new FormattedValue<int>();
+        public string containerimage { get; set; } = "";
     }
     public class ContainerEquipmentDTO
     {

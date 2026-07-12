@@ -89,22 +89,89 @@ namespace ContrackAPI
             }
             return model;
         }
-    
-    private ContainerDetailDTO ParseContainerDetail(DataRow dr)
+
+        //private ContainerDetailDTO ParseContainerDetail(DataRow dr)
+        //    {
+        //        var formattedAge = FormatConvertor.ToDateTimeFormat(Common.ToDateTimeOff(dr["manufacturedate"]));
+        //        if (!string.IsNullOrEmpty(formattedAge.SubText))
+        //        {
+        //            formattedAge.SubText = formattedAge.SubText.Replace("ago", "old");
+        //        }
+        //        int ageInYears = formattedAge.NumericValue != 0 ? Math.Abs(formattedAge.NumericValue / 365) : 0;
+        //        return new ContainerDetailDTO()
+        //        {
+        //            containerid = new EncryptedData()
+        //            {
+        //                NumericValue = Common.ToInt(dr["containerid"]),
+        //                EncryptedValue = Common.Encrypt(Common.ToInt(dr["containerid"]))
+        //            },
+        //            containeruuid = Common.ToString(dr["containeruuid"]),
+        //            equipmentno = Common.ToString(dr["equipmentno"]),
+        //            containermodeluuid = Common.ToString(dr["containermodeluuid"]),
+        //            type_name = Common.ToString(dr["typename"]),
+        //            operatorname = Common.GetOperatorName(Common.ToInt(dr["operatorid"])),
+        //            locationname = Common.ToString(dr["locationname"]),
+        //            model_iso_code = Common.ToString(dr["model_iso_code"]),
+        //            sizename = Common.ToString(dr["sizename"]),
+        //            manufacturedate = formattedAge,
+        //            is_empty = FormatConvertor.ToEmptyFull(Common.ToBool(dr["is_empty"])),
+        //            status_code = FormatConvertor.ToContainerStatus(Common.ToInt(dr["status_code"])),
+        //            ageinyears = ageInYears,
+        //            agetext = Common.GetAgeGrade(ageInYears),
+        //            moveicon = Common.GetSelectedIconPath(Common.ToInt(dr["moveiconid"])),
+        //            lastmove = Common.ToString(dr["movesname"]),
+        //            bookingno = Common.ToString(dr["bookingno"]),
+        //            bookinguuid = Common.ToString(dr["bookinguuid"]),
+        //            lastmovedatetime = FormatConvertor.ToClientDateTimeFormat(Common.ToDateTime(dr["lastmovedatetime"]))
+        //        };
+        //    }
+
+        private ContainerDetailDTO ParseContainerDetail(DataRow dr)
         {
             var formattedAge = FormatConvertor.ToDateTimeFormat(Common.ToDateTimeOff(dr["manufacturedate"]));
+
             if (!string.IsNullOrEmpty(formattedAge.SubText))
             {
                 formattedAge.SubText = formattedAge.SubText.Replace("ago", "old");
             }
-            int ageInYears = formattedAge.NumericValue != 0 ? Math.Abs(formattedAge.NumericValue / 365) : 0;
-            return new ContainerDetailDTO()
+
+            int ageInYears = formattedAge.NumericValue != 0
+                ? Math.Abs(formattedAge.NumericValue / 365)
+                : 0;
+
+            // Default image
+            string containerimage = "/assets/dbicons/container-img.svg";
+
+            // Get image based on container type
+            IContainerTypeRepository repo = new ContainerTypeRepository();
+            ContainerTypeService typeService = new ContainerTypeService(repo);
+
+            List<ContainerTypeDTO> typeList = typeService.GetContainerTypesList();
+
+            var selectedType = typeList.FirstOrDefault(x =>
+                string.Equals(
+                    x.typename,
+                    Common.ToString(dr["typename"]),
+                    StringComparison.OrdinalIgnoreCase));
+
+            if (selectedType != null)
             {
-                containerid = new EncryptedData()
+                string iconPath = Common.GetIconPath(selectedType.icon.iconid.NumericValue);
+
+                if (!string.IsNullOrWhiteSpace(iconPath))
+                {
+                    containerimage = iconPath;
+                }
+            }
+
+            return new ContainerDetailDTO
+            {
+                containerid = new EncryptedData
                 {
                     NumericValue = Common.ToInt(dr["containerid"]),
                     EncryptedValue = Common.Encrypt(Common.ToInt(dr["containerid"]))
                 },
+
                 containeruuid = Common.ToString(dr["containeruuid"]),
                 equipmentno = Common.ToString(dr["equipmentno"]),
                 containermodeluuid = Common.ToString(dr["containermodeluuid"]),
@@ -122,10 +189,10 @@ namespace ContrackAPI
                 lastmove = Common.ToString(dr["movesname"]),
                 bookingno = Common.ToString(dr["bookingno"]),
                 bookinguuid = Common.ToString(dr["bookinguuid"]),
-                lastmovedatetime = FormatConvertor.ToClientDateTimeFormat(Common.ToDateTime(dr["lastmovedatetime"]))
+                lastmovedatetime = FormatConvertor.ToClientDateTimeFormat(Common.ToDateTime(dr["lastmovedatetime"])),
+                containerimage = containerimage
             };
         }
-
         public List<ContainerEquipmentDTO> GetContainerByEquipmentno(string equipmentno)
         {
             List<ContainerEquipmentDTO> result = new List<ContainerEquipmentDTO>();
