@@ -22,6 +22,7 @@ public class JwtMiddleware : CustomException
 
     public async Task Invoke(HttpContext context)
     {
+
         if (context.GetEndpoint()?.Metadata?.GetMetadata<IAllowAnonymous>() != null)
         {
             await _next(context);
