@@ -16,7 +16,7 @@ namespace ContrackAPI
             using (SqlDB Db = new SqlDB(DatabaseCollection.Contrack))
             {
                 DataTable tbl = Db.GetDataTable(
-                    "SELECT * FROM masters.moves_list('" + Common.HubID + "','" + Common.UserID + "');"
+                    "SELECT * FROM masters.moves_list('" + 1 + "','" + 2 + "');"
                 );
 
                 result = (from DataRow dr in tbl.Rows
@@ -41,9 +41,9 @@ namespace ContrackAPI
                 {
                     DataTable tbl = Db.GetDataTable(
                         "SELECT * FROM masters.container_location_list(" +
-                        "p_hubid := '" + Common.HubID + "'," +
+                        "p_hubid := '" + 1 + "'," +
                         "p_filters := '{}'," +
-                        "p_userid := '" + Common.UserID + "'" +
+                        "p_userid := '" + 2 + "'" +
                         ");"
                     );
                     result = (from DataRow dr in tbl.Rows
@@ -68,7 +68,7 @@ namespace ContrackAPI
             using (SqlDB Db = new SqlDB(DatabaseCollection.Contrack))
             {
                 DataTable tbl = new DataTable();
-                tbl = Db.GetDataTable("SELECT * FROM  masters.moves_list('" + Common.HubID + "','" + Common.UserID + "');");
+                tbl = Db.GetDataTable("SELECT * FROM  masters.moves_list('" + 1 + "','" + 2 + "');");
 
                 result = (from DataRow dr in tbl.Rows
                           select new MovesDTO()

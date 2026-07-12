@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing; // Needed for MapControllers()
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 
 namespace ContrackAPI
 {
@@ -22,13 +21,7 @@ namespace ContrackAPI
             });
             app.UseHttpsRedirection();
             app.UseRouting();
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(
-        Path.Combine(app.Environment.ContentRootPath, "assets")),
-                RequestPath = "/assets"
-            });
-            // app.UseAuthentication();
+           // app.UseAuthentication();
             app.UseMiddleware<JwtMiddleware>();
            // app.UseAuthorization();
             app.MapControllers();

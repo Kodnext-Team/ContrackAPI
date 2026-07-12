@@ -219,7 +219,7 @@ namespace ContrackAPI
                 string safeSearch = Common.Escape(search ?? "");
 
                 string query = @" SELECT * FROM masters.voyage_search(
-            p_hubid := " + Common.HubID + @",
+            p_hubid := " + 1 + @",
             p_allow_create := " + (createnew ? "true" : "false") + @",
             p_search_text := '" + safeSearch + @"'
         );";
