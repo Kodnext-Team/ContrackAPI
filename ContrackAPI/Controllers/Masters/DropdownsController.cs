@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContrackAPI.Controllers.Masters
@@ -8,7 +9,7 @@ namespace ContrackAPI.Controllers.Masters
     public class DropdownsController : ControllerBase
     {
         APIResponse response = new APIResponse();
-
+        [AllowAnonymous]
         [HttpGet("MovesDropdown")]
         public IActionResult GetMovesDropdown([FromQuery] bool showempty = true)
         {
@@ -24,6 +25,7 @@ namespace ContrackAPI.Controllers.Masters
             }
             return Ok(response);
         }
+        [AllowAnonymous]
         [HttpGet("LocationDropdown")]
         public IActionResult GetLocationDropdown([FromQuery] bool showempty = true)
         {
@@ -39,6 +41,7 @@ namespace ContrackAPI.Controllers.Masters
             }
             return Ok(response);
         }
+        [AllowAnonymous]
         [HttpGet("NewMovesDropdown")]
         public IActionResult GetNewMovesDropdown([FromQuery] bool showempty = true)
         {
@@ -54,6 +57,7 @@ namespace ContrackAPI.Controllers.Masters
             }
             return Ok(response);
         }
+        [AllowAnonymous]
         [HttpGet("VoyageSearch")]
         public IActionResult GetVoyageSearch([FromQuery] string SearchText, [FromQuery] bool createnew = false)
         {
@@ -79,6 +83,7 @@ namespace ContrackAPI.Controllers.Masters
             }
             return Ok(response);
         }
+        [AllowAnonymous]
         [HttpGet("PortDropdown")]
         public IActionResult GetPortDropdown([FromQuery] string countryid = "", [FromQuery] bool showempty = true)
         {
@@ -95,6 +100,7 @@ namespace ContrackAPI.Controllers.Masters
 
             return Ok(response);
         }
+        [AllowAnonymous]
         [HttpGet("AgencyDropdown")]
         public IActionResult GetAgenciesUUIDDropdown([FromQuery] bool multiple = true)
         {
@@ -111,6 +117,7 @@ namespace ContrackAPI.Controllers.Masters
 
             return Ok(response);
         }
+        [AllowAnonymous]
         [HttpGet("ClientDropdown")]
         public IActionResult GetClientsByUserIDDropdown([FromQuery] bool multiple = false)
         {
@@ -127,6 +134,7 @@ namespace ContrackAPI.Controllers.Masters
 
             return Ok(response);
         }
+        [AllowAnonymous]
         [HttpGet("CreatedByDropdown")]
         public IActionResult GetCreatedByDropdown()
         {
@@ -143,6 +151,7 @@ namespace ContrackAPI.Controllers.Masters
 
             return Ok(response);
         }
+        [AllowAnonymous]
         [HttpGet("StatusDropdown")]
         public IActionResult GetStatusDropdown()
         {
@@ -159,6 +168,7 @@ namespace ContrackAPI.Controllers.Masters
 
             return Ok(response);
         }
+        [AllowAnonymous]
         [HttpGet("VesselDropdown")]
         public IActionResult GetVesselDropdown(string q = "", string AgencyDetailID = "", string multiple = "")
         {

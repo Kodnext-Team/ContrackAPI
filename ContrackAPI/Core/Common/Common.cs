@@ -215,6 +215,7 @@ namespace ContrackAPI
             }
             return output;
         }
+        public static string ImageBaseUrl { get; set; }
         public static IHttpContextAccessor HttpContextAccessor;
         public static int HubID
         {
@@ -504,8 +505,6 @@ namespace ContrackAPI
             }
         }
         private static List<IconDTO> _icons;
-        public static string BaseUrl =>
-            $"{HttpContextAccessor.HttpContext.Request.Scheme}://{HttpContextAccessor.HttpContext.Request.Host}";
 
         public static IconDTO GetIcon(int iconid)
         {
@@ -519,14 +518,18 @@ namespace ContrackAPI
         {
             var icon = GetIcon(iconid);
 
-            return icon.iscss? icon.icon: $"{BaseUrl}{IconFolder}{icon.icon}";
+            return icon.iscss
+                ? icon.icon
+                : $"{ImageBaseUrl}{IconFolder}{icon.icon}";
         }
 
         public static string GetSelectedIconPath(int iconid)
         {
             var icon = GetIcon(iconid);
 
-            return icon.iscss? icon.iconselected: $"{BaseUrl}{IconFolder}{icon.iconselected}";
+            return icon.iscss
+                ? icon.iconselected
+                : $"{ImageBaseUrl}{IconFolder}{icon.iconselected}";
         }
 
         public static decimal ToDecimal(object data)
