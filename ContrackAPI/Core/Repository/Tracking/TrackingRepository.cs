@@ -89,7 +89,7 @@ namespace ContrackAPI
                          "p_pickselectionuuid := " + Common.GetUUID(tracking.PickSelectionUuid) + "," +
                          "p_containerid := " + Common.Decrypt(tracking.containerid.EncryptedValue) + "," +
                          "p_bookingid := " + Common.Decrypt(tracking.bookingid.EncryptedValue) + "," +
-                         "p_hubid := " + Common.HubID + "," +
+                         "p_hubid := " + 1 + "," +
                          "p_movetype := " + Common.Decrypt(tracking.Moves.EncryptedValue) + "," +
                          "p_locationdetailid := " + Common.Decrypt(tracking.LocationDetailId.EncryptedValue) + "," +
                          "p_currentvoyageid := " + Common.Decrypt(tracking.CurrentVoyageId.EncryptedValue) + "," +
@@ -100,7 +100,7 @@ namespace ContrackAPI
                          "p_nextdatetime := " + Common.GetNullValue(tracking.NextDateTime) + "," +
                          "p_isdamaged := " + Common.ToBool(tracking.IsDamaged) + "," +
                          "p_noofdamages := " + Common.ToInt(tracking.NoOfDamages) + "," +
-                         "p_createdby := " + Common.UserID + "" +
+                         "p_createdby := " + 2 + "" +
                      ");");
 
                     if (tbl.Rows.Count > 0)

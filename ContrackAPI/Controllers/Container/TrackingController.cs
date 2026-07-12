@@ -28,6 +28,7 @@ namespace ContrackAPI
                 return Ok(new APIResponse());
             }
         }
+        [AllowAnonymous]
         [HttpPost("SaveRecordMove")]
         public IActionResult SaveRecordMove([FromBody] TrackingDTO model)
         {
