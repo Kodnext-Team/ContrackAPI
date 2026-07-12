@@ -106,9 +106,9 @@ namespace ContrackAPI
             {
                 DataTable tbl = new DataTable();
                 if (countryid == "")
-                    tbl = Db.GetDataTable("select * from masters.getportlist('" + Common.HubID.ToString() + "')");
+                    tbl = Db.GetDataTable("select * from masters.getportlist('" + 1 + "')");
                 else
-                    tbl = Db.GetDataTable("select * from masters.getportlist('" + Common.HubID.ToString() + "')");
+                    tbl = Db.GetDataTable("select * from masters.getportlist('" + 1 + "')");
                 result = (from DataRow dr in tbl.Rows
                           select new DropdownItem()
                           {
