@@ -6,7 +6,8 @@
         public string MovesUuid { get; set; } = "";
         public string MovesName { get; set; } = "";
         public int IconId { get; set; } = 0;
-        public string Icon { get; set; } = "";
+        public string IconPath { get; set; } = "";
+        public string SelectedIcon { get; set; } = "";
         public string InOut { get; set; } = "";
         public string FullEmptyNone { get; set; } = "";
         public bool DontShowPublic { get; set; } = false;

@@ -13,26 +13,37 @@ namespace ContrackAPI
         {
             _service = service;
         }
+        [AllowAnonymous]
+        [HttpPost("List")]
+        public IActionResult GetVoyageList([FromBody] VoyageFilter filter)
+        {
+            try
+            {
+                response = _service.GetVoyageList(filter);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return Ok(new APIResponse());
+            }
+
+        }
+        [AllowAnonymous]
         [HttpGet("VoyageDirectSearch")]
         public IActionResult GetDirectVoyageSearch(string Originportid, string Destinationportid)
         {
             try
             {
-                var data = _service.GetDirectVoyageSearch(Originportid, Destinationportid);
-                if (data != null)
-                {
-                    response.Result = Common.SuccessMessage("Success");
-                    response.Data = data;
-                }
-                else
-                {
-                    response.Result = Common.ErrorMessage("No data found");
-                }
+                response = _service.GetDirectVoyageSearch(Originportid, Destinationportid);
+                return Ok(response);
             }
             catch (Exception ex)
             {
+
+
+                return Ok(new APIResponse());
             }
-            return Ok(response);
+           
         }
     }
 }

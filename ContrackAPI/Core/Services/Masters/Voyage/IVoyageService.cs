@@ -2,8 +2,9 @@
 {
     public interface IVoyageService
     {
-        List<VoyageDTO> GetDirectVoyageSearch(string originportid, string destinationportid);
+        APIResponse GetDirectVoyageSearch(string originportid, string destinationportid);
         APIResponse GetVoyageByUUID(string voyageuuid);
+        APIResponse GetVoyageList(VoyageFilter filter);
 
 
     }
