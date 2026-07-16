@@ -46,6 +46,7 @@
         public string Terminal { get; set; } = "";
         public FormattedValue<DateTime> ETA { get; set; } = FormatConvertor.ToDateTimeFormat(DateTime.MinValue);
         public FormattedValue<DateTime> ETD { get; set; } = FormatConvertor.ToDateTimeFormat(DateTime.MinValue);
+        public FormattedValue<DateTime> ETB { get; set; } = FormatConvertor.ToDateTimeFormat(DateTime.MinValue);
         public FormattedValue<DateTime> CutoffDeadline { get; set; } = FormatConvertor.ToDateTimeFormat(DateTime.MinValue);
         public FormattedValue<DateTime> ATA { get; set; } = FormatConvertor.ToDateTimeFormat(DateTime.MinValue);
         public FormattedValue<DateTime> ATD { get; set; } = FormatConvertor.ToDateTimeFormat(DateTime.MinValue);

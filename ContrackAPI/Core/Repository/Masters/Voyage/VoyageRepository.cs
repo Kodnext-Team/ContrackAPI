@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using Newtonsoft.Json;
+using System.Data;
 namespace ContrackAPI
 {
     public class VoyageRepository : CustomException, IVoyageRepository
@@ -35,10 +36,12 @@ namespace ContrackAPI
                 using (SqlDB db = new SqlDB(DatabaseCollection.Contrack))
                 {
                     string query = $@"SELECT * FROM masters.voyage_search_direct(
-                                p_hubid := {Common.HubID},
+                                p_hubid := {1},
                                 p_originportid := {Common.Decrypt(originPortId)},
                                 p_destinationportid := {Common.Decrypt(destinationPortId)});";
                     DataTable tbl = db.GetDataTable(query);
+                    if (tbl == null || tbl.Rows.Count == 0)
+                        return null;
                     list = tbl.AsEnumerable().Select(r =>
                         {
                             return new VoyageDTO
@@ -250,6 +253,141 @@ namespace ContrackAPI
             }
             return list;
         }
+        public List<VoyageDTO> GetVoyageList(VoyageFilter filter)
+        {
+            List<VoyageDTO> list = new List<VoyageDTO>();
+            try
+            {
+                using (SqlDB db = new SqlDB(DatabaseCollection.Contrack))
+                {
+                    string filterJson = JsonConvert.SerializeObject(filter);
+                    string query = $@"SELECT * FROM masters.voyage_list_full(
+                    p_hubid   := {1},
+                    p_filters := '{filterJson}'::jsonb,
+                    p_userid  := {2});";
+                    DataTable tbl = db.GetDataTable(query);
+                    if (tbl == null || tbl.Rows.Count == 0)
+                        return null;
+                    list = tbl.AsEnumerable()
+                        .Select(r =>
+                        {
+                            return new VoyageDTO
+                            {
+                                VoyageId = new EncryptedData
+                                {
+                                    NumericValue = Common.ToInt(r["voyageid"]),
+                                    EncryptedValue = Common.Encrypt(Common.ToInt(r["voyageid"]))
+                                },
+                                VoyageUuid = Common.ToString(r["voyageuuid"]),
+                                VoyageNumber = Common.ToString(r["voyagenumber"]),
+                                Vesselname = Common.ToString(r["vesselname"]),
+                                IsLive = Common.ToBool(r["islive"]),
+                                CreatedAt = Common.ToDateTime(r["createdat"]),
+                                minDate = FormatConvertor.ToDateFormat(Common.ToDateTime(r["mindate"])),
+                                maxDate = FormatConvertor.ToDateFormat(Common.ToDateTime(r["maxdate"])),
+                                totalnoofrows = Common.ToInt(r["total_count"]),
+                                VoyageDetails = r["detailjson"] == DBNull.Value
+                                    ? new List<VoyageDetailDTO>()
+                                    : JsonConvert.DeserializeObject<List<dynamic>>(r["detailjson"].ToString())
+                                        .Select(d =>
+                                        {
+                                            var port = d.port;
+                                            var country = d.country;
+                                            return new VoyageDetailDTO
+                                            {
+                                                VoyageDetailId = new EncryptedData
+                                                {
+                                                    NumericValue = Common.ToInt(d.voyagedetailid),
+                                                    EncryptedValue = Common.Encrypt(Common.ToInt(d.voyagedetailid))
+                                                },
+                                                VoyageId = new EncryptedData
+                                                {
+                                                    NumericValue = Common.ToInt(d.voyageid),
+                                                    EncryptedValue = Common.Encrypt(Common.ToInt(d.voyageid))
+                                                },
+                                                PortId = new EncryptedData
+                                                {
+                                                    NumericValue = Common.ToInt(d.portid),
+                                                    EncryptedValue = Common.Encrypt(Common.ToInt(d.portid))
+                                                },
+                                                portname = Common.ToString(port.portname),
+                                                portcode = Common.ToString(port.portcode),
+                                                PortCountryId = Common.ToInt(port.countryid),
+                                                CountryId = Common.ToInt(country.countryid),
+                                                CountryName = Common.ToString(country.countryname),
+                                                CountryFlag = Common.ToString(country.flag),
+                                                Terminal = Common.ToString(d.terminal),
+                                                ETA = FormatConvertor.ToDateTimeFormat(Common.ToDateTime(d.eta)),
+                                                ETD = FormatConvertor.ToDateTimeFormat(Common.ToDateTime(d.etd)),
+                                                ETB = FormatConvertor.ToDateTimeFormat(Common.ToDateTime(d.etb)),
+                                                ATA = FormatConvertor.ToDateTimeFormat(Common.ToDateTime(d.ata)),
+                                                ATD = FormatConvertor.ToDateTimeFormat(Common.ToDateTime(d.atd)),
+                                                CutoffDeadline = FormatConvertor.ToDateTimeFormat(Common.ToDateTime(d.cutoffdeadline)),
+                                                ArrivalCaptain = Common.ToString(d.arrivalcaptain),
+                                                DepartureCaptain = Common.ToString(d.departurecaptain),
+                                                SortOrder = Common.ToInt(d.sortorder)
+                                            };
+                                        }).ToList()
+                            };
+                        }).ToList();
+                    list.ForEach(x =>
+                    {
+                        x.Status = GetStatus(x.VoyageDetails);
+                        x.NoOfDays = x.maxDate.Value.Date.Subtract(x.minDate.Value.Date).Days;
+                        x.VoyageDetails.ForEach(dtl =>
+                        {
+                            dtl.PortStatus = GetPortStatus(dtl);
+                        });
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                RecordException(ex);
+            }
+            return list;
+        }
+        private string GetStatus(List<VoyageDetailDTO> list)
+        {
+            if (list.Count > 0)
+            {
+                DateTime mindate, maxdate;
+                (mindate, maxdate) = Common.GetMaxMinDate(list);
+                //DateTime mindate = list.Min(y => y.ATA.Value == DateTime.MinValue ? y.ETA.Value : y.ATA.Value);
+                //DateTime maxdate = list.Max(y => y.ATA.Value == DateTime.MinValue ? y.ETA.Value : y.ATA.Value);
+                if (maxdate.Date < DateTime.Now.Date)
+                {
+                    return "<span class=\"badge-styling gray voyage-past\">Past</span>";// Past
+                }
+                else if (mindate.Date > DateTime.Now.Date)
+                {
+                    return "<span class=\"badge-styling green voyage-upcoming\">Upcoming</span>"; // Future
+                }
+                else
+                {
+                    return "<span class=\"badge-styling blue voyage-ongoing\">Ongoing</span>"; ;// Current
+                }
+            }
+            else
+                return "";
+        }
 
+
+
+        private string GetPortStatus(VoyageDetailDTO detail)
+        {
+            if (detail.ATD.Value > DateTime.MinValue)
+            {
+                return "<span><span class=\"badge-styling gray voyage-depart\">Departed</span></span>";
+            }
+            else if (detail.ATA.Value > DateTime.MinValue)
+            {
+                return "<span><span class=\"badge-styling green voyage-arrived\">Arrived</span></span>";
+            }
+            else
+            {
+                return "<span><span class=\"badge-styling blue voyage-scheduled\">Scheduled</span></span>";
+            }
+        }
     }
 }

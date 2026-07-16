@@ -13,45 +13,34 @@ namespace ContrackAPI
         {
             _service = service;
         }
-        //[AllowAnonymous]
-        //[HttpPost("List")]
-        //public IActionResult GetBookingList([FromBody] BookingListFilter filter)
-        //{
-        //    try
-        //    {
-        //        response = _service.GetBookingList(filter);
-        //        return Ok(response);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Ok(new APIResponse());
-        //    }
-
-        //}
         [AllowAnonymous]
         [HttpPost("List")]
         public IActionResult GetBookingList([FromBody] BookingListFilter filter)
         {
             try
             {
-                // If request body is null
-                filter ??= new BookingListFilter();
-
-                // Default noofrows = 10
-                if (filter.noofrows <= 0)
-                {
-                    filter.noofrows = 10;
-                }
-
                 response = _service.GetBookingList(filter);
-
                 return Ok(response);
             }
             catch (Exception ex)
             {
                 return Ok(new APIResponse());
             }
+
         }
+        //[AllowAnonymous]
+        //[HttpPost("List")]
+        //public IActionResult GetBookingList([FromBody] BookingListFilter filter)
+        //{
+        //    try
+        //    {
+        //        response = _service.GetBookingList(filter);             
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //    }
+        //    return Ok(response);
+        //}
         [AllowAnonymous]
         [HttpGet("GetByBookingUUID")]
         public IActionResult GetbookingByUUID(string bookinguuid)
