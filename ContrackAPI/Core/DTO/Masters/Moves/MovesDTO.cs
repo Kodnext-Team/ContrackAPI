@@ -8,7 +8,6 @@
         public int IconId { get; set; } = 0;
         public string IconPath { get; set; } = "";
         public string SelectedIcon { get; set; } = "";
-        public string locationicon { get; set; } = "";
         public string InOut { get; set; } = "";
         public string FullEmptyNone { get; set; } = "";
         public bool DontShowPublic { get; set; } = false;
