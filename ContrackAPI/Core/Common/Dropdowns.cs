@@ -134,7 +134,7 @@ namespace ContrackAPI
             using (SqlDB Db = new SqlDB())
             {
                 DataTable tbl = new DataTable();
-                tbl = Db.GetDataTable("SELECT * FROM  masters.getagencylist('" + Common.HubID + "','" + Common.UserID + "');");
+                tbl = Db.GetDataTable("SELECT * FROM  masters.getagencylist('" + 1 + "','" + 2 + "');");
                 result = (from DataRow dr in tbl.Rows
                           select new DropdownItem()
                           {
@@ -146,18 +146,18 @@ namespace ContrackAPI
                 result.Insert(0, new DropdownItem() { Text = "-Select-", Value = "" });
             return result;
         }
-        public static List<DropdownItem> GetClientsByUserIDDropdown(bool multiple = false)
+        public static List<DropdownItem> GetClientsByUserIDDropdown(bool multiple = false, bool returnid = false)
         {
             List<DropdownItem> result = new List<DropdownItem>();
             using (SqlDB Db = new SqlDB())
             {
                 DataTable tbl = new DataTable();
-                tbl = Db.GetDataTable("SELECT * FROM  masters.getclientlist_userid(" + Common.HubID + "," + Common.UserID + ");");
+                tbl = Db.GetDataTable("SELECT * FROM  masters.getclientlist_userid(" + 1 + "," + 2 + ");");
                 result = (from DataRow dr in tbl.Rows
                           select new DropdownItem()
                           {
                               Text = Common.ToString(dr["clientname"]),
-                              Value = Common.ToString(dr["clientuuid"])
+                              Value = returnid ? Common.Encrypt(Common.ToInt(dr["clientid"])) : Common.ToString(dr["clientuuid"])
                           }).ToList();
             }
             if (multiple)
@@ -215,13 +215,15 @@ namespace ContrackAPI
                 result.Insert(0, new DropdownItem() { Text = "- All Statuses -", Value = "" });
             return result;
         }
+
+       
         public static List<DropdownItem> GetVesselDropdownSearch(string search, string multiple = "")
         {
             List<DropdownItem> result = new List<DropdownItem>();
             using (SqlDB Db = new SqlDB())
             {
                 DataTable tbl = new DataTable();
-                tbl = Db.GetDataTable("SELECT * FROM  masters.getvessellist_userid(" + Common.HubID + "," + Common.UserID + ",'" + search + "');");
+                tbl = Db.GetDataTable("SELECT * FROM  masters.getvessellist_userid(" + 1 + "," + 2 + ",'" + search + "');");
                 result = (from DataRow dr in tbl.Rows
                           select new DropdownItem()
                           {
@@ -251,7 +253,117 @@ namespace ContrackAPI
                 result.Insert(0, new DropdownItem() { Text = "-Select-", Value = "" });
             return result;
         }
+        public static List<DropdownItem> GetContainerTypesDropdown(bool showempty = true)
+        {
+            List<DropdownItem> result = new List<DropdownItem>();
+            using (SqlDB Db = new SqlDB(DatabaseCollection.Contrack))
+            {
+                DataTable tbl = Db.GetDataTable(
+                    "SELECT * FROM masters.container_type_list_simple(" +
+                    "p_hubid := '" + 1 + "'" + ");");
+                result = (from DataRow dr in tbl.Rows
+                          select new DropdownItem()
+                          {
+                              Text = Common.ToString(dr["typename"]),
+                              Value = Common.Encrypt(Common.ToInt(dr["containertypeid"]))
+                          }).ToList();
+            }
+            if (showempty)
+                result.Insert(0, new DropdownItem() { Text = "-Select-", Value = "" });
+            return result;
+        }
 
+        public static List<DropdownItem> GetContainerSizesDropdown(bool showempty = true)
+        {
+            List<DropdownItem> result = new List<DropdownItem>();
+            using (SqlDB Db = new SqlDB(DatabaseCollection.Contrack))
+            {
+                DataTable tbl = Db.GetDataTable(
+                    "SELECT * FROM masters.container_size_list();");
+                result = (from DataRow dr in tbl.Rows
+                          select new DropdownItem()
+                          {
+                              Text = Common.ToString(dr["sizename"]),
+                              Value = Common.Encrypt(Common.ToInt(dr["sizeid"]))
+                          }).ToList();
+            }
+            if (showempty)
+                result.Insert(0, new DropdownItem() { Text = "-Select-", Value = "" });
+            return result;
+        }
 
+        public static List<DropdownItem> GetContainerModelsDropdown(bool showempty = true)
+        {
+            List<DropdownItem> result = new List<DropdownItem>();
+            try
+            {
+                using (SqlDB Db = new SqlDB(DatabaseCollection.Contrack))
+                {
+                    DataTable tbl = Db.GetDataTable(
+                        "SELECT * FROM masters.container_type_list(" +
+                        "p_hubid := " + 1 +
+                        ");");
+
+                    result = (from DataRow dr in tbl.Rows
+                              where Common.ToInt(dr["modelid"]) > 0
+                              select new DropdownItem()
+                              {
+                                  Text = $"{Common.ToString(dr["iso_code"])} - {Common.ToString(dr["sizename"])} {Common.ToString(dr["typename"])}",
+                                  Value = Common.ToString(dr["modeluuid"])
+                              }).OrderBy(x => x.Text).ToList();
+                }
+
+                if (showempty)
+                    result.Insert(0, new DropdownItem() { Text = "-Select-", Value = "" });
+            }
+            catch (Exception ex)
+            {
+            }
+            return result;
+        }
+
+        public static List<DropdownItem> GetLocationUUIDDropdown(bool showempty = true)
+        {
+            List<DropdownItem> result = new List<DropdownItem>();
+            try
+            {
+                using (SqlDB Db = new SqlDB(DatabaseCollection.Contrack))
+                {
+                    DataTable tbl = Db.GetDataTable(
+                        "SELECT * FROM masters.container_location_list(" +
+                        "p_hubid := '" + 1 + "'," +
+                        "p_filters := '{}'," +
+                        "p_userid := '" +2 + "'" +
+                        ");");
+
+                    result = (from DataRow dr in tbl.Rows
+                              select new DropdownItem()
+                              {
+                                  Text = $"{Common.ToString(dr["locationname"])} ({Common.ToString(dr["locationcode"])})",
+                                  Value = Common.ToString(dr["locationuuid"])
+                              }).ToList();
+                }
+
+                if (showempty)
+                    result.Insert(0, new DropdownItem() { Text = "-Select-", Value = "" });
+            }
+            catch (Exception ex)
+            {
+            }
+            return result;
+        }
+        public static List<DropdownItem> GetContainerOperatorDropdown()
+        {
+            // 1=Owned, 2=Leased, 3=SOC, 4=COC
+            var list = new List<DropdownItem>
+        {
+            new DropdownItem { Text = "Owned", Value = Common.Encrypt(1) },
+            new DropdownItem { Text = "Leased", Value = Common.Encrypt(2) },
+            new DropdownItem { Text = "SOC", Value = Common.Encrypt(3) },
+            new DropdownItem { Text = "COC", Value = Common.Encrypt(4) }
+        };
+            list.Insert(0, new DropdownItem { Text = "-Select-", Value = "" });
+            return list;
+        }
     }
 }

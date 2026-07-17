@@ -153,11 +153,12 @@ namespace ContrackAPI.Controllers.Masters
         }
         [AllowAnonymous]
         [HttpGet("StatusDropdown")]
-        public IActionResult GetStatusDropdown()
+        public IActionResult GetStatusDropdown(int type)
         {
             try
             {
-                var data = Dropdowns.GetStatusDropdown(105, false);
+                var data = Dropdowns.GetStatusDropdown(type, false);
+
                 response.Result = Common.SuccessMessage("Success");
                 response.Data = data;
             }
@@ -202,6 +203,86 @@ namespace ContrackAPI.Controllers.Masters
                     Result = Common.ErrorMessage(ex.Message)
                 });
             }
+        }
+        [AllowAnonymous]
+        [HttpGet("GetContainerTypesDropdown")]
+        public IActionResult GetContainerTypesDropdown([FromQuery] bool showempty = true)
+        {
+            try
+            {
+                var data = Dropdowns.GetContainerTypesDropdown(showempty);
+                response.Result = Common.SuccessMessage("Success");
+                response.Data = data;
+            }
+            catch (Exception ex)
+            {
+                response.Result = Common.ErrorMessage(ex.Message);
+            }
+            return Ok(response);
+        }
+        [AllowAnonymous]
+        [HttpGet("GetContainerSizesDropdown")]
+        public IActionResult GetContainerSizesDropdown([FromQuery] bool showempty = true)
+        {
+            try
+            {
+                var data = Dropdowns.GetContainerSizesDropdown(showempty);
+                response.Result = Common.SuccessMessage("Success");
+                response.Data = data;
+            }
+            catch (Exception ex)
+            {
+                response.Result = Common.ErrorMessage(ex.Message);
+            }
+            return Ok(response);
+        }
+        [AllowAnonymous]
+        [HttpGet("GetContainerModelsDropdown")]
+        public IActionResult GetContainerModelsDropdown([FromQuery] bool showempty = true)
+        {
+            try
+            {
+                var data = Dropdowns.GetContainerModelsDropdown(showempty);
+                response.Result = Common.SuccessMessage("Success");
+                response.Data = data;
+            }
+            catch (Exception ex)
+            {
+                response.Result = Common.ErrorMessage(ex.Message);
+            }
+            return Ok(response);
+        }
+        [AllowAnonymous]
+        [HttpGet("GetLocationUUIDDropdown")]
+        public IActionResult GetLocationUUIDDropdown([FromQuery] bool showempty = true)
+        {
+            try
+            {
+                var data = Dropdowns.GetLocationUUIDDropdown(showempty);
+                response.Result = Common.SuccessMessage("Success");
+                response.Data = data;
+            }
+            catch (Exception ex)
+            {
+                response.Result = Common.ErrorMessage(ex.Message);
+            }
+            return Ok(response);
+        }
+        [AllowAnonymous]
+        [HttpGet("GetContainerOperatorDropdown")]
+        public IActionResult GetContainerOperatorDropdown()
+        {
+            try
+            {
+                var data = Dropdowns.GetContainerOperatorDropdown();
+                response.Result = Common.SuccessMessage("Success");
+                response.Data = data;
+            }
+            catch (Exception ex)
+            {
+                response.Result = Common.ErrorMessage(ex.Message);
+            }
+            return Ok(response);
         }
     }
 }
