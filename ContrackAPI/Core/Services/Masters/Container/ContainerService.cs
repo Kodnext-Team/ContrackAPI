@@ -1,3 +1,4 @@
+using System.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ContrackAPI
@@ -98,16 +99,19 @@ namespace ContrackAPI
             }
             return response;
         }
-        public APIResponse GetContainerByEquipmentno(string equipmentno)
+        public APIResponseType GetContainerByEquipmentno(string equipmentno)
         {
+            APIResponseType response = new APIResponseType();
             try
             {
+
                 var dto = _repo.GetContainerByEquipmentno(equipmentno);
 
-                if (dto != null && dto.Count > 0)
+                if (dto != null && dto.Containers.Count > 0)
                 {
                     response.Result = Common.SuccessMessage("Success");
-                    response.Data = dto;
+                    response.MatchType = dto.MatchType;
+                    response.Data = dto.Containers;
                 }
                 else
                 {

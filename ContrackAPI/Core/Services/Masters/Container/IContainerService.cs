@@ -4,6 +4,6 @@ namespace ContrackAPI
     {
         APIResponse GetContainerList(ContainerFilterPage filter);
         APIResponse GetContainerByUUID(string containeruuid);
-        APIResponse GetContainerByEquipmentno(string equipmentno);
+        APIResponseType GetContainerByEquipmentno(string equipmentno);
     }
 }

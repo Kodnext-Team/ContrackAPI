@@ -65,6 +65,11 @@
         public FormattedValue<int> status_code { get; set; } = new FormattedValue<int>();
         public string containerimage { get; set; } = "";
     }
+    public class ContainerEquipmentResponseDTO
+    {
+        public int MatchType { get; set; }
+        public List<ContainerEquipmentDTO> Containers { get; set; } = new List<ContainerEquipmentDTO>();
+    }
     public class ContainerEquipmentDTO
     {
         public EncryptedData containerid { get; set; } = new EncryptedData();
@@ -75,6 +80,8 @@
 
         public string type_name { get; set; } = "";
         public string operatorname { get; set; }
-        
+        //public int matchtype { get; set; }   // 1 = Exact Match, 0 = Partial Match
+       // public double score { get; set; }
+
     }
 }
