@@ -12,6 +12,6 @@
         public string FullEmptyNone { get; set; } = "";
         public bool DontShowPublic { get; set; } = false;
         public bool ShowVoyage { get; set; } = false;
-        public CreationInfo CreationInfo { get; set; } = new CreationInfo();
+       // public CreationInfo CreationInfo { get; set; } = new CreationInfo();
     }
 }
