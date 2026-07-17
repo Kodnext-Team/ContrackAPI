@@ -48,30 +48,53 @@ namespace ContrackAPI
             if (string.IsNullOrWhiteSpace(filter.filters.enddate))
                 filter.filters.enddate = null;
         }
-        public APIResponse SaveTracking(TrackingDTO tracking)
+        public APIResponse SaveTracking(SaveTrackingRequestDTO request)
         {
+            APIResponse response = new APIResponse();
+
             try
             {
-                var model = tracking;
+                if (request == null)
+                {
+                    response.Result = Common.ErrorMessage("Invalid request.");
+                    return response;
+                }
+
+                if (request.Selections == null || request.Selections.Count == 0)
+                {
+                    response.Result = Common.ErrorMessage("Please select at least one container.");
+                    return response;
+                }
+
+                if (request.Tracking == null)
+                {
+                    response.Result = Common.ErrorMessage("Tracking details are missing.");
+                    return response;
+                }
+                var model = request.Tracking;
+
                 if (string.IsNullOrWhiteSpace(model?.Moves?.EncryptedValue))
                 {
                     response.Result = Common.ErrorMessage("Please select a move type.");
                     return response;
                 }
+
                 if (!string.IsNullOrWhiteSpace(model?.NextMoves?.EncryptedValue))
                 {
                     if (string.IsNullOrWhiteSpace(model.NextLocationDetailId?.EncryptedValue) &&
                         string.IsNullOrWhiteSpace(model.NextVoyageId?.EncryptedValue))
                     {
-                        response.Result = Common.ErrorMessage("Please select next location or voyage");
+                        response.Result = Common.ErrorMessage("Please select next location or voyage.");
                         return response;
                     }
+
                     if (string.IsNullOrWhiteSpace(model.NextDateTime))
                     {
                         response.Result = Common.ErrorMessage("Please select next date time.");
                         return response;
                     }
                 }
+
                 if (!string.IsNullOrWhiteSpace(model?.NextLocationDetailId?.EncryptedValue) ||
                     !string.IsNullOrWhiteSpace(model?.NextDateTime))
                 {
@@ -81,6 +104,7 @@ namespace ContrackAPI
                         return response;
                     }
                 }
+
                 if (!string.IsNullOrWhiteSpace(model.CurrentVoyageId?.EncryptedValue))
                     model.LocationDetailId.EncryptedValue = "";
                 else if (!string.IsNullOrWhiteSpace(model.LocationDetailId?.EncryptedValue))
@@ -90,15 +114,98 @@ namespace ContrackAPI
                     model.NextLocationDetailId.EncryptedValue = "";
                 else if (!string.IsNullOrWhiteSpace(model.NextLocationDetailId?.EncryptedValue))
                     model.NextVoyageId.EncryptedValue = "";
+
+                Result pickResult = _repo.SavePickSelection(request.Selections);
+
+                if (pickResult == null )
+                {
+                    response.Result = Common.ErrorMessage("Unable to create pick selection.");
+
+                    return response;
+                }
+                model.PickSelectionUuid = pickResult.TargetUUID;
                 response.Result = _repo.SaveTracking(model);
             }
             catch (Exception ex)
             {
                 RecordException(ex);
-                response.Result = Common.ErrorMessage("Error while saving tracking");
+                response.Result = Common.ErrorMessage(ex.Message);
             }
+
             return response;
         }
+        //public APIResponse SaveTracking(TrackingDTO tracking)
+        //{
+        //    try
+        //    {
+        //        var model = tracking;
+        //        if (string.IsNullOrWhiteSpace(model?.Moves?.EncryptedValue))
+        //        {
+        //            response.Result = Common.ErrorMessage("Please select a move type.");
+        //            return response;
+        //        }
+        //        if (!string.IsNullOrWhiteSpace(model?.NextMoves?.EncryptedValue))
+        //        {
+        //            if (string.IsNullOrWhiteSpace(model.NextLocationDetailId?.EncryptedValue) &&
+        //                string.IsNullOrWhiteSpace(model.NextVoyageId?.EncryptedValue))
+        //            {
+        //                response.Result = Common.ErrorMessage("Please select next location or voyage");
+        //                return response;
+        //            }
+        //            if (string.IsNullOrWhiteSpace(model.NextDateTime))
+        //            {
+        //                response.Result = Common.ErrorMessage("Please select next date time.");
+        //                return response;
+        //            }
+        //        }
+        //        if (!string.IsNullOrWhiteSpace(model?.NextLocationDetailId?.EncryptedValue) ||
+        //            !string.IsNullOrWhiteSpace(model?.NextDateTime))
+        //        {
+        //            if (string.IsNullOrWhiteSpace(model?.NextMoves?.EncryptedValue))
+        //            {
+        //                response.Result = Common.ErrorMessage("Please select next move.");
+        //                return response;
+        //            }
+        //        }
+        //        if (!string.IsNullOrWhiteSpace(model.CurrentVoyageId?.EncryptedValue))
+        //            model.LocationDetailId.EncryptedValue = "";
+        //        else if (!string.IsNullOrWhiteSpace(model.LocationDetailId?.EncryptedValue))
+        //            model.CurrentVoyageId.EncryptedValue = "";
+
+        //        if (!string.IsNullOrWhiteSpace(model.NextVoyageId?.EncryptedValue))
+        //            model.NextLocationDetailId.EncryptedValue = "";
+        //        else if (!string.IsNullOrWhiteSpace(model.NextLocationDetailId?.EncryptedValue))
+        //            model.NextVoyageId.EncryptedValue = "";
+        //        response.Result = _repo.SaveTracking(model);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        RecordException(ex);
+        //        response.Result = Common.ErrorMessage("Error while saving tracking");
+        //    }
+        //    return response;
+        //}
+        //public void SavePickSelection(List<TrackingSelectionDTO> model)
+        //{
+        //             Result result = new Result();
+
+        //    try
+        //    {
+        //        if (model == null || model.Count == 0)
+        //        {
+        //            result = Common.ErrorMessage("Please select the conatiner to track.");
+        //        }
+        //        else
+        //        {
+        //            result = _repo.SavePickSelection(model);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        result = Common.ErrorMessage(ex.ToString());
+        //        RecordException(ex);
+        //    }
+        //}
         public APIResponse GetTrackingDetails(string containeruuid, string bookinguuid)
         {
             APIResponse response = new APIResponse();
