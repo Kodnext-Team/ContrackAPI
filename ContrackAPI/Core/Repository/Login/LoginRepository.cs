@@ -62,7 +62,7 @@ namespace ContrackAPI
             {
                 using (var Db = new SqlDB())
                 {
-                    DataTable tbl = Db.GetDataTable($"SELECT * FROM masters.getuserbyid('{Common.HubID}','{userId}');");
+                    DataTable tbl = Db.GetDataTable($"SELECT * FROM masters.getuserbyid('{1}','{userId}');");
                     if (tbl.Rows.Count > 0)
                     {
                         DataRow row = tbl.Rows[0];

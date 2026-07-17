@@ -193,13 +193,14 @@ namespace ContrackAPI
                 containerimage = containerimage
             };
         }
-        public List<ContainerEquipmentDTO> GetContainerByEquipmentno(string equipmentno)
+
+        public ContainerEquipmentResponseDTO GetContainerByEquipmentno(string equipmentno)
         {
-            List<ContainerEquipmentDTO> result = new List<ContainerEquipmentDTO>();
+            ContainerEquipmentResponseDTO result = new ContainerEquipmentResponseDTO();
 
             try
             {
-                if (string.IsNullOrEmpty(equipmentno))
+                if (string.IsNullOrWhiteSpace(equipmentno))
                     return result;
 
                 using (SqlDB Db = new SqlDB(DatabaseCollection.Contrack))
@@ -210,9 +211,12 @@ namespace ContrackAPI
 
                     if (tbl != null && tbl.Rows.Count > 0)
                     {
+                        // MatchType is same for all rows
+                        result.MatchType = Common.ToInt(tbl.Rows[0]["matchtype"]);
+
                         foreach (DataRow dr in tbl.Rows)
                         {
-                            result.Add(ParseContainerEquipment(dr));
+                            result.Containers.Add(ParseContainerEquipment(dr));
                         }
                     }
                 }
@@ -239,7 +243,6 @@ namespace ContrackAPI
                 operatorname = Common.GetOperatorName(Common.ToInt(dr["operatorid"])),
                 model_iso_code = Common.ToString(dr["model_iso_code"]),
                 sizename = Common.ToString(dr["sizename"]),
-                
             };
         }
     }

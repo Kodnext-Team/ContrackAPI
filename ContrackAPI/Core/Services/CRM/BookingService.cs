@@ -118,22 +118,11 @@ namespace ContrackAPI
                         voyageData.VoyageDetails.Add(details[polIndex]);
                         voyageData.VoyageDetails.Add(details[podIndex]);
                     }
-
                     DateTime mindate, maxdate;
-
-                    (mindate, maxdate) =
-                        Common.GetMaxMinDate(voyageData.VoyageDetails);
-
-                    voyageData.minDate =
-                        FormatConvertor.ToDateTimeFormat(mindate);
-
-                    voyageData.maxDate =
-                        FormatConvertor.ToDateTimeFormat(maxdate);
-
-                    voyageData.NoOfDays =
-                        voyageData.maxDate.Value.Date
-                        .Subtract(voyageData.minDate.Value.Date)
-                        .Days;
+                    (mindate, maxdate) = Common.GetMaxMinDate(voyageData.VoyageDetails);
+                    voyageData.minDate = FormatConvertor.ToDateTimeFormat(mindate);
+                    voyageData.maxDate = FormatConvertor.ToDateTimeFormat(maxdate);
+                    voyageData.NoOfDays = voyageData.maxDate.Value.Date.Subtract(voyageData.minDate.Value.Date).Days;
                     booking.voyage = new BookingVoyageDTO
                     {
                         Vesselname = voyageData.Vesselname,

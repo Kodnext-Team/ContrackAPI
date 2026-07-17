@@ -43,14 +43,15 @@ namespace ContrackAPI
         [HttpGet("GetByContainerEquipmentno")]
         public IActionResult GetContainerByEquipmentno(string equipmentno)
         {
+            APIResponseType responseType = new APIResponseType();
             try
             {
-                response = _service.GetContainerByEquipmentno(equipmentno);
+                responseType = _service.GetContainerByEquipmentno(equipmentno);
             }
             catch (Exception ex)
             {
             }
-            return Ok(response);
+            return Ok(responseType);
         }
     }
 }
