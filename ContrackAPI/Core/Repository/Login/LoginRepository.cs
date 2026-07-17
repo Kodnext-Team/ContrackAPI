@@ -111,7 +111,7 @@ namespace ContrackAPI
             {
                 using (var Db = new SqlDB())
                 {
-                    string query = $"SELECT * FROM masters.getuserslist('{Common.HubID}', '{Common.Decrypt(filter.UserType)}', '{Common.Decrypt(filter.Role)}', '{{{(filter.EntityID.Any() ? string.Join(",", filter.EntityID.Select(Common.Decrypt)) : "0")}}}', '{Common.Escape(filter.Search)}', '{filter.limit}', '{filter.offset}', '{{{Common.UserID}}}', '{filter.sorting}', '{filter.sortingorder}');";
+                    string query = $"SELECT * FROM masters.getuserslist('{1}', '{Common.Decrypt(filter.UserType)}', '{Common.Decrypt(filter.Role)}', '{{{(filter.EntityID.Any() ? string.Join(",", filter.EntityID.Select(Common.Decrypt)) : "0")}}}', '{Common.Escape(filter.Search)}', '{filter.limit}', '{filter.offset}', '{{{2}}}', '{filter.sorting}', '{filter.sortingorder}');";
                     DataTable tbl = Db.GetDataTable(query);
 
                     list = (from DataRow dr in tbl.Rows
