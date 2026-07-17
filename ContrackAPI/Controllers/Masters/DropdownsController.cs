@@ -284,5 +284,21 @@ namespace ContrackAPI.Controllers.Masters
             }
             return Ok(response);
         }
+        [AllowAnonymous]
+        [HttpGet("GetContainerStatusDropdown")]
+        public IActionResult GetContainerStatusDropdown()
+        {
+            try
+            {
+                var data = Dropdowns.GetContainerStatusDropdown();
+                response.Result = Common.SuccessMessage("Success");
+                response.Data = data;
+            }
+            catch (Exception ex)
+            {
+                response.Result = Common.ErrorMessage(ex.Message);
+            }
+            return Ok(response);
+        }
     }
 }

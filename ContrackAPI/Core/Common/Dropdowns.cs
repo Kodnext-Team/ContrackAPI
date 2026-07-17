@@ -365,5 +365,15 @@ namespace ContrackAPI
             list.Insert(0, new DropdownItem { Text = "-Select-", Value = "" });
             return list;
         }
+        public static List<DropdownItem> GetContainerStatusDropdown()
+        {
+            // Static values: 1 = Available, 2 = Booked, 3 = Damaged
+            return new List<DropdownItem>
+            {
+                new DropdownItem { Text = "Available", Value = "1" },
+                new DropdownItem { Text = "Booked",    Value = "2" },
+                new DropdownItem { Text = "Damaged",   Value = "3" }
+            };
+        }
     }
 }
