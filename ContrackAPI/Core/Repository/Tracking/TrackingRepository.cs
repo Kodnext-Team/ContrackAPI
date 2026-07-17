@@ -127,6 +127,57 @@ namespace ContrackAPI
             }
             return result;
         }
+        public Result SavePickSelection(List<TrackingSelectionDTO> selections)
+        {
+            Result result = new Result();
+            try
+            {
+                using (SqlDB db = new SqlDB(DatabaseCollection.Contrack))
+                {
+                    List<string> otherIds = new List<string>();
+
+                    foreach (var item in selections)
+                    {
+                        var containerId = Common.Decrypt(item.ContainerId.EncryptedValue);
+
+                        var bookingId = Common.Decrypt(item.BookingId.EncryptedValue);
+
+                        otherIds.Add($"{containerId}|{bookingId}");
+                    }
+
+                    DataTable tbl = db.GetDataTable("SELECT * FROM sandbox.create_pick_selection(" +
+                         "p_hubid := " + 1 + "," +
+                         "p_uuids := NULL," +
+                         "p_otherids := ARRAY['" + string.Join("','", otherIds) + "']::text[]," +
+                         "p_createdby := " + 2 + ");"
+                    );
+
+                    if (tbl.Rows.Count != 0)
+                    {
+                        if (Common.ToInt(tbl.Rows[0][0]) > 0)
+                        {
+                            result = Common.SuccessMessage("Success");
+                            result.TargetUUID = Convert.ToString(tbl.Rows[0][2].ToString());
+                        }
+                        else
+                        {
+                            result = Common.ErrorMessage(tbl.Rows[0][1].ToString());
+                        }
+                    }
+                    else
+                    {
+                        result = Common.ErrorMessage("Cannot process request");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result = Common.ErrorMessage(ex.Message);
+                RecordException(ex);
+            }
+
+            return result;
+        }
         public List<TrackingDetailsDTO> GetTrackingDetails(string containerUuid, string bookingUuid)
         {
             List<TrackingDetailsDTO> trackingdetails = new List<TrackingDetailsDTO>();

@@ -19,11 +19,11 @@
         public EncryptedData NextVoyageId { get; set; } = new EncryptedData();
         public string NextVoyageName { get; set; } = "";
         //public CreationInfo CreationInfo { get; set; } = new CreationInfo();
-        //public ContainerDTO Container { get; set; } = new ContainerDTO();
+       // public ContainerDTO Container { get; set; } = new ContainerDTO();
         public EncryptedData bookingid { get; set; } = new EncryptedData();
-        public EncryptedData containerid { get; set; } = new EncryptedData();
+       public EncryptedData containerid { get; set; } = new EncryptedData();
 
-        //public ContainerBookingSummaryDTO ContainerBooking { get; set; } = new ContainerBookingSummaryDTO();
+       // public ContainerBookingSummaryDTO ContainerBooking { get; set; } = new ContainerBookingSummaryDTO();
         public string PickSelectionUuid { get; set; } = "";
         //public List<TrackingDamageDTO> TrackingDamages { get; set; } = new List<TrackingDamageDTO>();
     }
@@ -65,5 +65,11 @@
         public int PositionY { get; set; }
         public string Comments { get; set; } = "";
         public CreationInfo CreationInfo { get; set; } = new CreationInfo();
+    }
+    public class SaveTrackingRequestDTO
+    {
+        public List<TrackingSelectionDTO> Selections { get; set; } = new List<TrackingSelectionDTO>();
+
+        public TrackingDTO Tracking { get; set; } = new TrackingDTO();
     }
 }

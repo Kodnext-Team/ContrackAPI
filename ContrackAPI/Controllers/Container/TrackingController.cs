@@ -30,7 +30,7 @@ namespace ContrackAPI
         }
         [AllowAnonymous]
         [HttpPost("SaveRecordMove")]
-        public IActionResult SaveRecordMove([FromBody] TrackingDTO model)
+        public IActionResult SaveRecordMove([FromBody] SaveTrackingRequestDTO model)
         {
             try
             {
