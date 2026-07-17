@@ -79,9 +79,13 @@ namespace ContrackAPI
                                   EncryptedValue = Common.Encrypt(Common.ToInt(dr["movesid"]))
                               },
                               ShowVoyage = Common.ToBool(dr["showvoyage"]),
+                              DontShowPublic = Common.ToBool(dr["dontshowpublic"]),
                               IconPath = Common.GetIconPath(Common.ToInt(dr["iconid"])),
                               SelectedIcon = Common.GetSelectedIconPath(Common.ToInt(dr["iconid"])),
-                            
+                              InOut = Common.ToString(dr["in_out"]),
+                              MovesUuid = Common.ToString(dr["movesuuid"]),
+                              FullEmptyNone = Common.ToString(dr["full_empty_none"]),
+
 
                           }).ToList();
             }
