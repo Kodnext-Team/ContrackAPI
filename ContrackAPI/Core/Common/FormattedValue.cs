@@ -99,7 +99,10 @@
             {
                 Value = statusCode,
                 NumericValue = statusCode,
-                Text = statusCode == 2 ? "Booked" : "Available"
+                Text = statusCode == 2 ? "Booked"
+                     : statusCode == 3 ? "Damaged"
+                     : statusCode == 4 ? "Blocked"
+                     : "Available"
             };
         }
     }
