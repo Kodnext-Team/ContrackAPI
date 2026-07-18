@@ -53,6 +53,11 @@ namespace ContrackAPI
                     EncryptedValue = Common.Encrypt(Common.ToInt(dr["containerid"]))
                 },
                 containeruuid = Common.ToString(dr["containeruuid"]),
+                bookingid = new EncryptedData()
+                {
+                    NumericValue = Common.ToInt(dr["bookingid"]),
+                    EncryptedValue = Common.Encrypt(Common.ToInt(dr["bookingid"]))
+                },
                 equipmentno = Common.ToString(dr["equipmentno"]),
                 model_iso_code = Common.ToString(dr["model_iso_code"]),
                 sizename = Common.ToString(dr["sizename"]),
@@ -173,6 +178,7 @@ namespace ContrackAPI
                 },
 
                 containeruuid = Common.ToString(dr["containeruuid"]),
+                bookingid = new EncryptedData() { NumericValue = Common.ToInt(dr["bookingid"]), EncryptedValue = Common.Encrypt(Common.ToInt(dr["bookingid"])) },
                 equipmentno = Common.ToString(dr["equipmentno"]),
                 containermodeluuid = Common.ToString(dr["containermodeluuid"]),
                 type_name = Common.ToString(dr["typename"]),

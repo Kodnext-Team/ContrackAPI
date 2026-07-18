@@ -13,6 +13,8 @@
     {
         public EncryptedData containerid { get; set; } = new EncryptedData();
         public string containeruuid { get; set; } = "";
+        public EncryptedData bookingid { get; set; } = new EncryptedData();
+
         public string equipmentno { get; set; } = "";
         //public FormattedValue<DateTime> lastbookingdate { get; set; } = FormatConvertor.ToDateTimeFormat(DateTime.MinValue);
         //public FormattedValue<DateTime> manufacturedate { get; set; } = FormatConvertor.ToDateTimeFormat(DateTime.MinValue); 
@@ -43,6 +45,7 @@
     {
         public EncryptedData containerid { get; set; } = new EncryptedData();
         public string containeruuid { get; set; } = "";
+        public EncryptedData bookingid { get; set; } = new EncryptedData();
         public string equipmentno { get; set; } = "";
         public string containermodeluuid { get; set; } = "";
         //public FormattedValue<DateTime> lastbookingdate { get; set; } = FormatConvertor.ToDateTimeFormat(DateTime.MinValue);
