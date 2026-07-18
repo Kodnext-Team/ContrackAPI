@@ -60,17 +60,12 @@ namespace ContrackAPI
                     return response;
                 }
 
-                if (request.Selections == null || request.Selections.Count == 0)
-                {
-                    response.Result = Common.ErrorMessage("Please select at least one container.");
-                    return response;
-                }
-
                 if (request.Tracking == null)
                 {
                     response.Result = Common.ErrorMessage("Tracking details are missing.");
                     return response;
                 }
+
                 var model = request.Tracking;
 
                 if (string.IsNullOrWhiteSpace(model?.Moves?.EncryptedValue))
@@ -114,16 +109,34 @@ namespace ContrackAPI
                     model.NextLocationDetailId.EncryptedValue = "";
                 else if (!string.IsNullOrWhiteSpace(model.NextLocationDetailId?.EncryptedValue))
                     model.NextVoyageId.EncryptedValue = "";
+                // ADD or EDIT
+                long trackingId = Common.Decrypt(model.TrackingId.EncryptedValue);
 
-                Result pickResult = _repo.SavePickSelection(request.Selections);
-
-                if (pickResult == null )
+                if (trackingId == 0)
                 {
-                    response.Result = Common.ErrorMessage("Unable to create pick selection.");
+                    // ADD (Bulk)
+                    if (request.Selections == null || request.Selections.Count == 0)
+                    {
+                        response.Result = Common.ErrorMessage("Please select at least one container.");
+                        return response;
+                    }
 
-                    return response;
+                    Result pickResult = _repo.SavePickSelection(request.Selections);
+
+                    if (pickResult == null)
+                    {
+                        response.Result = Common.ErrorMessage("Unable to create pick selection.");
+                        return response;
+                    }
+
+                    model.PickSelectionUuid = pickResult.TargetUUID;
                 }
-                model.PickSelectionUuid = pickResult.TargetUUID;
+                else
+                {
+                    // EDIT
+                    model.PickSelectionUuid = "";
+                }
+
                 response.Result = _repo.SaveTracking(model);
             }
             catch (Exception ex)
