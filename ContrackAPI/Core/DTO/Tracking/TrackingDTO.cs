@@ -15,15 +15,14 @@
         public bool IsDamaged { get; set; } = false;
         public int NoOfDamages { get; set; } = 0;
         public EncryptedData CurrentVoyageId { get; set; } = new EncryptedData();
-        public string CurrentVoyageName { get; set; } = "";
         public EncryptedData NextVoyageId { get; set; } = new EncryptedData();
-        public string NextVoyageName { get; set; } = "";
         //public CreationInfo CreationInfo { get; set; } = new CreationInfo();
        // public ContainerDTO Container { get; set; } = new ContainerDTO();
         public EncryptedData bookingid { get; set; } = new EncryptedData();
        public EncryptedData containerid { get; set; } = new EncryptedData();
 
-       // public ContainerBookingSummaryDTO ContainerBooking { get; set; } = new ContainerBookingSummaryDTO();
+        // public ContainerBookingSummaryDTO ContainerBooking { get; set; } = new ContainerBookingSummaryDTO();
+        [System.Text.Json.Serialization.JsonIgnore]
         public string PickSelectionUuid { get; set; } = "";
         //public List<TrackingDamageDTO> TrackingDamages { get; set; } = new List<TrackingDamageDTO>();
     }

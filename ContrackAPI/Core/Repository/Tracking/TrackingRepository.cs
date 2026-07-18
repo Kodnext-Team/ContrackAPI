@@ -294,7 +294,7 @@ namespace ContrackAPI
                             NumericValue = Common.ToInt(tbl.Rows[0]["cmt_voyageid"]),
                             EncryptedValue = Common.Encrypt(Common.ToInt(tbl.Rows[0]["cmt_voyageid"]))
                         };
-                        tracking.CurrentVoyageName = Common.ToString(tbl.Rows[0]["cmt_currentvoyagename"]);               
+                       // tracking.CurrentVoyageName = Common.ToString(tbl.Rows[0]["cmt_currentvoyagename"]);               
                         tracking.NextLocationDetailId = new EncryptedData()
                         {
                             NumericValue = Common.ToInt(tbl.Rows[0]["cmt_nextlocationdetailid"]),
@@ -306,7 +306,7 @@ namespace ContrackAPI
                             NumericValue = Common.ToInt(tbl.Rows[0]["cmt_nextvoyageid"]),
                             EncryptedValue = Common.Encrypt(Common.ToInt(tbl.Rows[0]["cmt_nextvoyageid"]))
                         };
-                        tracking.NextVoyageName = Common.ToString(tbl.Rows[0]["cmt_nextvoyagename"]);
+                       // tracking.NextVoyageName = Common.ToString(tbl.Rows[0]["cmt_nextvoyagename"]);
                         tracking.IsDamaged = Common.ToBool(tbl.Rows[0]["cmt_isdamaged"]);
                         tracking.NoOfDamages = Common.ToInt(tbl.Rows[0]["cmt_noofdamages"]);                    
                     }
