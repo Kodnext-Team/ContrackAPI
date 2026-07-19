@@ -668,16 +668,13 @@ namespace ContrackAPI
                                     NumericValue = Common.ToInt(dr["pol_id"]),
                                     EncryptedValue = Common.Encrypt(Common.ToInt(dr["pol_id"]))
                                 },
-
                                 PolName = Common.ToString(dr["pol_name"]),
                                 PolCode = Common.ToString(dr["pol_code"]),
-
                                 PodId = new EncryptedData
                                 {
                                     NumericValue = Common.ToInt(dr["pod_id"]),
                                     EncryptedValue = Common.Encrypt(Common.ToInt(dr["pod_id"]))
                                 },
-
                                 PodName = Common.ToString(dr["pod_name"]),
                                 PodCode = Common.ToString(dr["pod_code"])
                             }).ToList();
