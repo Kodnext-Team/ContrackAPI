@@ -25,6 +25,10 @@ namespace ContrackAPI
             if (!string.IsNullOrEmpty(filters.location_encry)) count++;
             if (!string.IsNullOrEmpty(filters.pol_encry)) count++;
             if (!string.IsNullOrEmpty(filters.pod_encry)) count++;
+            if (!string.IsNullOrEmpty(filters.voyage_encry)) count++;
+            if (!string.IsNullOrEmpty(filters.move_encry)) count++;
+            if (!string.IsNullOrEmpty(filters.operator_encry)) count++;
+            if (!string.IsNullOrEmpty(filters.bookingno)) count++;
             if (filters.status > 0) count++;
             return count;
         }
@@ -37,16 +41,32 @@ namespace ContrackAPI
         public string location_encry { get; set; }
         public string pol_encry { get; set; }
         public string pod_encry { get; set; }
+        public string voyage_encry { get; set; }
+        public string voyage_name { get; set; }
+        public string move_encry { get; set; }
         [JsonProperty("status_selected")]
         public int status { get; set; }
         public List<long> containertypeids { get; set; } = new List<long>();
         public List<int> containersizeids { get; set; } = new List<int>();
         public List<string> containermodeluuids { get; set; } = new List<string>();
-        public List<long> locationdetailids { get; set; } = new List<long>();
+        //public List<string> locationdetailids { get; set; } = new List<string>();
         public List<int> pols { get; set; } = new List<int>();
         public List<int> pods { get; set; } = new List<int>();
+        public List<int> voyageids { get; set; } = new List<int>();
+        public List<int> moveids { get; set; } = new List<int>();
         [JsonProperty("status")]
         public List<int> status_list { get; set; } = new List<int>();
+        [JsonProperty("operator_selected")]
+        public int operatortype { get; set; }
+
+        [JsonProperty("operator_list")]
+        public List<int> operator_list { get; set; } = new List<int>();
+
+        public string operator_encry { get; set; }
+        public List<int> operatorids { get; set; } = new List<int>();
+        public int active_operator { get; set; } = 0;
+        public List<string> locationuuids { get; set; } = new List<string>();
+        public string bookingno { get; set; }
     }
     public class ContainerStatusCountDTO
     {
