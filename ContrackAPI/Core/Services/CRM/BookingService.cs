@@ -16,8 +16,18 @@ namespace ContrackAPI
         public APIResponse GetBookingList(BookingListFilter filter)
         {
             var response = new APIResponse();
+
             try
             {
+                if (filter?.filters != null)
+                {
+                    filter.filters.pol = Common.Decrypt(filter.filters.polencrypt);
+                    filter.filters.pod = Common.Decrypt(filter.filters.podencrypt);
+
+                    filter.filters.vesselid = filter.filters.vesseldetailid?
+                        .Select(x => Common.Decrypt(x))
+                        .ToList() ?? new List<int>();
+                }
                 var data = _repo.GetbookingList(filter);
                 if (data == null)
                 {
