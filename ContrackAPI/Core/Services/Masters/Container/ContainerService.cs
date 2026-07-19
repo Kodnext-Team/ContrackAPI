@@ -36,40 +36,100 @@ namespace ContrackAPI
         }
         private void ProcessFilters(ContainerFilterPage filter)
         {
-            if (filter.filters == null) filter.filters = new ContainerFilter();
-            if (!string.IsNullOrEmpty(filter.filters.containertype_encry))
+            if (filter.filters == null)
+                filter.filters = new ContainerFilter();
+            // Container Type
+            if (!string.IsNullOrWhiteSpace(filter.filters.containertype_encry))
             {
-                long id = (long)Common.Decrypt(filter.filters.containertype_encry);
-                if (id > 0) filter.filters.containertypeids = new List<long> { id };
+                filter.filters.containertypeids = filter.filters.containertype_encry
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => (long)Common.Decrypt(x.Trim()))
+                    .Where(x => x > 0)
+                    .ToList();
             }
-            if (!string.IsNullOrEmpty(filter.filters.containersize_encry))
+
+            // Container Size
+            if (!string.IsNullOrWhiteSpace(filter.filters.containersize_encry))
             {
-                int id = Common.ToInt(Common.Decrypt(filter.filters.containersize_encry).ToString());
-                if (id > 0) filter.filters.containersizeids = new List<int> { id };
+                filter.filters.containersizeids = filter.filters.containersize_encry
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => Common.ToInt(Common.Decrypt(x.Trim())))
+                    .Where(x => x > 0)
+                    .ToList();
             }
-            if (!string.IsNullOrEmpty(filter.filters.containermodel_encry))
+            if (!string.IsNullOrWhiteSpace(filter.filters.containermodel_encry))
             {
-                filter.filters.containermodeluuids = new List<string> { filter.filters.containermodel_encry };
+                filter.filters.containermodeluuids = filter.filters.containermodel_encry
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Trim())
+                    .ToList();
             }
-            if (!string.IsNullOrEmpty(filter.filters.location_encry))
+            if (!string.IsNullOrWhiteSpace(filter.filters.location_encry))
             {
-                long id = (long)Common.Decrypt(filter.filters.location_encry);
-                if (id > 0) filter.filters.locationdetailids = new List<long> { id };
+                filter.filters.locationuuids = filter.filters.location_encry
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Trim())
+                    .ToList();
             }
-            if (!string.IsNullOrEmpty(filter.filters.pol_encry))
+           
+            // POL
+            if (!string.IsNullOrWhiteSpace(filter.filters.pol_encry))
             {
-                int id = Common.Decrypt(filter.filters.pol_encry);
-                if (id > 0) filter.filters.pols = new List<int> { id };
+                filter.filters.pols = filter.filters.pol_encry
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => Common.ToInt(Common.Decrypt(x.Trim())))
+                    .Where(x => x > 0)
+                    .ToList();
             }
-            if (!string.IsNullOrEmpty(filter.filters.pod_encry))
+
+            // POD
+            if (!string.IsNullOrWhiteSpace(filter.filters.pod_encry))
             {
-                int id = Common.Decrypt(filter.filters.pod_encry);
-                if (id > 0) filter.filters.pods = new List<int> { id };
+                filter.filters.pods = filter.filters.pod_encry
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => Common.ToInt(Common.Decrypt(x.Trim())))
+                    .Where(x => x > 0)
+                    .ToList();
             }
+
+            // Voyage
+            if (!string.IsNullOrWhiteSpace(filter.filters.voyage_encry))
+            {
+                filter.filters.voyageids = filter.filters.voyage_encry
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => Common.ToInt(Common.Decrypt(x.Trim())))
+                    .Where(x => x > 0)
+                    .ToList();
+            }
+
+            // Move
+            if (!string.IsNullOrWhiteSpace(filter.filters.move_encry))
+            {
+                filter.filters.moveids = filter.filters.move_encry
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => Common.ToInt(Common.Decrypt(x.Trim())))
+                    .Where(x => x > 0)
+                    .ToList();
+            }
+
+            // Operator
+            if (!string.IsNullOrWhiteSpace(filter.filters.operator_encry))
+            {
+                filter.filters.operatorids = filter.filters.operator_encry
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => Common.ToInt(Common.Decrypt(x.Trim())))
+                    .Where(x => x > 0)
+                    .ToList();
+            }
+           
+
+            // Status
             if (filter.filters.status > 0)
                 filter.filters.status_list = new List<int> { filter.filters.status };
             else
                 filter.filters.status_list = new List<int>();
+
+          
         }
         public APIResponse GetContainerByUUID(string containeruuid)
         {
