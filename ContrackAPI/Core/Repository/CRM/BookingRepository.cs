@@ -645,5 +645,51 @@ namespace ContrackAPI
             }
             return list;
         }
+        public List<PortCombinationDTO> GetPortCombinationList()
+        {
+            List<PortCombinationDTO> list = new List<PortCombinationDTO>();
+
+            try
+            {
+                using (SqlDB db = new SqlDB(DatabaseCollection.Contrack))
+                {
+                    DataTable tbl = db.GetDataTable(
+                        "SELECT * FROM booking.booking_get_pol_pod_combination(" + 1 + ");"
+                    );
+
+                    if (tbl == null || tbl.Rows.Count == 0)
+                        return null;
+
+                    list = (from DataRow dr in tbl.Rows
+                            select new PortCombinationDTO
+                            {
+                                PolId = new EncryptedData
+                                {
+                                    NumericValue = Common.ToInt(dr["pol_id"]),
+                                    EncryptedValue = Common.Encrypt(Common.ToInt(dr["pol_id"]))
+                                },
+
+                                PolName = Common.ToString(dr["pol_name"]),
+                                PolCode = Common.ToString(dr["pol_code"]),
+
+                                PodId = new EncryptedData
+                                {
+                                    NumericValue = Common.ToInt(dr["pod_id"]),
+                                    EncryptedValue = Common.Encrypt(Common.ToInt(dr["pod_id"]))
+                                },
+
+                                PodName = Common.ToString(dr["pod_name"]),
+                                PodCode = Common.ToString(dr["pod_code"])
+                            }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                RecordException(ex);
+                throw new Exception(ex.Message, ex);
+            }
+
+            return list;
+        }
     }
 }

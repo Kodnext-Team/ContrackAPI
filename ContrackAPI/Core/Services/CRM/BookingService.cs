@@ -354,5 +354,27 @@ namespace ContrackAPI
             }
             return response;
         }
+        public APIResponse GetPortCombinationList()
+        {
+            var response = new APIResponse();
+            try
+            {
+                var data = _repo.GetPortCombinationList();
+                if (data == null)
+                {
+                    response.Result = Common.ErrorMessage("No data found");
+                }
+                else
+                {
+                    response.Result = Common.SuccessMessage("Success");
+                    response.Data = data;
+                }
+            }
+            catch (Exception ex)
+            {
+                RecordException(ex);
+            }
+            return response;
+        }
     }
 }
