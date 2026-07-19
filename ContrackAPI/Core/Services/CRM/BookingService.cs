@@ -16,10 +16,22 @@ namespace ContrackAPI
         public APIResponse GetBookingList(BookingListFilter filter)
         {
             var response = new APIResponse();
+
             try
             {
+                if (filter?.filters != null)
+                {
+                    filter.filters.pol = Common.Decrypt(filter.filters.polencrypt);
+                    filter.filters.pod = Common.Decrypt(filter.filters.podencrypt);
+
+                    filter.filters.vesselid = filter.filters.vesseldetailid?
+                        .Select(x => Common.Decrypt(x))
+                        .ToList() ?? new List<int>();
+                }
+
                 var data = _repo.GetbookingList(filter);
-                if (data == null)
+
+                if (data == null || !data.Any())
                 {
                     response.Result = Common.ErrorMessage("No data found");
                 }
@@ -32,7 +44,9 @@ namespace ContrackAPI
             catch (Exception ex)
             {
                 RecordException(ex);
+                response.Result = Common.ErrorMessage(ex.Message);
             }
+
             return response;
         }
         public APIResponse GetBookingByUUID(string bookinguuid)
