@@ -28,10 +28,8 @@ namespace ContrackAPI
                         .Select(x => Common.Decrypt(x))
                         .ToList() ?? new List<int>();
                 }
-
                 var data = _repo.GetbookingList(filter);
-
-                if (data == null || !data.Any())
+                if (data == null)
                 {
                     response.Result = Common.ErrorMessage("No data found");
                 }
@@ -44,9 +42,7 @@ namespace ContrackAPI
             catch (Exception ex)
             {
                 RecordException(ex);
-                response.Result = Common.ErrorMessage(ex.Message);
             }
-
             return response;
         }
         public APIResponse GetBookingByUUID(string bookinguuid)
