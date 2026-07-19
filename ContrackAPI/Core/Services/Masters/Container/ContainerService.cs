@@ -38,98 +38,51 @@ namespace ContrackAPI
         {
             if (filter.filters == null)
                 filter.filters = new ContainerFilter();
-            // Container Type
-            if (!string.IsNullOrWhiteSpace(filter.filters.containertype_encry))
-            {
-                filter.filters.containertypeids = filter.filters.containertype_encry
-                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => (long)Common.Decrypt(x.Trim()))
-                    .Where(x => x > 0)
-                    .ToList();
-            }
 
-            // Container Size
-            if (!string.IsNullOrWhiteSpace(filter.filters.containersize_encry))
-            {
-                filter.filters.containersizeids = filter.filters.containersize_encry
-                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Common.ToInt(Common.Decrypt(x.Trim())))
+            filter.filters.containertypeids =
+                filter.filters.containertypeencids
+                    .Select(x => (long)Common.Decrypt(x))
                     .Where(x => x > 0)
                     .ToList();
-            }
-            if (!string.IsNullOrWhiteSpace(filter.filters.containermodel_encry))
-            {
-                filter.filters.containermodeluuids = filter.filters.containermodel_encry
-                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Trim())
+
+            filter.filters.containersizeids =
+                filter.filters.containersizeencids
+                    .Select(x => Common.ToInt(Common.Decrypt(x)))
+                    .Where(x => x > 0)
                     .ToList();
-            }
-            if (!string.IsNullOrWhiteSpace(filter.filters.location_encry))
-            {
-                filter.filters.locationuuids = filter.filters.location_encry
-                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Trim())
-                    .ToList();
-            }
-           
-            // POL
+
             if (!string.IsNullOrWhiteSpace(filter.filters.pol_encry))
-            {
-                filter.filters.pols = filter.filters.pol_encry
-                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Common.ToInt(Common.Decrypt(x.Trim())))
-                    .Where(x => x > 0)
-                    .ToList();
-            }
+                filter.filters.pols = new List<int>
+        {
+            Common.ToInt(Common.Decrypt(filter.filters.pol_encry))
+        };
 
-            // POD
             if (!string.IsNullOrWhiteSpace(filter.filters.pod_encry))
-            {
-                filter.filters.pods = filter.filters.pod_encry
-                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Common.ToInt(Common.Decrypt(x.Trim())))
-                    .Where(x => x > 0)
-                    .ToList();
-            }
+                filter.filters.pods = new List<int>
+        {
+            Common.ToInt(Common.Decrypt(filter.filters.pod_encry))
+        };
 
-            // Voyage
             if (!string.IsNullOrWhiteSpace(filter.filters.voyage_encry))
-            {
-                filter.filters.voyageids = filter.filters.voyage_encry
-                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Common.ToInt(Common.Decrypt(x.Trim())))
-                    .Where(x => x > 0)
-                    .ToList();
-            }
+                filter.filters.voyageids = new List<int>
+        {
+            Common.ToInt(Common.Decrypt(filter.filters.voyage_encry))
+        };
 
-            // Move
             if (!string.IsNullOrWhiteSpace(filter.filters.move_encry))
-            {
-                filter.filters.moveids = filter.filters.move_encry
-                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Common.ToInt(Common.Decrypt(x.Trim())))
-                    .Where(x => x > 0)
-                    .ToList();
-            }
+                filter.filters.moveids = new List<int>
+        {
+            Common.ToInt(Common.Decrypt(filter.filters.move_encry))
+        };
 
-            // Operator
             if (!string.IsNullOrWhiteSpace(filter.filters.operator_encry))
-            {
-                filter.filters.operatorids = filter.filters.operator_encry
-                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Common.ToInt(Common.Decrypt(x.Trim())))
-                    .Where(x => x > 0)
-                    .ToList();
-            }
-           
+                filter.filters.operatorids = new List<int>
+        {
+            Common.ToInt(Common.Decrypt(filter.filters.operator_encry))
+        };
 
-            // Status
             if (filter.filters.status > 0)
                 filter.filters.status_list = new List<int> { filter.filters.status };
-            else
-                filter.filters.status_list = new List<int>();
-
-          
         }
         public APIResponse GetContainerByUUID(string containeruuid)
         {
