@@ -97,5 +97,20 @@ namespace ContrackAPI
                 return Ok(new APIResponse());
             }
         }
+        [AllowAnonymous]
+        [HttpPost("GetPortCombinationList")]
+        public IActionResult GetPortCombinationList()
+        {
+            try
+            {
+                response = _service.GetPortCombinationList();
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return Ok(new APIResponse());
+            }
+
+        }
     }
 }

@@ -54,4 +54,14 @@ namespace ContrackAPI
         //public string transportcomments { get; set; } = "";
         /*-------- For Transport Order ------------*/
     }
+    public class PortCombinationDTO
+    {
+        public EncryptedData PolId { get; set; } = new EncryptedData();
+        public string PolName { get; set; } = "";
+        public string PolCode { get; set; } = "";
+
+        public EncryptedData PodId { get; set; } = new EncryptedData();
+        public string PodName { get; set; } = "";
+        public string PodCode { get; set; } = "";
+    }
 }

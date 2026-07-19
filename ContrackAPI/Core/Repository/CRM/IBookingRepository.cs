@@ -13,5 +13,6 @@ namespace ContrackAPI
         List<ContainerAllottedDTO> GetContainerAllotment(string bookinguuid);
         Result SaveContainerSelection(string bookingid, List<ContainerSelectionDTO> selections);
         List<BookedContainerDTO> GetBookedContainers(string bookinguuid, BookedContainerFilter filters);
+        List<PortCombinationDTO> GetPortCombinationList();
     }
 }
