@@ -75,14 +75,13 @@ namespace ContrackAPI
             Common.ToInt(Common.Decrypt(filter.filters.move_encry))
         };
 
-            if (!string.IsNullOrWhiteSpace(filter.filters.operator_encry))
-                filter.filters.operatorids = new List<int>
-        {
-            Common.ToInt(Common.Decrypt(filter.filters.operator_encry))
-        };
+            filter.filters.operatorids =
+        filter.filters.operatorencids?
+            .Select(x => Common.ToInt(Common.Decrypt(x)))
+            .Where(x => x > 0)
+            .ToList() ?? new List<int>();
 
-            if (filter.filters.status > 0)
-                filter.filters.status_list = new List<int> { filter.filters.status };
+
         }
         public APIResponse GetContainerByUUID(string containeruuid)
         {
