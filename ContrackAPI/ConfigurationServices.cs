@@ -1,4 +1,4 @@
-﻿namespace ContrackAPI
+namespace ContrackAPI
 {
     public static class ConfigurationServices
     {
@@ -10,6 +10,7 @@
             services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<IContainerService, ContainerService>();
             services.AddScoped<ITrackingService, TrackingService>();
+            services.AddScoped<IDocumentService, DocumentService>();
 
             // Repository
             services.AddScoped<IVoyageRepository, VoyageRepository>();
@@ -18,6 +19,7 @@
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IContainerRepository, ContainerRepository>();
             services.AddScoped<ITrackingRepository, TrackingRepository>();
+            services.AddScoped<IDocumentRepository, DocumentRepository>();
         }
     }
 }

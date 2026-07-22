@@ -1,4 +1,4 @@
-﻿namespace ContrackAPI
+namespace ContrackAPI
 {
     public interface ITrackingRepository
     {
@@ -8,7 +8,6 @@
 
         TrackingDTO GetTrackingByUUID(string trackinguuid);
         Result SavePickSelection(List<TrackingSelectionDTO> containerBookingSelection);
-
-
+        Result SaveTempTracking(int containerId, int bookingId);
     }
 }

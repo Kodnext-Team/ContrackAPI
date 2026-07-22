@@ -55,19 +55,19 @@ namespace ContrackAPI
                 return Ok(new APIResponse());
             }
 
+        }       
+        [AllowAnonymous]
+        [HttpPost("SaveTempTracking")]
+        public IActionResult SaveTempTracking([FromBody] CreateTempTrackingRequest model)
+        {
+            try
+            {
+                response = _service.SaveTempTracking(model);
+            }
+            catch (Exception ex)
+            {
+            }
+            return Ok(response);
         }
-        //[AllowAnonymous]
-        //[HttpGet("GetTrackingByUUID")]
-        //public IActionResult GetTrackingByUUID(string trackinguuid)
-        //{
-        //    try
-        //    {
-        //        response = _service.GetTrackingByUUID(trackinguuid);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //    }
-        //    return Ok(response);
-        //}
     }
 }

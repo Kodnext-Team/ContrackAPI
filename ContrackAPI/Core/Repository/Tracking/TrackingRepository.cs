@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System.Data;
 
 namespace ContrackAPI
@@ -318,6 +318,49 @@ namespace ContrackAPI
             }
 
             return tracking;
+        }
+
+        public Result SaveTempTracking(int containerId, int bookingId)
+        {
+            Result result = new Result();
+            try
+            {
+                using (SqlDB db = new SqlDB(DatabaseCollection.Contrack))
+                {
+                    DataTable tbl = db.GetDataTable(
+                        "SELECT * FROM tracking.container_movement_tracking_temp_save(" +
+                        "p_containerid := " + containerId + "," +
+                        "p_bookingid := " + bookingId + "," +
+                        "p_hubid := " + 1 +
+                        ");"
+                    );
+
+                    if (tbl.Rows.Count != 0)
+                    {
+                        if (Common.ToInt(tbl.Rows[0][0]) > 0)
+                        {
+                            result = Common.SuccessMessage(Common.ToString(tbl.Rows[0][1]));
+                            result.TargetUUID = Common.ToString(tbl.Rows[0][2]); 
+                            result.TargetID = Common.ToInt(tbl.Rows[0][3]);
+                        }
+                        else
+                        {
+                            result = Common.ErrorMessage(Common.ToString(tbl.Rows[0][1]));
+                        }
+                    }
+                    else
+                    {
+                        result = Common.ErrorMessage("Cannot process request");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result = Common.ErrorMessage(ex.Message);
+                RecordException(ex);
+            }
+
+            return result;
         }
     }
 }

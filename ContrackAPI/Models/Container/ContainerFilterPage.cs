@@ -37,46 +37,46 @@ namespace ContrackAPI
     public class ContainerFilter
     {
         // Multiple Select
-        public List<string> containertypeencids { get; set; } = new();
-        public List<string> containersizeencids { get; set; } = new();
-        public List<string> containermodeluuids { get; set; } = new();
-        public List<string> locationuuids { get; set; } = new();
+        public List<string> containertypeencids { get; set; } = new List<string>();
+        public List<string> containersizeencids { get; set; } = new List<string>();
+        public List<string> containermodeluuids { get; set; } = new List<string>();
+        public List<string> locationuuids { get; set; } = new List<string>();
 
         // Multiple Select Operator
-        public List<string> operatorencids { get; set; } = new();
+        public List<string> operatorencids { get; set; } = new List<string>();
 
         // Single Select
-        public string pol_encry { get; set; }
-        public string pod_encry { get; set; }
-        public string voyage_encry { get; set; }
-        public string move_encry { get; set; }
+        public string pol_encry { get; set; } = "";
+        public string pod_encry { get; set; } = "";
+        public string voyage_encry { get; set; } = "";
+        public string move_encry { get; set; } = "";
 
-        public string bookingno { get; set; }
+        public string bookingno { get; set; } = "";
 
         // Multiple Status Selection
-        public List<int> status { get; set; } = new();
+        public List<int> status { get; set; } = new List<int>();
 
         // Internal fields
         [System.Text.Json.Serialization.JsonIgnore]
-        public List<long> containertypeids { get; set; } = new();
+        public List<long> containertypeids { get; set; } = new List<long>();
 
         [System.Text.Json.Serialization.JsonIgnore]
-        public List<int> containersizeids { get; set; } = new();
+        public List<int> containersizeids { get; set; } = new List<int>();
 
         [System.Text.Json.Serialization.JsonIgnore]
-        public List<int> operatorids { get; set; } = new();
+        public List<int> operatorids { get; set; } = new List<int>();
 
         [System.Text.Json.Serialization.JsonIgnore]
-        public List<int> pols { get; set; } = new();
+        public List<int> pols { get; set; } = new List<int>();
 
         [System.Text.Json.Serialization.JsonIgnore]
-        public List<int> pods { get; set; } = new();
+        public List<int> pods { get; set; } = new List<int>();
 
         [System.Text.Json.Serialization.JsonIgnore]
-        public List<int> voyageids { get; set; } = new();
+        public List<int> voyageids { get; set; } = new List<int>();
 
         [System.Text.Json.Serialization.JsonIgnore]
-        public List<int> moveids { get; set; } = new();
+        public List<int> moveids { get; set; } = new List<int>();
     }
     public class ContainerStatusCountDTO
     {
