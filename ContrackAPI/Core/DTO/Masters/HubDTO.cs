@@ -11,4 +11,8 @@
         public string email { get; set; } = "";
         public string phone { get; set; } = "";
     }
+    public class AppSettings
+    {
+        public string AttachmentFolder { get; set; }
+    }
 }

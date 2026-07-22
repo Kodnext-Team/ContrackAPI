@@ -1,4 +1,4 @@
-﻿namespace ContrackAPI
+namespace ContrackAPI
 {
     public class TrackingDTO
     {
@@ -70,5 +70,10 @@
         public List<TrackingSelectionDTO> Selections { get; set; } = new List<TrackingSelectionDTO>();
 
         public TrackingDTO Tracking { get; set; } = new TrackingDTO();
+    }
+    public class CreateTempTrackingRequest
+    {
+        public EncryptedData containerid { get; set; } = new EncryptedData();
+        public EncryptedData bookingid { get; set; } = new EncryptedData();
     }
 }
