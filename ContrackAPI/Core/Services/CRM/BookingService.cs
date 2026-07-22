@@ -7,6 +7,8 @@ namespace ContrackAPI
     {
         private readonly IBookingRepository _repo;
         private readonly IVoyageRepository _Voyagerepo;
+        APIResponse response = new APIResponse();
+
         public BookingService(IBookingRepository repo, IVoyageRepository voyagerepo)
         {
             _repo = repo;
@@ -15,8 +17,6 @@ namespace ContrackAPI
         }
         public APIResponse GetBookingList(BookingListFilter filter)
         {
-            var response = new APIResponse();
-
             try
             {
                 if (filter?.filters != null)
@@ -47,7 +47,6 @@ namespace ContrackAPI
         }
         public APIResponse GetBookingByUUID(string bookinguuid)
         {
-            var response = new APIResponse();
             try
             {
                 var data = _repo.GetbookingByUUID(bookinguuid);
@@ -194,7 +193,6 @@ namespace ContrackAPI
         }
         public APIResponse GetContainerSelection(string bookinguuid)
         {
-            var response = new APIResponse();
             try
             {
              ContainerBookingDTO booking = _repo.GetbookingByUUID(bookinguuid);
@@ -299,7 +297,6 @@ namespace ContrackAPI
         //}
         public APIResponse SaveContainerSelection(ContainerSelection bookingmodel)
         {
-            var response = new APIResponse();
             Result result = new Result();
             try
             {
@@ -344,7 +341,6 @@ namespace ContrackAPI
 
         public APIResponse GetBookedContainers(string bookinguuid, BookedContainerFilter filter)
         {
-            var response = new APIResponse();
             try
             {
                 var data = _repo.GetBookedContainers(bookinguuid, filter);
@@ -366,7 +362,6 @@ namespace ContrackAPI
         }
         public APIResponse GetPortCombinationList()
         {
-            var response = new APIResponse();
             try
             {
                 var data = _repo.GetPortCombinationList();
